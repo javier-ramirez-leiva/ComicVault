@@ -1,0 +1,7 @@
+<section class="body-font">
+    <ul class="grid-covers">
+        <li *ngFor="let serie of series; trackBy: trackBySeries">
+            <app-series [series]="serie"></app-series>
+        </li>
+    </ul>
+</section>

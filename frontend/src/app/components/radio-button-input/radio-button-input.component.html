@@ -1,0 +1,14 @@
+<input
+    #radioBtn
+    (click)="onValueChange()"
+    value
+    name="list-radio"
+    type="radio"
+    class="w-4 h-4 text-input-radio-text bg-input-radio-background border-input-radio-border focus:ring-input-radio-focus-ring focus:ring-2"
+>
+<label
+    (click)="select()"
+    class="ms-2 text-lg font-medium text-input-radio-label-text"
+>
+    {{label}}
+</label>

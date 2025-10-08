@@ -1,0 +1,53 @@
+<div class="whole-page-container">
+    <div class="px-4 pb-4 sm:pb-0 overflow-x-auto">
+        <ng-container *ngIf="user$ | async as user">
+            <div class="flex justify-start items-center mb-12 gap-8">
+                <div
+                    class="relative inline-flex items-center justify-center size-20 overflow-hidden rounded-full"
+                    [ngStyle]="{ 'background-color': user.color}"
+                >
+                    <span class="font-normal text-3xl text-slate-200">{{user.username[0].toUpperCase()}}</span>
+                </div>
+                <div class="flex flex-col ">
+                    <h3 class="pl-4 text-2xl font-bold text-generic-text">{{user.username}}</h3>
+                    <h5 class="pl-4 text-lg font-bold text-generic-text">Role: {{user.role}}</h5>
+                </div>
+                <div>
+                    <button
+                        type="button"
+                        class="button-icon button-edit p-2.5"
+                        (click)="editUser()"
+                    >
+                        <svg
+                            xmlns="http://www.w3.org/2000/svg"
+                            fill="none"
+                            viewBox="0 0 24 24"
+                            stroke-width="1.5"
+                            stroke="currentColor"
+                            class="size-4"
+                        >
+                            <path
+                                stroke-linecap="round"
+                                stroke-linejoin="round"
+                                d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L6.832 19.82a4.5 4.5 0 0 1-1.897 1.13l-2.685.8.8-2.685a4.5 4.5 0 0 1 1.13-1.897L16.863 4.487Zm0 0L19.5 7.125"
+                            ></path>
+                        </svg>
+                        <span class="sr-only">Edit User</span>
+                    </button>
+                </div>
+            </div>
+        </ng-container>
+        <ng-container *ngIf="histories$ | async as histories">
+            <div class="flex flex-col gap-4">
+                <app-funnel-button-history class="w-12 ml-auto"></app-funnel-button-history>
+                <app-history-table
+                    *ngIf="histories.length; else noResults"
+                    [histories]="histories"
+                ></app-history-table>
+            </div>
+            <ng-template #noResults>
+                <app-no-results></app-no-results>
+            </ng-template>
+        </ng-container>
+    </div>
+</div>

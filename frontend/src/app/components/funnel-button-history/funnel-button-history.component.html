@@ -1,0 +1,77 @@
+<app-right-panel-funnel-button (funnelButtonClicked)="onOpenDrawer()"></app-right-panel-funnel-button>
+<div
+    class="right-panel-mask"
+    [ngClass]="{ 'hidden': !(isDrawerOpen$ | async)}"
+    (click)="onCloseDrawer()"
+>
+</div>
+<div
+    class="right-panel-container bg-right-panel-background"
+    [ngClass]="{ 'translate-x-full': !(isDrawerOpen$ | async), '-translate-x-0': (isDrawerOpen$ | async) }"
+>
+    <app-right-panel-title
+        title=Filters
+        (onCloseClick)="onCloseDrawer()"
+    ></app-right-panel-title>
+
+    <form
+        [formGroup]="form"
+        class="flex flex-col justify-between flex-1"
+    >
+        <div class="space-y-6 text-right-panel-text">
+            <div class="space-y-2">
+                <app-input-text-form
+                    formControlName="comicTitle"
+                    title="Comic Title"
+                >
+                </app-input-text-form>
+            </div>
+            <div class="mb-4">
+                <app-date-text-form
+                    title="Date start"
+                    formControlName="dateStart"
+                ></app-date-text-form>
+            </div>
+
+            <div class="mb-4">
+                <app-date-text-form
+                    title="Date end"
+                    formControlName="dateEnd"
+                ></app-date-text-form>
+            </div>
+
+            <!-- Read Status -->
+            <div class="space-y-2">
+                <h6 class="text-base font-medium ">Read Status</h6>
+                <div class="flex items-center">
+                    <app-boolean-slider-form
+                        formControlName="readStatusOnGoing"
+                        label="On going"
+                    ></app-boolean-slider-form>
+                </div>
+                <div class="flex items-center">
+                    <app-boolean-slider-form
+                        formControlName="readStatusRead"
+                        label="Read"
+                    ></app-boolean-slider-form>
+                </div>
+            </div>
+            <!-- InLibrary -->
+            <div class="space-y-2">
+                <h6 class="text-base font-medium ">In Library</h6>
+                <div class="flex items-center">
+                    <app-boolean-slider-form
+                        formControlName="inLibraryYes"
+                        label="Yes"
+                    ></app-boolean-slider-form>
+                </div>
+                <div class="flex items-center">
+                    <app-boolean-slider-form
+                        formControlName="inLibraryNo"
+                        label="No"
+                    ></app-boolean-slider-form>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>

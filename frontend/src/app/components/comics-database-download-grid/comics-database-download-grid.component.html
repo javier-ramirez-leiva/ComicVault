@@ -1,0 +1,10 @@
+<section class="body-font">
+    <ul class="grid-covers">
+        <li *ngFor="let localDownload of (localDownloads$ | async)">
+            <app-comics-database-with-download
+                [comic]="localDownload.comic"
+                [progress$]="localDownload.progress$"
+            ></app-comics-database-with-download>
+        </li>
+    </ul>
+</section>

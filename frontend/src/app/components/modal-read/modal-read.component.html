@@ -1,0 +1,26 @@
+<div class="relative pt-10 bg-modal-background rounded-lg shadow-sm">
+    <app-cross-modal (onCloseClick)="cancel()"></app-cross-modal>
+    <div class="p-4 md:p-5 text-center">
+        <div class="relative flex items-center mb-4">
+            <app-radio-button-input
+                label="Read"
+                [value]="false"
+                (valueChange)="confirm('read')"
+            ></app-radio-button-input>
+        </div>
+        <div class="relative flex items-center mb-4">
+            <app-radio-button-input
+                label="Read incognito"
+                [value]="false"
+                (valueChange)="confirm('incognito')"
+            ></app-radio-button-input>
+        </div>
+        <div class="relative flex items-center mb-4">
+            <app-radio-button-input
+                label="Read from the beginning"
+                [value]="false"
+                (valueChange)="confirm('beginning')"
+            ></app-radio-button-input>
+        </div>
+    </div>
+</div>

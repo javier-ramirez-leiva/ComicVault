@@ -1,0 +1,93 @@
+{
+  "Scan": {
+    "blocks": [
+      {
+        "type": "header",
+        "text": {
+          "type": "plain_text",
+          "text": "Scan finished",
+          "emoji": true
+        }
+      },
+      {
+        "type": "section",
+        "text": {
+          "type": "mrkdwn",
+          "text": "Scan finished on *<$comicVaultBaseUrl|ComicVault>*\n"
+        }
+      }
+    ]
+  },
+  "Success": {
+    "blocks": [
+      {
+        "type": "header",
+        "text": {
+          "type": "plain_text",
+          "text": "Added: $comic.title",
+          "emoji": true
+        }
+      },
+      {
+        "type": "section",
+        "text": {
+          "type": "mrkdwn",
+          "text": "$comic.description \n\n *Link: <$comicVaultBaseUrl/comics/$comic.id/details|$comic.title>* \n *Year: $comic.year* \n *Size: $comic.size*"
+        },
+        "accessory": {
+          "type": "image",
+          "image_url": "$comic.image",
+          "alt_text": "$comic.title"
+        }
+      }
+    ]
+  },
+  "Error": {
+    "blocks": [
+      {
+        "type": "header",
+        "text": {
+          "type": "plain_text",
+          "text": "Error on: $comic.title",
+          "emoji": true
+        }
+      },
+      {
+        "type": "section",
+        "text": {
+          "type": "mrkdwn",
+          "text": "$comic.description \n *Year: $comic.year* \n *Size: $comic.size*"
+        },
+        "accessory": {
+          "type": "image",
+          "image_url": "$comic.image",
+          "alt_text": "$comic.title"
+        }
+      }
+    ]
+  },
+  "Test": {
+    "blocks": [
+      {
+        "type": "header",
+        "text": {
+          "type": "plain_text",
+          "text": "Test ComicVault slack notification",
+          "emoji": true
+        }
+      },
+      {
+        "type": "section",
+        "text": {
+          "type": "mrkdwn",
+          "text": "Here you will have the details \n *Link: <$comicVaultBaseUrl|ComicVault>* \n *Year: year* \n *Size: size*"
+        },
+        "accessory": {
+          "type": "image",
+          "image_url": "https://miro.medium.com/v2/0*ZjYSm_q36J4KChdn",
+          "alt_text": "Title"
+        }
+      }
+    ]
+  }
+}

@@ -1,0 +1,17 @@
+<button
+    type="button"
+    class="inline-flex flex-col items-center justify-center px-5 group w-full h-full"
+    [routerLink]="route"
+    [queryParams]="queryParams"
+>
+    <svg
+        class="w-5 h-5 mb-1 "
+        aria-hidden="true"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="currentColor"
+        viewBox="0 0 20 20"
+        [class.text-nav-menu-bottom-icon-active]="(activePageService.activePage$ | async) === activeRoute"
+    >
+        <path [attr.d]="svgPath"></path>
+    </svg>
+</button>

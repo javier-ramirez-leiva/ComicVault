@@ -1,0 +1,45 @@
+<div class="relative pt-10 bg-modal-background rounded-lg shadow-sm">
+    <app-cross-modal (onCloseClick)="cancel()"></app-cross-modal>
+    <div class="px-4 pt-4">
+        <label class="font-semibold text-lg text-generic-text">{{data?.comicTitle}}</label>
+    </div>
+    <div class="p-4 md:p-5 text-center">
+        <div
+            *ngFor="let downloadIssue of data?.options"
+            class="relative flex items-center mb-4"
+        >
+            <form class="max-w-sm mx-auto">
+                <label class="block mb-2 text-sm font-medium text-generic-text">{{downloadIssue.description}}</label>
+                <select
+                    (change)="onPlatformChange($event, downloadIssue.idGcIssue)"
+                    class="bg-input-select-background border border-input-select-border text-input-select-text text-sm rounded-lg focus:ring-input-select-focus-ring block w-full p-2.5"
+                >
+                    <ng-container *ngIf="downloadIssue.links.length">
+                        <option
+                            [value]="0"
+                            selected
+                        >
+                            {{downloadIssue.links[0].platform}}
+                        </option>
+                        <option
+                            *ngFor="let item of downloadIssue.links.slice(1); let i = index"
+                            [value]="i+1"
+                        >
+                            {{item.platform}}
+                        </option>
+                    </ng-container>
+                    <option [value]="-1">NONE</option>
+                </select>
+            </form>
+        </div>
+    </div>
+    <div class="align-middle w-full flex justify-center py-4">
+        <button
+            type="button"
+            (click)="confirm()"
+            class="button-text button-primary"
+        >
+            Download
+        </button>
+    </div>
+</div>

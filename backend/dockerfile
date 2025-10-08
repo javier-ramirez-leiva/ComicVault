@@ -1,0 +1,36 @@
+# Stage 1: Build the application
+FROM maven:3.8.5-openjdk-17-slim AS build
+
+WORKDIR /app
+
+RUN apt-get update && apt-get install -y unrar-free unzip
+
+COPY backend/pom.xml ./pom.xml
+RUN mvn dependency:go-offline
+
+# Copy source code AND .git
+COPY .git .git
+COPY backend/src ./src
+
+RUN mvn package -DskipTests
+
+# Stage 2: Run the application
+FROM maven:3.8.5-openjdk-17-slim
+
+WORKDIR /app
+
+# Copy the JAR from the build stage
+COPY --from=build /app/target/*.jar app.jar
+COPY backend/src/main/resources/notify_slack.json ./default_notify.json
+
+RUN echo '#!/bin/sh\n' \
+    'mkdir -p /data\n' \
+    '[ ! -f /data/notify_slack.json ] && cp /app/default_notify.json /data/notify_slack.json\n' \
+    'exec java -jar app.jar\n' \
+    > /app/entrypoint.sh && chmod +x /app/entrypoint.sh
+
+VOLUME /data
+
+EXPOSE 8080
+
+ENTRYPOINT ["/app/entrypoint.sh"]

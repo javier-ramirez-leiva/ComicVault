@@ -1,0 +1,11 @@
+<app-cover-card
+    [id]="series.id"
+    [title]="series.title"
+    [firstLine]="'Year: ' + series.year"
+    [secondLine]="'Issues: ' + series.totalIssues + ' / ' + series.readIssues"
+    [imageURL]="imageURL"
+    [navigationURL]="url"
+    [searchOrDatabase]="false"
+    [numberBadge]="number"
+    [checked]="series.readStatus"
+></app-cover-card>

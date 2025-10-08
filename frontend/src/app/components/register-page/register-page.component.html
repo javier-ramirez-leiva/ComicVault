@@ -1,0 +1,40 @@
+<div class="fixed top-0 bottom-0 left-0 right-0 max-h-screen max-w-screen z-40 bg-background flex items-center justify-center">
+    <section class="h-fit">
+        <div class="flex flex-col items-center justify-center px-6 py-8 lg:py-0">
+            <div class="flex flex-row items-center justify-center mb-6 mr-5">
+                <img
+                    [src]="iconSrc"
+                    alt="Icon"
+                    class="size-24"
+                >
+                <h3 class="pl-2 text-2xl font-bold text-generic-text">ComicVault</h3>
+            </div>
+            <div class="w-full bg-login-background rounded-lg shadow-sm md:mt-0 sm:max-w-md xl:p-0">
+                <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
+                    <h1 class="text-xl font-bold leading-tight tracking-tight md:text-2xl text-generic-text">Register admin user</h1>
+                    <form
+                        class="space-y-4 md:space-y-6"
+                        action="#"
+                    >
+                        <div>
+                            <app-input-text title="Your username" [(value)]="username" id="username"/>
+                        </div>
+                       <div>
+                            <app-input-text title="Your device name" [(value)]="device" id="device"/>
+                        </div>
+                        <div>
+                            <app-input-text title="Password" [(value)]="password" [password]="true" id="password"/>
+                        </div>
+                        <button
+                            (click)="register()"
+                            type="submit"
+                            class="w-full button-text button-primary"
+                        >
+                            Sign in
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+</div>

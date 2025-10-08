@@ -1,0 +1,5 @@
+<div class = "flex flex-col gap-8">
+@for (processingNotification of (processingNotifications$ | async); track processingNotification) {
+    <app-processing-notification [processingNotification]=processingNotification></app-processing-notification>
+}
+</div>

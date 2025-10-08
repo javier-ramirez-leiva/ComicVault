@@ -1,0 +1,104 @@
+<div
+    *ngIf="(canScrollLeft$ | async) || (canScrollRight$ | async)  || header"
+    class="pl-4 flex flex-row justify-between gap-8 items-center w-full text-generic-text "
+>
+    <h3 class="text-2xl font-bold ">{{header}}</h3>
+    <div class="flex flex-row gap-2">
+        <div class="size-10">
+            <button
+                *ngIf="canScrollLeft$ | async"
+                type="button"
+                (click)="scrollFullScreen('left')"
+                class="flex items-center justify-center h-10 w-10 rounded-full focus:outline-hidden group"
+            >
+                <svg
+                    class="w-4 h-4 "
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 6 10"
+                >
+                    <path
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M5 1 1 5l4 4"
+                    ></path>
+                </svg>
+            </button>
+        </div>
+        <div class="size-10">
+            <button
+                *ngIf="canScrollRight$ | async"
+                type="button"
+                (click)="scrollFullScreen('right')"
+                class="flex items-center justify-center h-10 w-10 rounded-full focus:outline-hidden group"
+            >
+                <svg
+                    class="w-4 h-4 "
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 6 10"
+                >
+                    <path
+                        stroke="currentColor"
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="m1 9 4-4-4-4"
+                    ></path>
+                </svg>
+
+            </button>
+        </div>
+    </div>
+</div>
+<div
+    *ngIf="series.length > 0"
+    #scrollContainer
+    class="flex flex-nowrap overflow-x-auto overflow-y-hidden  mt-4 overflow-section no-scrollbar"
+>
+    <div
+        *ngFor="let serie of series; trackBy: trackBySeries"
+        class="p-4 shrink-0"
+        style="width: 200px;"
+    >
+        <app-series [series]=serie></app-series>
+    </div>
+</div>
+<div
+    *ngIf="comics.length > 0"
+    #scrollContainer
+    class="flex flex-nowrap overflow-x-auto overflow-y-hidden mt-4 overflow-section no-scrollbar"
+>
+    <div
+        *ngFor="let comic of comics; trackBy: trackByComic"
+        class="p-4 shrink-0"
+        style="width: 200px;"
+        #comicItem
+    >
+        <app-comic-database
+            [highlight]="comic.highlight"
+            [comic]="comic"
+        ></app-comic-database>
+    </div>
+</div>
+<div
+    *ngIf="comicSearchs.length > 0"
+    #scrollContainer
+    class="flex flex-nowrap overflow-x-auto overflow-y-hidden mt-4 overflow-section no-scrollbar"
+>
+    <div
+        *ngFor="let comic of comicSearchs; trackBy: trackByComicSearch"
+        class="p-4 shrink-0"
+        style="width: 200px;"
+        #comicItem
+    >
+        <app-comic-search
+            [comic]="comic"
+            [queryParams]="tag ? {tag:serializedTag} : null"
+        ></app-comic-search>
+    </div>
+</div>

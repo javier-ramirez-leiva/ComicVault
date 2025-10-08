@@ -1,0 +1,26 @@
+<label
+    *ngIf="title"
+    class="block mb-2 text-sm font-medium text-generic-text"
+>
+    {{title}}
+</label>
+<input
+    *ngIf="!multiLine"
+    #input
+    type="text"
+    class="bg-input-background border border-input-border text-generic-text text-sm rounded-lg focus:ring-input-field-focus-ring focus:border-input-button-focus-ring block w-full p-2.5"
+    (change)="onInput($event)"
+    (blur)="onTouched()"
+    [disabled]="isDisabled"
+    [value]="value"
+>
+<textarea
+    *ngIf="multiLine"
+    #input
+    rows="5"
+    class="bg-input-background border border-input-border text-generic-text text-sm rounded-lg focus:ring-input-field-focus-ring focus:border-input-button-focus-ring block w-full p-2.5"
+    (input)="onInput($event)"
+    (blur)="onTouched()"
+    [disabled]="isDisabled"
+    [value]="value"
+></textarea>

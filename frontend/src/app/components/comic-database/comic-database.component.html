@@ -1,0 +1,18 @@
+<app-cover-card
+    [id]="comic.id"
+    [title]="comic.title"
+    [firstLine]="firstLine"
+    [secondLine]="secondLine"
+    [imageURL]="imageURL"
+    [navigationURL]="url"
+    [searchOrDatabase]="false"
+    [highlight]="highlight"
+    [progress]="progress"
+    [checked]="comic.readStatus"
+    [displayButton]="false"
+    [comicsDatabase]="comic"
+    [new]="comic.pageStatus===0 && !comic.readStatus"
+    [draggableStatus]="draggableStatus"
+    [issueLine]="comic.issue.toString()"
+    [isHovered]="isHovered"
+></app-cover-card>

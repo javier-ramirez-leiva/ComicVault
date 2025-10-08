@@ -1,0 +1,46 @@
+<div
+    #scrollContainer
+    class="flex pb-2 gap-6 overflow-x-auto items-end relative overflow-visible pt-18"
+>
+    <div
+        *ngFor="let indexes of range"
+        #image
+        class="shrink-0 flex flex-col items-center"
+        (click)="emitPageChange(indexes[0])"
+    >
+        <div
+            class="flex transition-all border-cover-card-active-border"
+            [class.border-4]="isIndexesActive(indexes)"
+            [id]="'card-' + indexes[0]"
+        >
+            <ng-container *ngFor="let index of indexes">
+                <ng-container *ngIf="!imageErrors[index]; else pageNumberTpl">
+                    <img
+                        [src]="pagesURL + index"
+                        class="h-24 md:h-40 w-auto transition-all border-cover-card-active-border"
+                        [class.md:h-60]="isIndexesActive(indexes)"
+                        [class.h-36]="isIndexesActive(indexes)"
+                        (error)="imageErrors[index] = true"
+                    >
+                </ng-container>
+                <ng-template #pageNumberTpl>
+                    <div
+                        class="h-24 md:h-40 aspect-[3/5] w-auto transition-all border-cover-card-active-border font-extrabold text-2xl flex justify-center items-center bg-background text-generic-text"
+                        [class.md:h-60]="isIndexesActive(indexes)"
+                        [class.h-36]="isIndexesActive(indexes)"
+                    >
+                        {{ index }}
+                    </div>
+                </ng-template>
+            </ng-container>
+        </div>
+        <div class="text-white-text mt-2">{{getPageText(indexes)}}</div>
+    </div>
+</div>
+<div class="w-full mt-2 bg-cover-card-progress-background rounded-full h-2 mb-8">
+    <div
+        class="bg-cover-card-read h-2 rounded-full"
+        [style]="widthStyle"
+    ></div>
+</div>
+<div class="absolute right-8 bottom-8 text-white-text">Pages: {{comic.pages}}</div>

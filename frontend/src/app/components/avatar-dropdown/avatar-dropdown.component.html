@@ -1,0 +1,48 @@
+<ng-container *ngIf="authService.user$ | async as user">
+    <app-avatar-user
+        size="large"
+        [username]="user.username"
+        [color]="user.color"
+        (onClick)="toggleDropdown()"
+    ></app-avatar-user>
+    <div
+        *ngIf="displayyDropdown"
+        class="z-10 divide-y bg-nav-menu-background border-2 border-nav-menu-section-border divide-nav-menu-section-border rounded-lg shadow-xs w-44 absolute top-16 right-2"
+        appOutsideClick
+        (outsideClick)="hideDropdown()"
+    >
+        <div class="px-4 py-3 text-sm text-generic-text">
+            <div class="py-1">{{user.username}}</div>
+            <div class="font-medium truncate">{{user.role}}</div>
+        </div>
+        <ul
+            class="py-2 text-sm text-nav-menu-button-text"
+            aria-labelledby="avatarButton"
+        >
+            <li>
+                <a
+                    (click)="toggleDarkMode()"
+                    class="block px-4 py-2 hover:bg-nav-menu-button-active "
+                >
+                    Toggle Theme
+                </a>
+            </li>
+            <li>
+                <a
+                    [routerLink]="['/user']"
+                    class="block px-4 py-2 hover:bg-nav-menu-button-active"
+                >
+                    User Settings
+                </a>
+            </li>
+        </ul>
+        <div class="py-1">
+            <a
+                [routerLink]="['/login']"
+                class="block px-4 py-2 text-sm hover:bg-nav-menu-button-active text-nav-menu-button-text"
+            >
+                Sign out
+            </a>
+        </div>
+    </div>
+</ng-container>
