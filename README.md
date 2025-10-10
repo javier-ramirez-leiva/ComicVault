@@ -1,6 +1,12 @@
 <p align="center">
 <img src="./docs/logo.png" alt="ComicVault" style="margin: 20px 0;">
 </p>
+<p align="center">
+<img src="https://img.shields.io/github/last-commit/javier-ramirez-leiva/ComicVault" alt="GitHub last commit" />
+<img src="https://img.shields.io/github/issues/javier-ramirez-leiva/ComicVault" alt="GitHub issues">
+<img src="https://img.shields.io/github/stars/javier-ramirez-leiva/ComicVault?style=social" alt="GitHub stars">
+<img src="https://img.shields.io/github/license/javier-ramirez-leiva/ComicVault" alt="License">
+</p>
 
 ComicVault is an open-source personal comic library and downloader.   It helps you organize, search, and manage your digital comics in a clean, modern interface.
 
