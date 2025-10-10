@@ -1,7 +1,6 @@
 <div class="whole-page-container">
     <ng-container *ngIf="comics$ | async as comics">
         <ng-container *ngIf="comics.length">
-            <h3 class="pl-4 text-2xl font-bold text-generic-text">Downloads</h3>
             <app-comics-download-grid
                 *ngIf="gridService.gridOptionActivePage$ | async; else tmplTable"
                 class="mb-4 pl-4 pt-4"
