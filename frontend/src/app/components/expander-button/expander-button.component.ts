@@ -1,12 +1,15 @@
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
 @Component({
   selector: 'app-expander-button',
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './expander-button.component.html'
 })
 export class ExpanderButtonComponent {
   @Input({ required: true }) title!: string;
+  @Input({ required: false }) upperBorder = false;
+  @Input({ required: false }) bottomBorder = false;
   @Output() buttonClicked = new EventEmitter<void>();
 
   expanded = false;

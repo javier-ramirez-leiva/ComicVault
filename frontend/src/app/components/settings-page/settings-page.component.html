@@ -4,6 +4,7 @@
             appHideRoles
             [appHideForRoles]="[Role.Requester, Role.Viewer]"
             title="Library"
+            [upperBorder]="true"
             (buttonClicked)="toggleShowServer()"
         ></app-expander-button>
         <div [ngClass]="{ 'hidden': !showServer}">
@@ -230,11 +231,12 @@
             appHideRoles
             [appHideForRoles]="[Role.Owner, Role.Contributor, Role.Requester, Role.Viewer]"
             title="Advanced"
+            [bottomBorder]="true"
             (buttonClicked)="toggleAdvanced()"
         ></app-expander-button>
         <div [ngClass]="{ 'hidden': !showAdvanced}">
 
-            <div class="p-5 border border-t-0 border-settings-menu-border">
+            <div class="p-5 border border-t-0 border-settings-menu-border rounded-b-lg">
                 <div class="mb-5 mt-5">
                     <div class="flex flex-col md:flex-row gap-2 w-fit">
                         <button
