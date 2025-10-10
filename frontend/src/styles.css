@@ -546,10 +546,6 @@ ul.grid-mini-pages {
   @apply bg-text-box-background text-text-box-text;
 }
 
-.table-container-2-3 {
-  @apply table-auto max-w-full w-full lg:w-2/3 text-sm text-left rtl:text-right text-table-text;
-}
-
 .table-container-full {
   @apply table-auto max-w-full w-full text-sm text-left rtl:text-right text-table-text;
 }
