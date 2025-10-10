@@ -19,7 +19,7 @@
                                 [src]="imageURL"
                                 [alt]="comic.title"
                                 (click)="read()"
-                                class="relative inset-0 w-full h-full object-contain object-center rounded-md block"
+                                class="relative inset-0 w-full h-full object-contain object-center rounded-xl block border-2 border-cover-card-border"
                                 [class.hidden]="!imageLoaded"
                                 (load)="imageLoaded = true"
                             >

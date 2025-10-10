@@ -1,4 +1,4 @@
-<div class="relative overflow-x-auto shadow-md sm:rounded-lg">
+<div class="relative overflow-x-auto shadow-md rounded-lg">
     <table
         class="table-container-full"
         cdkDropList
@@ -80,7 +80,7 @@
                         (click)="coverCardClickCollector.getMultiSelect() ? $event.preventDefault() : null"
                         [class.pointer-events-none]="coverCardClickCollector.getMultiSelect()"
                         [src]="configURLService.baseURL+'/'+configURLService.apiVersion+'/comics/'+rowComic.comic.id+'/cover/small'"
-                        class="m-4 w-24 md:w-24 max-w-full max-h-full"
+                        class="m-4 w-24 md:w-24 max-w-full max-h-full rounded-md border-1 border-cover-card-border"
                     >
                 </td>
                 <td class="py-4 px-6">
