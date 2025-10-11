@@ -1,11 +1,14 @@
 package org.comicVaultBackend.services.impl;
 
+import org.comicVaultBackend.controllers.ComicController;
 import org.comicVaultBackend.domain.dto.ComicSearchDTO;
 import org.comicVaultBackend.domain.dto.DownloadLinkDTO;
 import org.comicVaultBackend.domain.dto.JDownloaderConfigurationDTO;
 import org.comicVaultBackend.exceptions.DownloadException;
 import org.comicVaultBackend.services.DownloadService;
 import org.comicVaultBackend.services.JDownloaderService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -24,6 +27,7 @@ import java.util.concurrent.Executors;
 @Service
 public class DownloadServiceImpl implements DownloadService {
 
+    private static final Logger logger = LoggerFactory.getLogger(DownloadServiceImpl.class);
 
     private List<ComicSearchDTO> listDownloadingComics = new ArrayList<>();
 
@@ -99,7 +103,7 @@ public class DownloadServiceImpl implements DownloadService {
                 }
 
             } catch (IOException e) {
-                System.out.println("No downloading file from URL: " + downloadLink.getLink());
+                logger.warn("No downloading file from URL: " + downloadLink.getLink());
             }
         } else {
             try {
