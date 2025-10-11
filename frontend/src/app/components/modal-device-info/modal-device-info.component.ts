@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { Row, TwoColumnsTableComponent } from "../two-columns-table/two-columns-table.component";
 import { ModalDetailsTopComponent } from "../modal-details-top/modal-details-top.component";
 import { ModalDetailsBottomComponent } from "../modal-details-bottom/modal-details-bottom.component";
+import { formatDate } from 'src/app/utils/dates';
 
 
 @Component({
@@ -39,7 +40,7 @@ export class ModalDeviceInfoComponent implements ModalComponent<null, { device: 
         {
           title: 'IP and date of login',
           type: 'text',
-          text: `${this.data.device?.ip ?? ''} - ${this.data.device?.createdAt ?? ''}`,
+          text: `${this.data.device?.ip ?? ''} - ${this.data.device?.createdAt ? formatDate(this.data.device?.createdAt) : ''}`,
         },
         {
           title: 'Browser',
