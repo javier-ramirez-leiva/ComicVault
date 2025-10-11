@@ -36,13 +36,23 @@ export class DeleteLibButtonComponent {
         return this.comicsService.deleteReadComics(deleteReadOption);
       }),
     ).subscribe(response => {
-      this.notifierService.appendNotification({
-        id: 0,
-        title: 'Deleted',
-        message: 'Comics read deleted!',
-        type: 'warning'
-      });
-      this.routerService.reloadCurrentRoute();
+      if (response) {
+        this.notifierService.appendNotification({
+          id: 0,
+          title: 'Deleted',
+          message: 'Comics read deleted!',
+          type: 'warning'
+        });
+        this.routerService.reloadCurrentRoute();
+      } else {
+        this.notifierService.appendNotification({
+          id: 0,
+          title: 'In progress',
+          message: 'Delete was already in progress',
+          type: 'warning'
+        });
+      }
+
     });
   }
 }

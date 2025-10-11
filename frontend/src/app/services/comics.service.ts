@@ -109,8 +109,8 @@ export class ComicsService {
     );
   }
 
-  scanLib(): Observable<any> {
-    return this.httpService.request<any>(
+  scanLib(): Observable<boolean> {
+    return this.httpService.request<boolean>(
       'POST',
       `/scanLib`,
     );
@@ -264,15 +264,15 @@ export class ComicsService {
     );
   }
 
-  cleanLibrary(): Observable<any> {
-    return this.httpService.request<any>(
+  cleanLibrary(): Observable<boolean> {
+    return this.httpService.request<boolean>(
       'DELETE',
       `/comics/clean`,
     );
   }
 
-  deleteReadComics(deleteReadOption: DeleteReadOptions): Observable<any> {
-    return this.httpService.request<any>(
+  deleteReadComics(deleteReadOption: DeleteReadOptions): Observable<boolean> {
+    return this.httpService.request<boolean>(
       'POST',
       `/comics/deleteRead`,
       deleteReadOption,

@@ -12,11 +12,13 @@ public interface JobService {
 
     void save(JobEntity jobEntity);
 
-    void finishJob(JobEntity jobEntity, JobEntity.STATUS status);
+    void finishJob(JobEntity jobEntity, JobEntity.Status status);
 
     void setDuration(JobEntity jobEntity);
 
     List<JobEntity> listJobs(int page);
+
+    boolean areThereJobs(JobEntity.Type type, JobEntity.Status status);
 
     Optional<JobEntity> getJobById(Long jobId);
 }

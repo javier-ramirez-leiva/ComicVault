@@ -23,14 +23,24 @@ export class ScanLibButtonComponent {
       message: 'Scanning...',
       type: 'scan'
     })
-    this.comicsService.scanLib().subscribe((data) => {
-      this.notifierService.appendNotification({
-        id: 0,
-        title: 'Success',
-        message: 'Comics refreshed!',
-        type: 'success'
-      });
-      this.routerService.reloadCurrentRoute();
+    this.comicsService.scanLib().subscribe((response) => {
+      if (response) {
+        this.notifierService.appendNotification({
+          id: 0,
+          title: 'Success',
+          message: 'Comics refreshed!',
+          type: 'success'
+        });
+        this.routerService.reloadCurrentRoute();
+      } else {
+        this.notifierService.appendNotification({
+          id: 0,
+          title: 'In progress',
+          message: 'Scan was already in progress',
+          type: 'success'
+        });
+      }
+
     });
   }
 }

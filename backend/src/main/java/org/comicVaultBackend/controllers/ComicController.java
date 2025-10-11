@@ -146,20 +146,23 @@ public class ComicController {
 
     @PreAuthorize("hasAnyAuthority('ADMIN','OWNER', 'CONTRIBUTOR')")
     @PostMapping(path = "/scanLib")
-    public void scanLib() throws FileManagerException {
+    //false if there is already a job in progress
+    public boolean scanLib() throws FileManagerException {
+        if (jobService.areThereJobs(JobEntity.Type.SCAN_LIB, JobEntity.Status.ON_GOING)) {
+            return false;
+        }
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-
-        JobDTO jobDTO = JobDTO.builder().username(username).timeStamp(new Date()).type(JobEntity.Type.SCAN_LIB).status(JobEntity.STATUS.ON_GOING).build();
+        JobDTO jobDTO = JobDTO.builder().username(username).timeStamp(new Date()).type(JobEntity.Type.SCAN_LIB).status(JobEntity.Status.ON_GOING).build();
         JobEntity jobEntity = jobService.createJob(jobDTO);
 
         try {
             SCAN_LIB(jobEntity);
-            jobService.finishJob(jobEntity, JobEntity.STATUS.COMPLETED);
+            jobService.finishJob(jobEntity, JobEntity.Status.COMPLETED);
         } catch (FileManagerException e) {
-            jobService.finishJob(jobEntity, JobEntity.STATUS.ERROR);
+            jobService.finishJob(jobEntity, JobEntity.Status.ERROR);
             logger.error("Error scanning lib : {}", e.getMessage());
         }
-
+        return true;
     }
 
     private void SCAN_LIB(JobEntity jobEntity) throws FileManagerException {
@@ -415,16 +418,16 @@ public class ComicController {
         if (comicEntityOptional.isEmpty()) {
             throw new EntityNotFoundException(comicID, EntityNotFoundException.Entity.COMIC);
         }
-        JobDTO jobDTO = JobDTO.builder().username(username).timeStamp(new Date()).type(JobEntity.Type.DELETE).status(JobEntity.STATUS.ON_GOING).build();
+        JobDTO jobDTO = JobDTO.builder().username(username).timeStamp(new Date()).type(JobEntity.Type.DELETE).status(JobEntity.Status.ON_GOING).build();
         JobEntity jobEntity = jobService.createJob(jobDTO);
         try {
             String nextComicID = deleteComic(comicEntityOptional.get(), true, jobEntity);
-            jobService.finishJob(jobEntity, JobEntity.STATUS.COMPLETED);
+            jobService.finishJob(jobEntity, JobEntity.Status.COMPLETED);
             Map<String, String> responseBody = new HashMap<>();
             responseBody.put("nextComicID", nextComicID);
             return new ResponseEntity<>(responseBody, HttpStatus.OK);
         } catch (FileManagerException e) {
-            jobService.finishJob(jobEntity, JobEntity.STATUS.ERROR);
+            jobService.finishJob(jobEntity, JobEntity.Status.ERROR);
             throw e;
         }
     }
@@ -447,7 +450,7 @@ public class ComicController {
         }
 
         //Delete list is always good even if there is some error in here
-        JobDTO jobDTO = JobDTO.builder().username(username).timeStamp(new Date()).type(JobEntity.Type.DELETE).status(JobEntity.STATUS.ON_GOING).build();
+        JobDTO jobDTO = JobDTO.builder().username(username).timeStamp(new Date()).type(JobEntity.Type.DELETE).status(JobEntity.Status.ON_GOING).build();
         JobEntity jobEntity = jobService.createJob(jobDTO);
         for (ComicEntity comicEntity : listComics) {
             try {
@@ -456,18 +459,24 @@ public class ComicController {
                 logger.error(ex.getMessage());
             }
         }
-        jobService.finishJob(jobEntity, JobEntity.STATUS.COMPLETED);
+        jobService.finishJob(jobEntity, JobEntity.Status.COMPLETED);
     }
 
     @PreAuthorize("hasAnyAuthority('ADMIN','OWNER')")
     @DeleteMapping(path = "/comics/clean")
-    public void cleanLibrary() {
+    //false if there is already a job in progress
+    public boolean cleanLibrary() {
+        if (jobService.areThereJobs(JobEntity.Type.SCAN_LIB, JobEntity.Status.ON_GOING)) {
+            return false;
+        }
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        JobDTO jobDTO = JobDTO.builder().username(username).timeStamp(new Date()).type(JobEntity.Type.CLEAN_LIB).status(JobEntity.STATUS.ON_GOING).build();
+        JobDTO jobDTO = JobDTO.builder().username(username).timeStamp(new Date()).type(JobEntity.Type.CLEAN_LIB).status(JobEntity.Status.ON_GOING).build();
         JobEntity jobEntity = jobService.createJob(jobDTO);
 
         CLEAN_LIB(jobEntity);
-        jobService.finishJob(jobEntity, JobEntity.STATUS.COMPLETED);
+        jobService.finishJob(jobEntity, JobEntity.Status.COMPLETED);
+
+        return true;
     }
 
     private void CLEAN_LIB(JobEntity jobEntity) {
@@ -543,26 +552,29 @@ public class ComicController {
     }
 
 
-    @WithUserLock
     @PreAuthorize("hasAnyAuthority('ADMIN')")
     @PostMapping(path = "/comics/deleteRead")
-    public void deleteReadComics(@RequestBody String deleteReadOption) {
+    //false if there is already a job in progress
+    public boolean deleteReadComics(@RequestBody String deleteReadOption) {
+        if (jobService.areThereJobs(JobEntity.Type.DELETE_LIB, JobEntity.Status.ON_GOING)) {
+            return false;
+        }
         DeleteReadOptions option;
-
         try {
             option = DeleteReadOptions.valueOf(deleteReadOption);
         } catch (IllegalArgumentException e) {
             throw new IllegalArgumentException("Invalid deleteReadOption: " + deleteReadOption);
         }
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        JobDTO jobDTO = JobDTO.builder().username(username).timeStamp(new Date()).type(JobEntity.Type.DELETE_LIB).status(JobEntity.STATUS.ON_GOING).build();
+        JobDTO jobDTO = JobDTO.builder().username(username).timeStamp(new Date()).type(JobEntity.Type.DELETE_LIB).status(JobEntity.Status.ON_GOING).build();
         JobEntity jobEntity = jobService.createJob(jobDTO);
         record ComicJobArgs(JobEntity jobEntity, DeleteReadOptions option) {
         }
         ;//Delete lib is complete even if there are some errors
         DELETE_LIB(jobEntity, option);
-        jobService.finishJob(jobEntity, JobEntity.STATUS.COMPLETED);
+        jobService.finishJob(jobEntity, JobEntity.Status.COMPLETED);
 
+        return true;
     }
 
     private void DELETE_LIB(JobEntity jobEntity, DeleteReadOptions option) {
@@ -805,13 +817,13 @@ public class ComicController {
             throw new ConfigurationValueException("Configuration value 'downloadRoot' is empty");
         }
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        JobDTO jobDTO = JobDTO.builder().username(username).timeStamp(new Date()).type(JobEntity.Type.DOWNLOAD).status(JobEntity.STATUS.ON_GOING).build();
+        JobDTO jobDTO = JobDTO.builder().username(username).timeStamp(new Date()).type(JobEntity.Type.DOWNLOAD).status(JobEntity.Status.ON_GOING).build();
         JobEntity jobEntity = jobService.createJob(jobDTO);
         try {
             DOWNLOAD(jobEntity, requestBodyDownload);
-            jobService.finishJob(jobEntity, JobEntity.STATUS.COMPLETED);
+            jobService.finishJob(jobEntity, JobEntity.Status.COMPLETED);
         } catch (Exception e) {
-            jobService.finishJob(jobEntity, JobEntity.STATUS.ERROR);
+            jobService.finishJob(jobEntity, JobEntity.Status.ERROR);
         }
     }
 
@@ -855,7 +867,7 @@ public class ComicController {
         }
 
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
-        JobDTO jobDTO = JobDTO.builder().username(username).timeStamp(new Date()).type(JobEntity.Type.DOWNLOAD_LIST).status(JobEntity.STATUS.ON_GOING).build();
+        JobDTO jobDTO = JobDTO.builder().username(username).timeStamp(new Date()).type(JobEntity.Type.DOWNLOAD_LIST).status(JobEntity.Status.ON_GOING).build();
         JobEntity jobEntity = jobService.createJob(jobDTO);
 
         record ComicJobArgs(JobEntity jobEntity, DownloadRequestListDTO downloadRequestListDTO) {
@@ -863,7 +875,7 @@ public class ComicController {
         ;
         //Downloading a list never returns an error
         DOWNLOAD_LIST(jobEntity, downloadRequestListDTO);
-        jobService.finishJob(jobEntity, JobEntity.STATUS.COMPLETED);
+        jobService.finishJob(jobEntity, JobEntity.Status.COMPLETED);
     }
 
     private void DOWNLOAD_LIST(JobEntity jobEntity, DownloadRequestListDTO downloadRequestListDTO) {
