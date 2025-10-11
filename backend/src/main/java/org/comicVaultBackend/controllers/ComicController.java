@@ -3,9 +3,11 @@ package org.comicVaultBackend.controllers;
 
 import jakarta.transaction.Transactional;
 import org.apache.coyote.BadRequestException;
+import org.comicVaultBackend.annotations.SkipLogging;
+import org.comicVaultBackend.annotations.SkipLoggingResponseBody;
+import org.comicVaultBackend.annotations.WithComicLock;
+import org.comicVaultBackend.annotations.WithUserLock;
 import org.comicVaultBackend.config.ApiConfig;
-import org.comicVaultBackend.config.SkipLogging;
-import org.comicVaultBackend.config.SkipLoggingResponseBody;
 import org.comicVaultBackend.domain.dto.*;
 import org.comicVaultBackend.domain.entities.*;
 import org.comicVaultBackend.domain.regular.ComicTitle;
@@ -110,7 +112,6 @@ public class ComicController {
         return downloadService.getListDownloadingComics();
     }
 
-    @WithComicLock
     @PreAuthorize("hasAnyAuthority('ADMIN','OWNER', 'CONTRIBUTOR', 'REQUESTER', 'VIEWER')")
     @GetMapping(path = "comics")
     public List<ComicDTO> listComics() {
@@ -353,14 +354,14 @@ public class ComicController {
         comicService.updateNonNullProperties(requestBodyComic, comicEntityOptional.get());
     }
 
-    @WithComicLock
+    @WithUserLock
     @PreAuthorize("hasAnyAuthority('ADMIN','OWNER', 'CONTRIBUTOR', 'REQUESTER', 'VIEWER')")
     @PostMapping(path = "/comicList/markAsRead")
     public void markAsRead(@RequestBody List<String> comicIDs) {
         markAsReadValue(comicIDs, true);
     }
 
-    @WithComicLock
+    @WithUserLock
     @PreAuthorize("hasAnyAuthority('ADMIN','OWNER', 'CONTRIBUTOR', 'REQUESTER', 'VIEWER')")
     @PostMapping(path = "/comicList/markAsNotRead")
     public void markAsNotRead(@RequestBody List<String> comicIDs) {
@@ -383,7 +384,6 @@ public class ComicController {
         }
     }
 
-    @WithComicLock
     @PreAuthorize("hasAnyAuthority('ADMIN','OWNER','CONTRIBUTOR')")
     @PostMapping(path = "/comicList/setIssues")
     public void setIssueNumbers(@RequestBody Map<String, Integer> comicIdsIssues) {
@@ -430,7 +430,6 @@ public class ComicController {
     }
 
     //Post verb because the body may be too large for an url
-    @WithComicLock
     @PreAuthorize("hasAnyAuthority('ADMIN','OWNER')")
     @PostMapping(path = "/comicList/delete")
     public void deleteComicList(@RequestBody List<String> comicIDs) {
@@ -543,7 +542,8 @@ public class ComicController {
 
     }
 
-    @WithComicLock
+
+    @WithUserLock
     @PreAuthorize("hasAnyAuthority('ADMIN')")
     @PostMapping(path = "/comics/deleteRead")
     public void deleteReadComics(@RequestBody String deleteReadOption) {
