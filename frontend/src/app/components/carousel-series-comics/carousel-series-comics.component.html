@@ -58,7 +58,7 @@
 <div
     *ngIf="series.length > 0"
     #scrollContainer
-    class="flex flex-nowrap overflow-x-auto overflow-y-hidden  mt-4 overflow-section no-scrollbar"
+    class="flex flex-nowrap overflow-x-auto overflow-y-hidden overflow-section no-scrollbar"
 >
     <div
         *ngFor="let serie of series; trackBy: trackBySeries"
@@ -71,7 +71,7 @@
 <div
     *ngIf="comics.length > 0"
     #scrollContainer
-    class="flex flex-nowrap overflow-x-auto overflow-y-hidden mt-4 overflow-section no-scrollbar"
+    class="flex flex-nowrap overflow-x-auto overflow-y-hidden overflow-section no-scrollbar"
 >
     <div
         *ngFor="let comic of comics; trackBy: trackByComic"
@@ -88,7 +88,7 @@
 <div
     *ngIf="comicSearchs.length > 0"
     #scrollContainer
-    class="flex flex-nowrap overflow-x-auto overflow-y-hidden mt-4 overflow-section no-scrollbar"
+    class="flex flex-nowrap overflow-x-auto overflow-y-hidden overflow-section no-scrollbar"
 >
     <div
         *ngFor="let comic of comicSearchs; trackBy: trackByComicSearch"

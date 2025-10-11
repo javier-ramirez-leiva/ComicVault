@@ -5,14 +5,13 @@ import { ComicsService, GridService } from 'services';
 import { CommonModule } from '@angular/common';
 import { ComicsDownloadGridComponent } from '../comics-download-grid/comics-download-grid.component';
 import { ComicsDatabaseWithDownload, DownloadService } from 'services';
-import { ComicsDatabaseDownloadGridComponent } from "../comics-database-download-grid/comics-database-download-grid.component";
 import { NoResultsComponent } from "../no-results/no-results.component";
 import { ComicSearchTableComponent } from "../comic-search-table/comic-search-table.component";
 
 
 @Component({
   selector: 'app-downloads-page',
-  imports: [ComicsDownloadGridComponent, CommonModule, ComicsDatabaseDownloadGridComponent, NoResultsComponent, ComicSearchTableComponent],
+  imports: [ComicsDownloadGridComponent, CommonModule, NoResultsComponent, ComicSearchTableComponent],
   templateUrl: './downloads-page.component.html',
 })
 export class DownloadsPageComponent {

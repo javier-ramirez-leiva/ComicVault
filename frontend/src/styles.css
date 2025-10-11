@@ -51,6 +51,7 @@
   --color-cover-card-background: oklch(27.9% 0.041 260.031 / 0.90);
   --color-cover-card-title: var(--color-slate-100);
   --color-cover-card-text: var(--color-sky-600);
+  --color-cover-card-border: var(--color-slate-300);
   --color-cover-card-active-border: var(--color-sky-600);
   --color-cover-card-read: oklch(50.8% 0.118 165.612 / 0.95);
   /*emerald-700*/
@@ -328,6 +329,7 @@
     --color-cover-card-background: oklch(27.9% 0.041 260.031 / 0.90);
     --color-cover-card-title: var(--color-sky-600);
     --color-cover-card-text: var(--color-slate-100);
+    --color-cover-card-border: var(--color-slate-700);
     --color-cover-card-active-border: var(--color-sky-600);
     --color-cover-card-read: oklch(50.8% 0.118 165.612 / 0.95);
     /*emerald-700*/
@@ -542,10 +544,6 @@ ul.grid-mini-pages {
 
 .text-box-input {
   @apply bg-text-box-background text-text-box-text;
-}
-
-.table-container-2-3 {
-  @apply table-auto max-w-full w-full lg:w-2/3 text-sm text-left rtl:text-right text-table-text;
 }
 
 .table-container-full {

@@ -16,7 +16,9 @@
             <div class="absolute inset-0 flex items-center justify-center rounded-md animate-pulse bg-cover-card-pulsing"></div>
         </div>
         <img
-            [ngClass]="{ 'border-4 border-cover-card-active-border': highlight===true}"
+            [ngClass]="{ 'border-4 border-cover-card-active-border': highlight===true,
+                'border-1 border-cover-card-border': !highlight
+            }"
             class=" relative inset-0 w-full h-full object-cover object-center rounded-md"
             [class.hidden]="!imageLoaded"
             alt="{{title}}"
