@@ -25,7 +25,7 @@ public class JobEntity {
         DELETE_LIB
     }
 
-    public enum STATUS {
+    public enum Status {
         ON_GOING,
         COMPLETED,
         ERROR
@@ -48,7 +48,7 @@ public class JobEntity {
     private Type type;
 
     @Column(nullable = false)
-    private STATUS status;
+    private Status status;
 
     private List<Long> logsIds;
 }

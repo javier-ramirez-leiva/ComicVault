@@ -44,7 +44,7 @@ public class SchedulerServiceImpl implements SchedulerService {
      */
     @PreDestroy
     public void shutdown() {
-        System.out.println("Shutting down scheduler...");
+        logger.info("Shutting down scheduler...");
         executor.shutdown();
         try {
             if (!executor.awaitTermination(60, TimeUnit.SECONDS)) {

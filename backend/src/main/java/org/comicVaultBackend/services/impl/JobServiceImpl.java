@@ -58,7 +58,7 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
-    public void finishJob(JobEntity jobEntity, JobEntity.STATUS status) {
+    public void finishJob(JobEntity jobEntity, JobEntity.Status status) {
         jobEntity.setStatus(status);
         setDuration(jobEntity);
         save(jobEntity);
@@ -89,6 +89,11 @@ public class JobServiceImpl implements JobService {
         Pageable pageable = PageRequest.of(page, 25, Sort.by(Sort.Direction.DESC, "timeStamp"));
         Page<JobEntity> jobs = jobRepositoryPage.findAll(pageable);
         return jobs.getContent();
+    }
+
+    @Override
+    public boolean areThereJobs(JobEntity.Type type, JobEntity.Status status) {
+        return !jobRepository.findAllByTypeAndStatus(type, status).isEmpty();
     }
 
     @Override

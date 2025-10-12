@@ -1,7 +1,8 @@
 package org.comicVaultBackend.controllers;
 
+import org.comicVaultBackend.annotations.SkipLogging;
+import org.comicVaultBackend.annotations.WithSeriesLock;
 import org.comicVaultBackend.config.ApiConfig;
-import org.comicVaultBackend.config.SkipLogging;
 import org.comicVaultBackend.domain.dto.ComicDTO;
 import org.comicVaultBackend.domain.dto.SeriesDTO;
 import org.comicVaultBackend.domain.entities.ComicEntity;
@@ -13,7 +14,6 @@ import org.comicVaultBackend.mappers.Mapper;
 import org.comicVaultBackend.services.ConfigurationService;
 import org.comicVaultBackend.services.FileManagerService;
 import org.comicVaultBackend.services.SeriesService;
-import org.comicVaultBackend.services.WithComicLock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -88,7 +88,7 @@ public class SeriesController {
 
     @PreAuthorize("hasAnyAuthority('ADMIN','OWNER', 'CONTRIBUTOR', 'REQUESTER', 'VIEWER')")
     @GetMapping(path = "/search")
-    public SeriesDTO getComicByID(@RequestParam(name = "id", required = false, defaultValue = "") String id) throws EntityNotFoundException {
+    public SeriesDTO getSeriesByID(@RequestParam(name = "id", required = false, defaultValue = "") String id) throws EntityNotFoundException {
 
         Optional<SeriesEntity> seriesEntity;
         if (!id.isBlank()) {
@@ -170,7 +170,7 @@ public class SeriesController {
         return comicMapper.mapTo(comicEntity);
     }
 
-    @WithComicLock
+    @WithSeriesLock
     @PreAuthorize("hasAnyAuthority('ADMIN','OWNER', 'CONTRIBUTOR')")
     @PostMapping(path = "/{seriesID}")
     public void setComicProperties(@PathVariable String seriesID, @RequestBody SeriesDTO requestBodySeries) throws EntityNotFoundException, IllegalAccessException {

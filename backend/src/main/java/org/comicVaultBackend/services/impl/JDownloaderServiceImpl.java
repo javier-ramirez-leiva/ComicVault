@@ -4,6 +4,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.comicVaultBackend.domain.dto.*;
 import org.comicVaultBackend.exceptions.DownloadException;
 import org.comicVaultBackend.services.JDownloaderService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -23,6 +25,8 @@ import java.util.concurrent.atomic.AtomicReference;
 
 @Service
 public class JDownloaderServiceImpl implements JDownloaderService {
+
+    private static final Logger logger = LoggerFactory.getLogger(JDownloaderServiceImpl.class);
 
     public Path downloadFile(Path downloadRoot, Path parentFolder, DownloadLinkDTO downloadLink, String title, ComicSearchDTO comicSearchDto, String description, JDownloaderConfigurationDTO jDownloaderConfiguration) throws DownloadException {
         /*Create a comic.gcd json formatted file with all information of the comic, so that if later it's scanned the information will be retrieved*/
@@ -78,9 +82,9 @@ public class JDownloaderServiceImpl implements JDownloaderService {
                 if (jDownloaderConfiguration.isDeleteFolderOutputFolder()) {
                     File oldParentFolder = comicFile.getParentFile();
                     if (_deleteFolder(oldParentFolder)) {
-                        System.out.println("Deleted: " + oldParentFolder.toString());
+                        logger.info("Deleted: " + oldParentFolder.toString());
                     } else {
-                        System.out.println("Failed to delete: " + oldParentFolder.toString());
+                        logger.error("Failed to delete: " + oldParentFolder.toString());
                     }
                 }
                 return targetPath;
@@ -106,51 +110,25 @@ public class JDownloaderServiceImpl implements JDownloaderService {
             File[] comicFiles = folder.listFiles(comicFilter);
             if (comicFiles != null && comicFiles.length == 1) {
                 comicFilePath = comicFiles[0].getAbsolutePath();
-                System.out.println("Grabbed comics:" + comicFilePath);
+                logger.info("Grabbed comics:" + comicFilePath);
                 // Give JDownloader some 15 sec to do its thing and avoid potential errors
                 try {
                     Thread.sleep(15000);
                 } catch (InterruptedException e) {
-                    System.out.println("Thread was interrupted!");
+                    logger.warn("Thread was interrupted!");
                 }
             } else {
                 comicSearch.setCurrentBytes(partFile.length());
                 try {
                     Thread.sleep(1000);
                 } catch (InterruptedException e) {
-                    System.out.println("Thread was interrupted!");
+                    logger.error("Thread was interrupted!");
                 }
             }
             times++;
         }
 
-
         return comicFilePath;
-
-        /*In order to calculate the progress, calculate each 5s the difference between the nominal size and the size of the part file found on the folder (there is only one)*/
-        /*AtomicReference<String> comicFilePath = new AtomicReference<>();
-        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
-        CountDownLatch latch = new CountDownLatch(1);  // To block the caller until task finishes
-        Runnable task = () -> {
-            FilenameFilter comicFilter = (dir, name) -> (!name.toLowerCase().startsWith("_") && (name.toLowerCase().endsWith(".cbr") || name.toLowerCase().endsWith(".cbz")));
-            File[] comicFiles = folder.listFiles(comicFilter);
-            if(comicFiles!=null && comicFiles.length==1){
-                comicFilePath.set(comicFiles[0].getAbsolutePath());
-                System.out.println("Grabbed comics:" + comicFilePath);
-                latch.countDown();  // Release the latch
-                scheduler.shutdown();  // Stop the scheduler
-            }else{
-                comicSearch.setCurrentBytes(partFile.length());
-            }
-        };
-        scheduler.scheduleAtFixedRate(task, 0, 5, TimeUnit.SECONDS);
-        try {
-            latch.await();  // Wait until the folder check finishes (either success or error)
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
-
-        return comicFilePath.get();*/
     }
 
     static File _wait1MinForPartFileToAppear(File folder) throws DownloadException {
@@ -164,7 +142,7 @@ public class JDownloaderServiceImpl implements JDownloaderService {
                 latch.countDown();  // Release the latch
                 scheduler.shutdown();  // Stop the scheduler
                 file.set(files[0]);
-                System.out.println("Crawljob added:" + files[0].toString());
+                logger.info("Crawljob added:" + files[0].toString());
             }
         };
         scheduler.scheduleAtFixedRate(task, 0, 5, TimeUnit.SECONDS);

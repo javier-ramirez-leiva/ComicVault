@@ -756,7 +756,7 @@ public class ComicFileServiceImpl implements ComicFileService {
                     });
 
                     if (result != ExtractOperationResult.OK) {
-                        System.err.println("Failed to extract: " + baseFileName);
+                        logger.warn("Failed to extract: " + baseFileName);
                         continue;
                     }
                 } catch (Exception e) {

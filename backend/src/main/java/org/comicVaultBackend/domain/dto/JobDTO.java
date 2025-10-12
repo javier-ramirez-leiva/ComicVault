@@ -21,5 +21,5 @@ public class JobDTO {
     private String username;
     private List<Long> logsIds;
     private JobEntity.Type type;
-    private JobEntity.STATUS status;
+    private JobEntity.Status status;
 }

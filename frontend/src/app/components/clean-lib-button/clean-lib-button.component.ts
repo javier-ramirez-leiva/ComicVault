@@ -35,13 +35,23 @@ export class CleanLibButtonComponent {
         return this.comicsService.cleanLibrary();
       })
     ).subscribe(response => {
-      this.notifierService.appendNotification({
-        id: 0,
-        title: 'Cleaned',
-        message: 'Library cleaned!',
-        type: 'warning'
-      });
-      this.routerService.reloadCurrentRoute();
+      if (response) {
+        this.notifierService.appendNotification({
+          id: 0,
+          title: 'Cleaned',
+          message: 'Library cleaned!',
+          type: 'warning'
+        });
+        this.routerService.reloadCurrentRoute();
+      } else {
+        this.notifierService.appendNotification({
+          id: 0,
+          title: 'In progress',
+          message: 'Clean was already in progress',
+          type: 'warning'
+        });
+      }
+
     });
   }
 
