@@ -1,5 +1,13 @@
-<div class="h-full px-3 py-4 overflow-y-auto bg-nav-menu-background  pt-20 overflow-x-hidden">
-    <ul class="space-y-2 font-medium">
+<div class="h-full px-3 py-4 overflow-y-auto bg-nav-menu-background  pt-6 overflow-x-hidden">
+    <div class="flex flex-row items-center justify-center mr-2">
+        <img
+            src="assets/icon-192x192.png"
+            alt="Icon"
+            class="size-16"
+        >
+        <h3 class="pl-2 text-2xl font-bold text-generic-text logo-typo">ComicVault</h3>
+    </div>
+    <ul class="space-y-2 pt-8 font-medium">
         <li>
             <app-left-nav-button
                 route="home"
@@ -38,7 +46,7 @@
 
                     <!-- Dropdown -->
                     <div
-                        class="fixed left-[calc(100%-2rem)] top-42 z-50"
+                        class="fixed left-[calc(100%-2rem)] top-52 z-50"
                         *ngIf="displayLibraryMiniMenu"
                         appOutsideClick
                         (outsideClick)="setDisplayLibraryMiniMenu(false)"

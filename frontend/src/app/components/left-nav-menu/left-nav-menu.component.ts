@@ -25,6 +25,8 @@ export class LeftNavMenuComponent {
   protected readonly darkModeService = inject(DarkmodeService);
   protected readonly Role = Role;
 
+  iconSrc: string = (this.darkModeService.darkModeSignal() === 'dark') ? 'assets/icon-192x192.png' : 'assets/icon-192x192.png'
+
   protected displayLibraryMiniMenu = false;
 
   setDisplayLibraryMiniMenu(value: boolean) {
