@@ -22,7 +22,7 @@ export class LogHistoryPageComponent {
 
     constructor() {
         this.logs$ = this.route.queryParams.pipe(
-            tap(d => console.log(d)),
+
             switchMap((params) => {
                 this.page = params['page'] ? params['page'] : 1;
                 return this.logService.getHistoryLogs(this.page);

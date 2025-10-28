@@ -130,7 +130,6 @@ export class AuthService {
                 color: this.color,
               });
               // Retry the original API call with the new access token up to 5 times max
-              console.log('Retry');
               if (tries >= 5) {
                 return EMPTY;
               }
