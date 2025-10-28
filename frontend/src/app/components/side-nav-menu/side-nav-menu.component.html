@@ -13,7 +13,7 @@
 
 <ng-container *ngIf="leftMenuOpen$ | async as leftMenu">
 <aside
-   class="fixed top-0 left-0 z-40 w-64 h-screen transition-transform -translate-x-full lg:translate-x-0 md:block"
+   class="fixed top-0 left-0 z-40 w-52 h-screen transition-transform -translate-x-full lg:translate-x-0 md:block"
    [class.translate-x-0]="leftMenu === 'open'"
    appOutsideClick
    (outsideClick)="setLeftMenuOpen(false)">
@@ -31,7 +31,7 @@
 </div>
 
 
-<div class="lg:ml-64 bg-background min-h-screen h-full relative items-center ">
+<div class="lg:ml-52 bg-background min-h-screen h-full relative items-center ">
    <app-modal-container></app-modal-container>
    <app-blur-mask *ngIf="blurMaskService.active"></app-blur-mask>
    <router-outlet></router-outlet>

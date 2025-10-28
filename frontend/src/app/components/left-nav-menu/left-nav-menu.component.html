@@ -1,13 +1,17 @@
 <div class="h-full px-3 py-4 overflow-y-auto bg-nav-menu-background  pt-6 overflow-x-hidden">
-    <div class="flex flex-row items-center justify-center mr-2">
-        <img
-            src="assets/icon-192x192.png"
-            alt="Icon"
-            class="size-16"
+    <div class>
+        <a
+            routerLink="home"
+            class="flex items-center ps-2.5 mb-5"
         >
-        <h3 class="pl-2 text-2xl font-bold text-generic-text logo-typo">ComicVault</h3>
+            <img
+                [src]="iconSrc"
+                class="size-10 me-3"
+            >
+            <span class="self-center text-xl font-semibold whitespace-nowrap text-generic-text logo-typo">ComicVault</span>
+        </a>
     </div>
-    <ul class="space-y-2 pt-8 font-medium">
+    <ul class="space-y-2 pt-2 font-medium">
         <li>
             <app-left-nav-button
                 route="home"
