@@ -9,14 +9,14 @@ import { ModalContainerComponent } from "../modal-container/modal-container.comp
 import { MultiSelectComponent } from "../multi-select/multi-select.component";
 import { BottomNavMenuComponent } from "../bottom-nav-menu/bottom-nav-menu.component";
 import { LeftNavMenuComponent } from "../left-nav-menu/left-nav-menu.component";
-import { OutsideClickDirective } from 'directives';
-import { BehaviorSubject, debounceTime, map, Observable, tap } from 'rxjs';
+import { OutsideMenuClickDirective } from 'directives';
+import { BehaviorSubject, map, Observable, tap, throttleTime } from 'rxjs';
 import { BlurMaskComponent } from "../blur-mask/blur-mask.component";
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 @Component({
   selector: 'app-side-nav-menu',
-  imports: [RouterOutlet, NotificationGridComponent, ProcessingNotificationGridComponent, CommonModule, TopBarComponent, ModalContainerComponent, MultiSelectComponent, BottomNavMenuComponent, LeftNavMenuComponent, OutsideClickDirective, BlurMaskComponent],
+  imports: [RouterOutlet, NotificationGridComponent, ProcessingNotificationGridComponent, CommonModule, TopBarComponent, ModalContainerComponent, MultiSelectComponent, BottomNavMenuComponent, LeftNavMenuComponent, OutsideMenuClickDirective, BlurMaskComponent],
   templateUrl: './side-nav-menu.component.html'
 })
 @UntilDestroy()
@@ -32,7 +32,8 @@ export class SideNavMenuComponent {
 
   constructor() {
     this.leftMenuOpen$ = this.leftMenuOpenTrigger$.pipe(
-      debounceTime(100),
+      throttleTime(100),
+      tap(open => this.blurMaskService.setActive(open)),
       map(open => open ? 'open' : 'close')
     );
 
@@ -44,8 +45,8 @@ export class SideNavMenuComponent {
   }
 
   setLeftMenuOpen(value: boolean) {
-    this.leftMenuOpenTrigger$.next(value);
-    this.blurMaskService.setActive(value);
+    if (this.leftMenuOpenTrigger$.value !== value)
+      this.leftMenuOpenTrigger$.next(value);
   }
 
 }

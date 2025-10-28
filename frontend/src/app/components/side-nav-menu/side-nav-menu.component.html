@@ -15,9 +15,9 @@
 <aside
    class="fixed top-0 left-0 z-40 w-52 h-screen transition-transform -translate-x-full lg:translate-x-0 md:block"
    [class.translate-x-0]="leftMenu === 'open'"
-   appOutsideClick
+   appOutsideMenuClick
    (outsideClick)="setLeftMenuOpen(false)">
-   <app-left-nav-menu></app-left-nav-menu>
+   <app-left-nav-menu [open]="leftMenu === 'open'"></app-left-nav-menu>
 </aside>
 
 </ng-container>

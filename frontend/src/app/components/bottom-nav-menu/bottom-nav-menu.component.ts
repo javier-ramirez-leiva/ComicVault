@@ -24,8 +24,10 @@ export class BottomNavMenuComponent {
   protected drawerOpen = false;
 
   onDrawerOpen(value: boolean) {
-    this.drawerOpen = value;
-    this.blurMaskService.setActive(value);
+    if (this.drawerOpen !== value) {
+      this.drawerOpen = value;
+      this.blurMaskService.setActive(value);
+    }
   }
 
   constructor() {

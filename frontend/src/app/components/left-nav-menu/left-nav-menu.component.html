@@ -36,7 +36,7 @@
                     type="button"
                     appHideRoles
                     [appHideForRoles]="[Role.Requester, Role.Viewer]"
-                    (click)="setDisplayLibraryMiniMenu(true)"
+                    (click)="toggleDisplayLibraryMenu()"
                 >
                     <svg
                         class="w-5 h-5"
@@ -51,9 +51,9 @@
                     <!-- Dropdown -->
                     <div
                         class="fixed left-[calc(100%-2rem)] top-44 z-50"
-                        *ngIf="displayLibraryMiniMenu"
+                        *ngIf="displayLibraryMiniMenu && open"
                         appOutsideClick
-                        (outsideClick)="setDisplayLibraryMiniMenu(false)"
+                        (outsideClick)="setDisplayLibraryMenu(false)"
                     >
                         <div class="bg-nav-menu-button-active divide-y rounded-lg shadow-lg w-52">
                             <ul class="py-2 text-sm text-nav-menu-button-text">
