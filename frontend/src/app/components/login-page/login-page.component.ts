@@ -27,7 +27,7 @@ export class LoginPageComponent implements OnInit {
   notifier: NotifierService = inject(NotifierService);
   darkMode: DarkmodeService = inject(DarkmodeService);
   deviceDetectorService: DeviceDetectorService = inject(DeviceDetectorService);
-  iconSrc: string = (this.darkMode.darkModeSignal() === 'dark') ? 'assets/icon-192x192.png' : 'assets/icon-192x192.png'
+  iconSrc: string = (this.darkMode.darkModeSignal() === 'dark') ? 'assets/icon-192x192.png' : 'assets/icon-192x192.png';
 
   ngOnInit(): void {
     this.authService.signOut();

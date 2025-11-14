@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100;200;300;400;500;600;700;800;900&display=swap');
 @import 'tailwindcss';
 @plugin '@tailwindcss/aspect-ratio';
 
@@ -198,8 +199,8 @@
   --color-bar-slider-background: var(--color-slate-700);
 
   /*Settings menu*/
-  --color-settings-menu-background: var(--color-slate-400);
-  --color-settings-menu-button-active: var(--color-slate-300);
+  --color-settings-menu-background: var(--color-slate-300);
+  --color-settings-menu-button-active: var(--color-slate-200);
   --color-settings-menu-button-text: var(--color-slate-900);
   --color-settings-menu-border: var(--color-slate-500);
 
@@ -881,6 +882,10 @@ ul.grid-mini-pages {
 
 .processing-notification-download {
   @apply bg-processing-notification-download-background;
+}
+
+.logo-typo {
+  font-family: 'Inter', sans-serif;
 }
 
 

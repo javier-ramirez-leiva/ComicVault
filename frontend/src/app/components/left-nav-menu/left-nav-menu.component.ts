@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { ActivePageService } from 'services';
 import { HideRolesDirective, OutsideClickDirective } from 'directives';
 import { Role } from 'interfaces';
@@ -25,9 +25,26 @@ export class LeftNavMenuComponent {
   protected readonly darkModeService = inject(DarkmodeService);
   protected readonly Role = Role;
 
-  protected displayLibraryMiniMenu = false;
+  iconSrc: string = (this.darkModeService.darkModeSignal() === 'dark') ? 'assets/icon-192x192.png' : 'assets/icon-192x192.png'
 
-  setDisplayLibraryMiniMenu(value: boolean) {
+  protected displayLibraryMiniMenu = false;
+  private _open = false;
+
+  @Input({ required: true })
+  set open(value: boolean) {
+    this._open = value;
+    this.displayLibraryMiniMenu = this.displayLibraryMiniMenu && this._open;
+  }
+
+  get open(): boolean {
+    return this._open;
+  }
+
+  setDisplayLibraryMenu(value: boolean) {
     this.displayLibraryMiniMenu = value;
+  }
+
+  toggleDisplayLibraryMenu() {
+    this.displayLibraryMiniMenu = !this.displayLibraryMiniMenu;
   }
 }
