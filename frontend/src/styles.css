@@ -467,7 +467,7 @@
     --color-two-choices-active-text: var(--color-slate-100);
     --color-two-choices-active-background: var(--color-sky-700);
     --color-two-choices-inactive-text: var(--color-sky-700);
-    --color-two-choices-inactive-background: var(--color-slate-100);
+    --color-two-choices-inactive-background: var(--color-slate-800);
 
     /*Notifications*/
     --color-notification-success-text: var(--color-emerald-400);
