@@ -65,7 +65,9 @@ public class GetComicsScrapperImpl implements GetComicsScrapperService {
                         Element titleTag = post.selectFirst(".post-title");
                         String title = titleTag.text().strip();
 
-                        if (title.contains("Weekly Pack")) {
+                        List<String> filteredKeywords = List.of("Weekly Pack", "GetComics");
+
+                        if (filteredKeywords.stream().anyMatch(title::contains)) {
                             continue;
                         }
 
@@ -159,7 +161,9 @@ public class GetComicsScrapperImpl implements GetComicsScrapperService {
                         Element a = aio_pulse.selectFirst("a");
                         String link = a.attr("href");
                         String platform = a.text();
-                        downLoadLinkDTOS.add(DownloadLinkDTO.builder().link(link).platform(platform).build());
+                        if (!platform.equals("Read Online")) {
+                            downLoadLinkDTOS.add(DownloadLinkDTO.builder().link(link).platform(platform).build());
+                        }
                     }
 
                     Element post_content = doc.selectFirst(".post-contents");
