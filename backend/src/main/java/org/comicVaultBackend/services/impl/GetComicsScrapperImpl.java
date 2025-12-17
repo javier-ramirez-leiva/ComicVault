@@ -1,6 +1,7 @@
 package org.comicVaultBackend.services.impl;
 
 
+import org.apache.commons.text.similarity.LevenshteinDistance;
 import org.comicVaultBackend.domain.dto.*;
 import org.comicVaultBackend.domain.regular.ComicTitle;
 import org.comicVaultBackend.exceptions.*;
@@ -171,9 +172,6 @@ public class GetComicsScrapperImpl implements GetComicsScrapperService {
 
                     String description = paragraph.text();
 
-                    List<TagDTO> tags = scrapeTags(doc);
-                    TagDTO mainTag = getMainTag(tags);
-
                     String title = "";
                     String size = "";
                     String year = "";
@@ -201,6 +199,8 @@ public class GetComicsScrapperImpl implements GetComicsScrapperService {
                             }
                         }
                     }
+                    List<TagDTO> tags = scrapeTags(doc);
+                    TagDTO mainTag = getMainTag(tags, title);
 
 
                     DownloadIssueDTO downloadIssueDTO = DownloadIssueDTO.builder().links(downLoadLinkDTOS).description(description).build();
@@ -222,10 +222,16 @@ public class GetComicsScrapperImpl implements GetComicsScrapperService {
 
                     Element ul = postContents.get(0).selectFirst("ul");
 
+                    //One of the titles
+                    String title = null;
+
                     List<DownloadIssueDTO> downloadIssueDTOS = new ArrayList<DownloadIssueDTO>();
                     for (Element li : ul.select("li")) {
                         String descriptionIssue = li.text().split(":", 2)[0];
                         String issueTitle = _generateTitleIssue(descriptionIssue);
+                        if (title == null) {
+                            title = issueTitle;
+                        }
                         String idGcIssue = _generateidGcIssue(issueTitle);
                         //Try all the strings we may find
                         for (Element strong : li.select("strong")) {
@@ -245,7 +251,7 @@ public class GetComicsScrapperImpl implements GetComicsScrapperService {
                     }
 
                     List<TagDTO> tags = scrapeTags(doc);
-                    TagDTO mainTag = getMainTag(tags);
+                    TagDTO mainTag = getMainTag(tags, title);
 
                     return ComicSearchDetailsLinksDTO.builder().description(description).downloadIssues(downloadIssueDTOS).tags(tags).mainTag(mainTag).build();
 
@@ -295,25 +301,16 @@ public class GetComicsScrapperImpl implements GetComicsScrapperService {
         return tags;
     }
 
-    private TagDTO getMainTag(List<TagDTO> tags) {
+    private TagDTO getMainTag(List<TagDTO> tags, String comicTitle) {
         if (tags == null || tags.isEmpty()) {
             return null;
         }
 
-        if (tags.size() == 1) {
-            return tags.get(0);
-        }
+        LevenshteinDistance distance = new LevenshteinDistance();
 
         return tags.stream()
-                .filter(tag -> {
-                    String name = tag.getName();
-                    return name != null && (
-                            !name.contains("Marvel Comics") &&
-                                    !name.contains("DC Comics") &&
-                                    !name.contains("Other Comics")
-                    );
-                })
-                .max(Comparator.comparingInt(tag -> tag.getName().length()))
+                .min(Comparator.comparingInt(s -> distance.apply(comicTitle, s.getName()))
+                )
                 .orElse(null);
     }
 
