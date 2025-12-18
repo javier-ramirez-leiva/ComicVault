@@ -87,7 +87,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
                     .map(SimpleGrantedAuthority::new)
                     .collect(Collectors.toList());
 
-            if (jwtUtil.validateAccessToken(jwt, userDetails) && jwtUtil.validateRefreshToken(refreshToken)) {
+            if (jwtUtil.validateAccessToken(jwt, userDetails)) {
                 UsernamePasswordAuthenticationToken authenticationToken =
                         new UsernamePasswordAuthenticationToken(userDetails, null, authorities);
                 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));

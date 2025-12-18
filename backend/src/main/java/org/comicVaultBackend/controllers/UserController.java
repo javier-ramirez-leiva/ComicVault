@@ -108,8 +108,8 @@ public class UserController {
         final String refreshToken = jwtUtil.generateRefreshToken(userDetails, authenticationRequest, clientIp);
         final String color = optionalUserEntity.get().getColor();
 
-        ResponseCookie accessCookie = createCookie(request, "ACCESS_TOKEN", accessToken, jwtUtil.getAccessTtlMs(), "/api", true);
-        ResponseCookie refreshCookie = createCookie(request, "REFRESH_TOKEN", refreshToken, jwtUtil.getRefreshTtlMs(), "/api", true);
+        ResponseCookie accessCookie = createCookie(request, "ACCESS_TOKEN", accessToken, jwtUtil.getAccessTtlMs(), apiVersion, true);
+        ResponseCookie refreshCookie = createCookie(request, "REFRESH_TOKEN", refreshToken, jwtUtil.getRefreshTtlMs(), apiVersion + "/users/refresh", true);
 
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.SET_COOKIE, accessCookie.toString());
@@ -175,8 +175,8 @@ public class UserController {
         String newRefreshToken = jwtUtil.renewRefreshToken(tokenEntity);
 
         // 6️⃣ Create cookies dynamically
-        ResponseCookie accessCookie = createCookie(request, "ACCESS_TOKEN", newAccessToken, jwtUtil.getAccessTtlMs(), "/api", true);
-        ResponseCookie refreshCookie = createCookie(request, "REFRESH_TOKEN", newRefreshToken, jwtUtil.getRefreshTtlMs(), "/api", true);
+        ResponseCookie accessCookie = createCookie(request, "ACCESS_TOKEN", newAccessToken, jwtUtil.getAccessTtlMs(), apiVersion, true);
+        ResponseCookie refreshCookie = createCookie(request, "REFRESH_TOKEN", newRefreshToken, jwtUtil.getRefreshTtlMs(), apiVersion + "/users/refresh", true);
 
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.SET_COOKIE, accessCookie.toString());
