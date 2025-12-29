@@ -171,7 +171,7 @@ public class UserController {
         UserDetails userDetails = userDetailsService.loadUserByUsername(tokenEntity.getUsername());
 
         // 4️⃣ Generate new tokens
-        String newAccessToken = jwtUtil.generateAccessToken(userDetails, tokenEntity.getDevice());
+        String newAccessToken = jwtUtil.generateAccessToken(userDetails, tokenEntity.getDeviceId());
         String newRefreshToken = jwtUtil.renewRefreshToken(tokenEntity);
 
         // 6️⃣ Create cookies dynamically
