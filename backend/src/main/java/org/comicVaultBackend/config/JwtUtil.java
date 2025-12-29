@@ -228,10 +228,12 @@ public class JwtUtil {
         }
     }
 
-    public void deleteTokenTokenIfExisting(String token) {
+    public void deleteTokenTokenIfExisting(String accessToken) {
         try {
-            RefreshTokenEntity tokenEntity = getValidRefreshToken(token);
-            refreshTokenRepository.delete(tokenEntity);
+            String deviceId = extractDeviceId(accessToken);
+            Optional<RefreshTokenEntity> refreshTokenEntity = refreshTokenRepository.findByDeviceId(deviceId);
+            refreshTokenEntity.ifPresent(tokenEntity -> refreshTokenRepository.delete(tokenEntity));
+
         } catch (Exception e) {
             //Nevermind
         }

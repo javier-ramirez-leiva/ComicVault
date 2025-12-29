@@ -146,13 +146,13 @@ public class UserController {
     // This method does not return anything because the result is not relevant
     @GetMapping("/forgetMe")
     public void forgetMe(HttpServletRequest request) throws EntityNotFoundException {
-        String refreshToken = Arrays.stream(Optional.ofNullable(request.getCookies()).orElse(new Cookie[0]))
-                .filter(c -> "REFRESH_TOKEN".equals(c.getName()))
+        String accessToken = Arrays.stream(Optional.ofNullable(request.getCookies()).orElse(new Cookie[0]))
+                .filter(c -> "ACCESS_TOKEN".equals(c.getName()))
                 .findFirst()
                 .map(Cookie::getValue)
                 .orElseThrow(() -> new EntityNotFoundException("Refresh token not found", EntityNotFoundException.Entity.REFRESH_TOKEN));
 
-        jwtUtil.deleteTokenTokenIfExisting(refreshToken);
+        jwtUtil.deleteTokenTokenIfExisting(accessToken);
     }
 
     @GetMapping("/refresh")
