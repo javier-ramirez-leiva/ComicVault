@@ -104,12 +104,12 @@ public class UserController {
         }
 
         final Role role = optionalUserEntity.get().getRole();
-        final String accessToken = jwtUtil.generateAccessToken(userDetails);
-        final String refreshToken = jwtUtil.generateRefreshToken(userDetails, authenticationRequest, clientIp);
+        final JwtUtil.TokenPair refreshTokenPair = jwtUtil.generateRefreshToken(userDetails, authenticationRequest, clientIp);
+        final String accessToken = jwtUtil.generateAccessToken(userDetails, refreshTokenPair.deviceId());
         final String color = optionalUserEntity.get().getColor();
 
         ResponseCookie accessCookie = createCookie(request, "ACCESS_TOKEN", accessToken, jwtUtil.getAccessTtlMs(), apiVersion, true);
-        ResponseCookie refreshCookie = createCookie(request, "REFRESH_TOKEN", refreshToken, jwtUtil.getRefreshTtlMs(), apiVersion + "/users/refresh", true);
+        ResponseCookie refreshCookie = createCookie(request, "REFRESH_TOKEN", refreshTokenPair.refreshToken(), jwtUtil.getRefreshTtlMs(), apiVersion + "/users/refresh", true);
 
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.SET_COOKIE, accessCookie.toString());
@@ -171,7 +171,7 @@ public class UserController {
         UserDetails userDetails = userDetailsService.loadUserByUsername(tokenEntity.getUsername());
 
         // 4️⃣ Generate new tokens
-        String newAccessToken = jwtUtil.generateAccessToken(userDetails);
+        String newAccessToken = jwtUtil.generateAccessToken(userDetails, tokenEntity.getDevice());
         String newRefreshToken = jwtUtil.renewRefreshToken(tokenEntity);
 
         // 6️⃣ Create cookies dynamically

@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.Nullable;
 import jakarta.annotation.PostConstruct;
 import org.comicVaultBackend.domain.dto.AuthentificationRequestDTO;
 import org.comicVaultBackend.domain.entities.RefreshTokenEntity;
@@ -42,6 +43,8 @@ public class JwtUtil {
     @Value("${JWT_REFRESH_SECRET}")
     private String refreshSecret;
 
+    private static String DEVICE_ID_CLAIM = "deviceId";
+
     private SecretKey ACCESS_SECRET_KEY;
     private SecretKey REFRESH_SECRET_KEY;
 
@@ -65,6 +68,12 @@ public class JwtUtil {
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
+    }
+
+    @Nullable
+    public String extractDeviceId(String token) {
+        Claims claims = extractAllClaims(token);
+        return (String) claims.get(DEVICE_ID_CLAIM);
     }
 
     public Date extractExpiration(String token) {
@@ -107,8 +116,8 @@ public class JwtUtil {
         return extractExpiration(token).before(new Date());
     }
 
-    public String generateAccessToken(UserDetails userDetails) {
-        Map<String, Object> claims = new HashMap<>();
+    public String generateAccessToken(UserDetails userDetails, String deviceId) {
+        Map<String, Object> claims = Map.of(DEVICE_ID_CLAIM, deviceId);
         return createAccessToken(claims, userDetails.getUsername());
     }
 
@@ -122,7 +131,11 @@ public class JwtUtil {
                 .compact();
     }
 
-    public String generateRefreshToken(UserDetails userDetails, AuthentificationRequestDTO authenticationRequest, String clientIp) {
+    public record TokenPair(String refreshToken, String deviceId) {
+    }
+
+    // This method returns the access token and the deviceId of this new device. The id is to be attached on access tokens
+    public TokenPair generateRefreshToken(UserDetails userDetails, AuthentificationRequestDTO authenticationRequest, String clientIp) {
         String jti = UUID.randomUUID().toString();
 
         Date expiryDate = new Date(System.currentTimeMillis() + REFRESH_TOKEN_EXPIRY);
@@ -149,7 +162,7 @@ public class JwtUtil {
                 .ip(clientIp)
                 .build();
 
-        refreshTokenRepository.save(tokenEntity);
+        RefreshTokenEntity savedTokenEntity = refreshTokenRepository.save(tokenEntity);
 
 
         Claims claims = Jwts.parserBuilder()
@@ -159,7 +172,7 @@ public class JwtUtil {
                 .getBody();
 
 
-        return token;
+        return new TokenPair(token, savedTokenEntity.getDeviceId());
     }
 
     public String renewRefreshToken(RefreshTokenEntity tokenEntity) {
@@ -178,9 +191,9 @@ public class JwtUtil {
         return token;
     }
 
-    public Boolean validateAccessToken(String token, UserDetails userDetails) {
+    public Boolean validateAccessToken(String token, UserDetails userDetails, RefreshTokenEntity refreshTokenEntity) {
         final String username = extractUsername(token);
-        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+        return (username.equals(userDetails.getUsername()) && username.equals(refreshTokenEntity.getUsername()) && !isTokenExpired(token));
     }
 
     public Boolean validateRefreshToken(String token) {
