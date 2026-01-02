@@ -104,12 +104,12 @@ public class UserController {
         }
 
         final Role role = optionalUserEntity.get().getRole();
-        final String accessToken = jwtUtil.generateAccessToken(userDetails);
-        final String refreshToken = jwtUtil.generateRefreshToken(userDetails, authenticationRequest, clientIp);
+        final JwtUtil.TokenPair refreshTokenPair = jwtUtil.generateRefreshToken(userDetails, authenticationRequest, clientIp);
+        final String accessToken = jwtUtil.generateAccessToken(userDetails, refreshTokenPair.deviceId());
         final String color = optionalUserEntity.get().getColor();
 
-        ResponseCookie accessCookie = createCookie(request, "ACCESS_TOKEN", accessToken, jwtUtil.getAccessTtlMs(), "/api", true);
-        ResponseCookie refreshCookie = createCookie(request, "REFRESH_TOKEN", refreshToken, jwtUtil.getRefreshTtlMs(), "/api", true);
+        ResponseCookie accessCookie = createCookie(request, "ACCESS_TOKEN", accessToken, jwtUtil.getAccessTtlMs(), apiVersion, true);
+        ResponseCookie refreshCookie = createCookie(request, "REFRESH_TOKEN", refreshTokenPair.refreshToken(), jwtUtil.getRefreshTtlMs(), apiVersion + "/users/refresh", true);
 
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.SET_COOKIE, accessCookie.toString());
@@ -146,13 +146,13 @@ public class UserController {
     // This method does not return anything because the result is not relevant
     @GetMapping("/forgetMe")
     public void forgetMe(HttpServletRequest request) throws EntityNotFoundException {
-        String refreshToken = Arrays.stream(Optional.ofNullable(request.getCookies()).orElse(new Cookie[0]))
-                .filter(c -> "REFRESH_TOKEN".equals(c.getName()))
+        String accessToken = Arrays.stream(Optional.ofNullable(request.getCookies()).orElse(new Cookie[0]))
+                .filter(c -> "ACCESS_TOKEN".equals(c.getName()))
                 .findFirst()
                 .map(Cookie::getValue)
                 .orElseThrow(() -> new EntityNotFoundException("Refresh token not found", EntityNotFoundException.Entity.REFRESH_TOKEN));
 
-        jwtUtil.deleteTokenTokenIfExisting(refreshToken);
+        jwtUtil.deleteTokenTokenIfExisting(accessToken);
     }
 
     @GetMapping("/refresh")
@@ -171,12 +171,12 @@ public class UserController {
         UserDetails userDetails = userDetailsService.loadUserByUsername(tokenEntity.getUsername());
 
         // 4️⃣ Generate new tokens
-        String newAccessToken = jwtUtil.generateAccessToken(userDetails);
+        String newAccessToken = jwtUtil.generateAccessToken(userDetails, tokenEntity.getDeviceId());
         String newRefreshToken = jwtUtil.renewRefreshToken(tokenEntity);
 
         // 6️⃣ Create cookies dynamically
-        ResponseCookie accessCookie = createCookie(request, "ACCESS_TOKEN", newAccessToken, jwtUtil.getAccessTtlMs(), "/api", true);
-        ResponseCookie refreshCookie = createCookie(request, "REFRESH_TOKEN", newRefreshToken, jwtUtil.getRefreshTtlMs(), "/api", true);
+        ResponseCookie accessCookie = createCookie(request, "ACCESS_TOKEN", newAccessToken, jwtUtil.getAccessTtlMs(), apiVersion, true);
+        ResponseCookie refreshCookie = createCookie(request, "REFRESH_TOKEN", newRefreshToken, jwtUtil.getRefreshTtlMs(), apiVersion + "/users/refresh", true);
 
         HttpHeaders headers = new HttpHeaders();
         headers.add(HttpHeaders.SET_COOKIE, accessCookie.toString());

@@ -6,6 +6,8 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import org.comicVaultBackend.domain.entities.RefreshTokenEntity;
+import org.comicVaultBackend.repositories.RefreshTokenRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.GrantedAuthority;
@@ -21,6 +23,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -29,6 +32,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
     @Autowired
     private UserDetailsService userDetailsService;
+
+    @Autowired
+    private RefreshTokenRepository refreshTokenRepository;
 
     @Autowired
     private JwtUtil jwtUtil;
@@ -65,12 +71,13 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         }
 
         String jwt = extractAccessTokenFromCookies(request);
-        String refreshToken = extractRefreshTokenFromCookies(request);
         String username = null;
+        String deviceId = null;
 
         if (jwt != null) {
             try {
                 username = jwtUtil.extractUsername(jwt);
+                deviceId = jwtUtil.extractDeviceId(jwt);
             } catch (ExpiredJwtException e) {
                 // Access token expired → let refresh endpoint handle renewal
             } catch (Exception e) {
@@ -78,16 +85,17 @@ public class JwtRequestFilter extends OncePerRequestFilter {
             }
         }
 
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+        if (username != null && deviceId != null && SecurityContextHolder.getContext().getAuthentication() == null) {
 
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
+            Optional<RefreshTokenEntity> refreshTokenEntity = this.refreshTokenRepository.findByDeviceId(deviceId);
             String role = String.valueOf(jwtUtil.extractRole(jwt));
 
             List<GrantedAuthority> authorities = Stream.of(role)
                     .map(SimpleGrantedAuthority::new)
                     .collect(Collectors.toList());
 
-            if (jwtUtil.validateAccessToken(jwt, userDetails) && jwtUtil.validateRefreshToken(refreshToken)) {
+            if (refreshTokenEntity.isPresent() && jwtUtil.validateAccessToken(jwt, userDetails, refreshTokenEntity.get())) {
                 UsernamePasswordAuthenticationToken authenticationToken =
                         new UsernamePasswordAuthenticationToken(userDetails, null, authorities);
                 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
