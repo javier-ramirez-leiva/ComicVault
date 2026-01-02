@@ -7,10 +7,12 @@ import org.comicVaultBackend.annotations.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StopWatch;
 import org.springframework.web.method.HandlerMethod;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import java.lang.annotation.Annotation;
+import java.util.OptionalLong;
 
 @Component
 public class LoggingInterceptor implements HandlerInterceptor {
@@ -21,6 +23,7 @@ public class LoggingInterceptor implements HandlerInterceptor {
     private final ThreadLocal<Boolean> skipLoggingResponse = new ThreadLocal<>();
     private final ThreadLocal<Boolean> skipLoggingRequestBody = new ThreadLocal<>();
     private final ThreadLocal<Boolean> skipLoggingResponseBody = new ThreadLocal<>();
+    private final ThreadLocal<StopWatch> callStopWatch = new ThreadLocal<>();
 
     private boolean logRequest;
     private boolean logResponse = false;
@@ -45,6 +48,9 @@ public class LoggingInterceptor implements HandlerInterceptor {
         }
 
         if (logResponse) {
+            StopWatch stopWatch = new StopWatch();
+            stopWatch.start();
+            callStopWatch.set(stopWatch);
             shouldSkipResponse = hasAnyDecorator(handler, SkipLogging.class, SkipLoggingResponse.class);
             shouldSkipResponseBody = hasAnyDecorator(handler, SkipLogging.class, SkipLoggingRequest.class, SkipLoggingResponseBody.class);
         }
@@ -53,6 +59,24 @@ public class LoggingInterceptor implements HandlerInterceptor {
         skipLoggingRequestBody.set(shouldSkipRequestBody);
         skipLoggingResponseBody.set(shouldSkipResponseBody);
         return true;
+    }
+
+    @Override
+    public void afterCompletion(
+            HttpServletRequest request,
+            HttpServletResponse response,
+            Object handler,
+            Exception ex) {
+        // If the response is to be logged, the stopwatch will be erased once we get the value later
+        if (!skipLoggingResponse.get()) {
+            callStopWatch.remove();
+        }
+        skipLoggingRequest.remove();
+        skipLoggingResponse.remove();
+        skipLoggingRequestBody.remove();
+        skipLoggingResponseBody.remove();
+
+
     }
 
     private boolean hasAnyDecorator(Object handler, Class<? extends Annotation>... decoratorClasses) {
@@ -69,6 +93,18 @@ public class LoggingInterceptor implements HandlerInterceptor {
 
     public boolean isSkipLoggingResponse() {
         return Boolean.TRUE.equals(skipLoggingResponse.get());
+    }
+
+    public OptionalLong getElapsedTime() {
+        StopWatch stopWatch = callStopWatch.get();
+        callStopWatch.remove();
+        if (stopWatch == null) {
+            return OptionalLong.empty();
+        }
+        if (stopWatch.isRunning()) {
+            stopWatch.stop();
+        }
+        return OptionalLong.of(stopWatch.getTotalTimeMillis());
     }
 
     public boolean isSkipLoggingResponseBody() {

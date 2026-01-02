@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.OptionalLong;
 
 @Component
 public class RequestResponseLoggingFilter implements Filter {
@@ -29,7 +30,6 @@ public class RequestResponseLoggingFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
 
-
         CachedBodyHttpServletRequest cachedRequest = new CachedBodyHttpServletRequest((HttpServletRequest) request);
         CachedBodyHttpServletResponse cachedResponse = new CachedBodyHttpServletResponse((HttpServletResponse) response);
         chain.doFilter(cachedRequest, cachedResponse);
@@ -39,9 +39,8 @@ public class RequestResponseLoggingFilter implements Filter {
         }
 
         if (!loggingInterceptor.isSkipLoggingResponse()) {
-            logResponse(cachedResponse, !loggingInterceptor.isSkipLoggingResponseBody());
+            logResponse(cachedRequest, cachedResponse, !loggingInterceptor.isSkipLoggingResponseBody());
         }
-
 
         cachedResponse.copyBodyToResponse(); // Important: restore body to actual response
     }
@@ -66,9 +65,12 @@ public class RequestResponseLoggingFilter implements Filter {
         logger.info(sb.toString());
     }
 
-    private void logResponse(CachedBodyHttpServletResponse response, boolean includeBody) throws IOException {
+    private void logResponse(CachedBodyHttpServletRequest request, CachedBodyHttpServletResponse response, boolean includeBody) throws IOException {
         StringBuilder sb = new StringBuilder();
         sb.append("\n➡️ [RESPONSE] Status: ").append(response.getStatus());
+        sb.append("\n⬅️ [REQUEST] ").append(request.getMethod()).append(" ").append(request.getRequestURI());
+        OptionalLong optionalElapsedTime = loggingInterceptor.getElapsedTime();
+        optionalElapsedTime.ifPresent(elapsedTime -> sb.append("\nTime elapsed (ms): ").append(elapsedTime));
 
         sb.append("\nHeaders:");
         for (String name : response.getHeaderNames()) {
@@ -79,7 +81,6 @@ public class RequestResponseLoggingFilter implements Filter {
             String body = new String(response.getContentAsByteArray(), StandardCharsets.UTF_8);
             sb.append("\nBody:\n").append(body);
         }
-
 
         logger.info(sb.toString());
     }
