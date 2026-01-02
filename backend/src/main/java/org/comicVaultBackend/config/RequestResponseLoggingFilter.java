@@ -42,6 +42,8 @@ public class RequestResponseLoggingFilter implements Filter {
             logResponse(cachedRequest, cachedResponse, !loggingInterceptor.isSkipLoggingResponseBody());
         }
 
+        loggingInterceptor.cleanThread();
+
         cachedResponse.copyBodyToResponse(); // Important: restore body to actual response
     }
 

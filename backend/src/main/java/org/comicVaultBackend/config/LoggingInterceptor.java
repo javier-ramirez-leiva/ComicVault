@@ -61,22 +61,12 @@ public class LoggingInterceptor implements HandlerInterceptor {
         return true;
     }
 
-    @Override
-    public void afterCompletion(
-            HttpServletRequest request,
-            HttpServletResponse response,
-            Object handler,
-            Exception ex) {
-        // If the response is to be logged, the stopwatch will be erased once we get the value later
-        if (!skipLoggingResponse.get()) {
-            callStopWatch.remove();
-        }
+    public void cleanThread() {
         skipLoggingRequest.remove();
         skipLoggingResponse.remove();
         skipLoggingRequestBody.remove();
         skipLoggingResponseBody.remove();
-
-
+        callStopWatch.remove();
     }
 
     private boolean hasAnyDecorator(Object handler, Class<? extends Annotation>... decoratorClasses) {
@@ -108,14 +98,14 @@ public class LoggingInterceptor implements HandlerInterceptor {
     }
 
     public boolean isSkipLoggingResponseBody() {
-        return Boolean.TRUE.equals(skipLoggingResponseBody.get());
+        return skipLoggingResponseBody.get();
     }
 
     public boolean isSkipLogginRequest() {
-        return Boolean.TRUE.equals(skipLoggingRequest.get());
+        return skipLoggingRequest.get();
     }
 
     public boolean isSkipLogginRequestBody() {
-        return Boolean.TRUE.equals(skipLoggingRequestBody.get());
+        return skipLoggingRequestBody.get();
     }
 }
