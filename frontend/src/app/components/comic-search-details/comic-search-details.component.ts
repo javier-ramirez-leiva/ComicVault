@@ -114,9 +114,8 @@ export class ComicSearchDetailsComponent implements OnInit {
 
 
 
-    interval(500).pipe(
-      withLatestFrom(this.comicSearchDetailsLinks$),
-      filter(([_, comicSearchDetailsLinks]) => comicSearchDetailsLinks?.downloadingStatus === 'downloading'),
+    this.comicSearchDetailsLinks$.pipe(
+      filter((comicSearchDetailsLinks) => comicSearchDetailsLinks?.downloadingStatus === 'downloading'),
       switchMap(() => this.comicsService.downloads()),
       map((downloads) => downloads.find(download => download.idGc === this.idGc)),
       filter(notNullOrUndefined()),
