@@ -15,14 +15,27 @@ import { notNullOrUndefined } from 'src/app/utils/rsjx-operators';
 })
 export class TrendingButtonComponent implements OnInit {
 
-  @Input({ required: true }) category!: Category | null;
-
-  categoryControl = new FormControl(null);
+  categoryControl = new FormControl<Category | null>(null);
 
   renderer = inject(Renderer2);
   topBarService = inject(TopBarService);
 
   @Output() categoryChange = new EventEmitter<Category>();
+
+  _category!: Category | null;
+  @Input({ required: true })
+  set category(val: Category | null) {
+    this._category = val;
+    if (val === null) {
+      this.categoryControl.setValue('all', { emitEvent: false });
+    } else {
+      this.categoryControl.setValue(val, { emitEvent: false });
+    }
+
+  }
+  get category(): Category | null {
+    return this._category;
+  }
 
   ngOnInit(): void {
     this.categoryControl.valueChanges.pipe(

@@ -43,17 +43,19 @@
             >
                 Select a role
             </label>
-            <select
-                id="role"
-                [formControl]="roleControl"
-                class="bg-input-select-background border border-input-select-border text-input-select-text text-sm rounded-lg focus:ring-input-select-focus-ring block w-full p-2.5"
-            >
-                <option value="ADMIN">ADMIN</option>
-                <option value="OWNER">OWNER</option>
-                <option value="CONTRIBUTOR">CONTRIBUTOR</option>
-                <option value="REQUESTER">REQUESTER</option>
-                <option selected="VIEWER">VIEWER</option>
-            </select>
+            <div class="bg-input-select-background border border-input-select-border text-input-select-text text-sm rounded-lg focus:ring-input-select-focus-ring p-2.5">
+                <select
+                    id="role"
+                    [formControl]="roleControl"
+                    class="w-full"
+                >
+                    <option value="ADMIN">ADMIN</option>
+                    <option value="OWNER">OWNER</option>
+                    <option value="CONTRIBUTOR">CONTRIBUTOR</option>
+                    <option value="REQUESTER">REQUESTER</option>
+                    <option selected="VIEWER">VIEWER</option>
+                </select>
+            </div>
         </div>
         <div class="align-middle w-full flex justify-center py-4">
             <button

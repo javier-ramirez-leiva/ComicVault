@@ -1,6 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { ComicsService, TopBarService, PaginationRatioService, WindowService, NotifierService, ActivePageService, GridService } from 'services';
-import { BehaviorSubject, EMPTY, Observable, Subject, catchError, combineLatest, debounceTime, delay, filter, map, startWith, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, EMPTY, Observable, Subject, catchError, combineLatest, debounceTime, delay, filter, map, of, startWith, switchMap, tap } from 'rxjs';
 import { Category, ComicsSearch, HttpResponseError, isHttpResponseError } from 'interfaces';
 import { ComicsSearchGridComponent } from '../comics-search-grid/comics-search-grid.component';
 import { CommonModule } from '@angular/common';
@@ -58,7 +58,6 @@ export class SearchPageComponent implements OnInit {
                 tap(_ => {
                     this.windowService.scrollToTop(0, 'smooth');
                     this.comics$.next(undefined);
-                    this.enableBottomEvents = false;
                     this.page = 1;
                     this.errorOrEmpty = false;
                 })
@@ -67,12 +66,12 @@ export class SearchPageComponent implements OnInit {
         ])
             .pipe(
                 debounceTime(100),
+                tap(() => this.enableBottomEvents = false),
                 switchMap(([params, _]) => {
                     this.errorMessage$.next(null);
                     this.query = params['query'];
                     this.category = params['category'];
                     this.tag = params['tag'];
-                    let text;
                     let observable$;
                     if (this.category) {
                         observable$ = this.comicsService.trending(this.category, this.page, pagesRatio);
@@ -87,23 +86,25 @@ export class SearchPageComponent implements OnInit {
                         observable$ = this.comicsService.trending(this.category, this.page, pagesRatio);
                     }
                     this.page++;
-                    return observable$;
+                    return observable$.pipe(
+                        catchError(err => {
+                            this.miniSpinner$.next(false);
+                            this.errorOrEmpty = true;
+                            const error = err.error;
+                            if (isHttpResponseError(error) && (error.errorCode === 'SCRAPER_GATEWAY_ERROR' || error.errorCode === 'SCRAPER_PARSING_ERROR')) {
+                                this.notifierService.appendNotification({
+                                    id: 0,
+                                    title: 'Error',
+                                    message: err.error.message as string,
+                                    type: 'error'
+                                });
+                                this.errorMessage$.next(error);
+                            }
+                            return EMPTY;
+                        })
+                    );
                 }),
-                catchError(catchError => {
-                    this.miniSpinner$.next(false);
-                    this.errorOrEmpty = true;
-                    const error = catchError.error;
-                    if (isHttpResponseError(error) && (error.errorCode === 'SCRAPER_GATEWAY_ERROR' || error.errorCode === 'SCRAPER_PARSING_ERROR')) {
-                        this.notifierService.appendNotification({
-                            id: 0,
-                            title: 'Error',
-                            message: catchError.error.message as string,
-                            type: 'error'
-                        });
-                        this.errorMessage$.next(catchError.error);
-                    }
-                    return EMPTY;
-                }),
+                tap(() => this.enableBottomEvents = true),
                 map((scrapperResponse) => {
                     this.errorOrEmpty = scrapperResponse.comicsSearchs.length === 0 || scrapperResponse.endReached;
                     this.miniSpinner$.next(false);
