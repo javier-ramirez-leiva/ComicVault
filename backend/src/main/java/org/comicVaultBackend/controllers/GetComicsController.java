@@ -14,6 +14,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 @RestController
 @RequestMapping("${api.version}")
@@ -37,8 +41,78 @@ public class GetComicsController {
     @Autowired
     private ConfigurationService configurationService;
 
+    private enum SearchType {
+        BASE_URL,
+        SEARCH,
+        TAG,
+        CATEGORY
+    }
+
     private void setBaseUrl() {
         urlBuilderService.setBaseURL(configurationService.getConfiguration().getGetComicsBaseUrl());
+    }
+
+    private ScrapperResponseDTO scrappeComics(int page, int pageRatio, SearchType searchType, String queryString) throws ComicScrapperGatewayException {
+        ExecutorService executor = Executors.newFixedThreadPool(pageRatio);
+
+        // One future per page, indexed by i (1..pageRatio)
+        List<CompletableFuture<List<ComicSearchDTO>>> futures = new ArrayList<>();
+
+        for (int i = 1; i <= pageRatio; i++) {
+            final int index = i;
+            final int currentPage = ((page - 1) * pageRatio) + index;
+            String url = "";
+            switch (searchType) {
+                case BASE_URL -> url = urlBuilderService.baseURL(currentPage);
+                case SEARCH -> url = urlBuilderService.search(queryString, currentPage);
+                case TAG -> url = urlBuilderService.tag(queryString, currentPage);
+                case CATEGORY -> url = urlBuilderService.category(queryString, currentPage);
+            }
+
+            String finalUrl = url;
+            CompletableFuture<List<ComicSearchDTO>> future =
+                    CompletableFuture.supplyAsync(() -> {
+                        try {
+                            List<ComicSearchDTO> comics =
+                                    getComicsScrapperService.getComics(finalUrl, currentPage);
+                            comics.forEach(this::setDownloadingStatus);
+                            return comics;
+                        } catch (ComicScrapperParsingException |
+                                 ComicScrapperGatewayException |
+                                 ComicScrapperGatewayPageException e) {
+                            throw new CompletionException(e);
+                        }
+                    }, executor);
+
+            futures.add(future);
+        }
+
+        List<ComicSearchDTO> allComics = new ArrayList<>();
+        boolean endReached = false;
+
+        // Rebuild results in page order
+        for (int i = 0; i < futures.size(); i++) {
+            try {
+                List<ComicSearchDTO> pageComics = futures.get(i).join();
+                allComics.addAll(pageComics);
+            } catch (CompletionException e) {
+                Throwable cause = e.getCause();
+
+                if (i == 0 && cause instanceof ComicScrapperGatewayException) {
+                    throw (ComicScrapperGatewayException) cause;
+                }
+
+                endReached = true;
+                break;
+            }
+        }
+
+        executor.shutdown();
+
+        return ScrapperResponseDTO.builder()
+                .comicsSearchs(allComics)
+                .endReached(endReached)
+                .build();
     }
 
     @PreAuthorize("hasAnyAuthority('ADMIN','OWNER', 'CONTRIBUTOR', 'REQUESTER', 'VIEWER')")
@@ -50,27 +124,7 @@ public class GetComicsController {
     ) throws ComicScrapperParsingException, ComicScrapperGatewayException, ComicScrapperGatewayPageException {
 
         setBaseUrl();
-        List<ComicSearchDTO> allComics = new ArrayList<>();
-        boolean endReached = false;
-        for (int i = 1; i <= pageRatio; ++i) {
-            int currentPage = ((page - 1) * pageRatio) + i;
-            String url = urlBuilderService.search(query, currentPage);
-            try {
-                List<ComicSearchDTO> listComics = getComicsScrapperService.getComics(url, currentPage);
-                listComics.forEach(this::setDownloadingStatus);
-                allComics.addAll(listComics);
-            } catch (ComicScrapperParsingException | ComicScrapperGatewayException |
-                     ComicScrapperGatewayPageException e) {
-                //Scrapping errors can happen here
-                if (i == 1 && e instanceof ComicScrapperGatewayException) {
-                    throw e;
-                } else {
-                    endReached = true;
-                    break;
-                }
-            }
-        }
-        return ScrapperResponseDTO.builder().comicsSearchs(allComics).endReached(endReached).build();
+        return scrappeComics(page, pageRatio, SearchType.SEARCH, query);
     }
 
     @PreAuthorize("hasAnyAuthority('ADMIN','OWNER', 'CONTRIBUTOR', 'REQUESTER', 'VIEWER')")
@@ -82,25 +136,7 @@ public class GetComicsController {
     ) throws ComicScrapperParsingException, ComicScrapperGatewayException, ComicScrapperGatewayPageException {
 
         setBaseUrl();
-        List<ComicSearchDTO> allComics = new ArrayList<>();
-        boolean endReached = false;
-        for (int i = 1; i <= pageRatio; ++i) {
-            int currentPage = ((page - 1) * pageRatio) + i;
-            String url = urlBuilderService.tag(tag, currentPage);
-            try {
-                List<ComicSearchDTO> listComics = getComicsScrapperService.getComics(url, currentPage);
-                listComics.forEach(this::setDownloadingStatus);
-                allComics.addAll(listComics);
-            } catch (ComicScrapperParsingException | ComicScrapperGatewayException |
-                     ComicScrapperGatewayPageException e) {
-                if (i == 1) {
-                    throw e;
-                } else {
-                    break;
-                }
-            }
-        }
-        return ScrapperResponseDTO.builder().comicsSearchs(allComics).endReached(endReached).build();
+        return scrappeComics(page, pageRatio, SearchType.TAG, tag);
     }
 
     @PreAuthorize("hasAnyAuthority('ADMIN','OWNER', 'CONTRIBUTOR', 'REQUESTER', 'VIEWER')")
@@ -110,25 +146,7 @@ public class GetComicsController {
             @RequestParam(name = "pageRatio", required = false, defaultValue = "1") int pageRatio
     ) throws ComicScrapperParsingException, ComicScrapperGatewayException, ComicScrapperGatewayPageException {
         setBaseUrl();
-        List<ComicSearchDTO> allComics = new ArrayList<>();
-        boolean endReached = false;
-        for (int i = 1; i <= pageRatio; ++i) {
-            int currentPage = ((page - 1) * pageRatio) + i;
-            String url = urlBuilderService.baseURL(currentPage);
-            try {
-                List<ComicSearchDTO> listComics = getComicsScrapperService.getComics(url, currentPage);
-                listComics.forEach(this::setDownloadingStatus);
-                allComics.addAll(listComics);
-            } catch (ComicScrapperParsingException | ComicScrapperGatewayException |
-                     ComicScrapperGatewayPageException e) {
-                if (i == 1) {
-                    throw e;
-                } else {
-                    break;
-                }
-            }
-        }
-        return ScrapperResponseDTO.builder().comicsSearchs(allComics).endReached(endReached).build();
+        return scrappeComics(page, pageRatio, SearchType.BASE_URL, "nevermind");
     }
 
     @PreAuthorize("hasAnyAuthority('ADMIN','OWNER', 'CONTRIBUTOR', 'REQUESTER', 'VIEWER')")
@@ -139,25 +157,7 @@ public class GetComicsController {
             @RequestParam(name = "category", required = false, defaultValue = "") String category
     ) throws ComicScrapperParsingException, ComicScrapperGatewayException, ComicScrapperGatewayPageException {
         setBaseUrl();
-        List<ComicSearchDTO> allComics = new ArrayList<>();
-        boolean endReached = false;
-        for (int i = 1; i <= pageRatio; ++i) {
-            int currentPage = ((page - 1) * pageRatio) + i;
-            String url = urlBuilderService.category(category, ((page - 1) * pageRatio) + i);
-            try {
-                List<ComicSearchDTO> listComics = getComicsScrapperService.getComics(url, currentPage);
-                listComics.forEach(this::setDownloadingStatus);
-                allComics.addAll(listComics);
-            } catch (ComicScrapperParsingException | ComicScrapperGatewayException |
-                     ComicScrapperGatewayPageException e) {
-                if (i == 1) {
-                    throw e;
-                } else {
-                    break;
-                }
-            }
-        }
-        return ScrapperResponseDTO.builder().comicsSearchs(allComics).endReached(endReached).build();
+        return scrappeComics(page, pageRatio, SearchType.CATEGORY, category);
     }
 
     @PreAuthorize("hasAnyAuthority('ADMIN','OWNER', 'CONTRIBUTOR', 'REQUESTER', 'VIEWER')")
