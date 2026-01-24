@@ -1,6 +1,25 @@
 import { Injectable, inject, isDevMode, signal } from '@angular/core';
-import { AuthentificationRequest, AuthentificationResponse, Role, UserInfoResponse, isHttpResponseError } from 'interfaces';
-import { EMPTY, Observable, ReplaySubject, Subject, catchError, delay, filter, map, of, switchMap, tap, throwError } from 'rxjs';
+import {
+  AuthentificationRequest,
+  AuthentificationResponse,
+  Role,
+  UserInfoResponse,
+  isHttpResponseError,
+} from 'interfaces';
+import {
+  EMPTY,
+  Observable,
+  ReplaySubject,
+  Subject,
+  catchError,
+  delay,
+  filter,
+  map,
+  of,
+  switchMap,
+  tap,
+  throwError,
+} from 'rxjs';
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { NotifierService } from './notifier.service';
 import { Router } from '@angular/router';
@@ -11,13 +30,11 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ConfigURLService } from './configURL.service';
 import { environment } from 'src/environments/environment';
 
-
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 @UntilDestroy()
 export class AuthService {
-
   loggedIn = signal<boolean>(false);
   private readonly configURLService = inject(ConfigURLService);
   private readonly httpClient: HttpClient = inject(HttpClient);
@@ -31,7 +48,7 @@ export class AuthService {
   private user: UserInfoResponse = {
     username: '',
     role: Role.Viewer,
-    color: ''
+    color: '',
   };
   private color: string = '';
   username$: ReplaySubject<string> = new ReplaySubject<string>(1);
@@ -39,10 +56,9 @@ export class AuthService {
   color$: ReplaySubject<string> = new ReplaySubject<string>(1);
   user$: ReplaySubject<UserInfoResponse> = new ReplaySubject<UserInfoResponse>(1);
 
-  constructor() { }
+  constructor() {}
 
   sessionInit(): Observable<boolean> {
-
     //If strings are not empty, set the authentification
 
     return this.session().pipe(
@@ -52,7 +68,7 @@ export class AuthService {
         this.setAuthentification({
           username: userInfo.username,
           role: userInfo.role,
-          color: userInfo.color
+          color: userInfo.color,
         });
         return of(true); // Return true if successful
       }),
@@ -60,18 +76,16 @@ export class AuthService {
         this.errorNotification(error);
         this.signOut();
         return of(false); // Return false if there's an error
-
-      })
+      }),
     );
   }
-
 
   setAuthentification(authentification: AuthentificationResponse): void {
     this.loggedIn.set(true);
     this.user$.next({
       username: authentification.username,
       role: authentification.role,
-      color: authentification.color
+      color: authentification.color,
     });
     this.username$.next(authentification.username);
     this.role$.next(authentification.role);
@@ -84,9 +98,7 @@ export class AuthService {
   signOut() {
     this.loggedIn.set(false);
     this.forgetMe().pipe(untilDestroyed(this)).subscribe();
-
   }
-
 
   handleApiCallError<T>(apiCall: () => Observable<T>): Observable<T> {
     let tries = 0;
@@ -94,7 +106,7 @@ export class AuthService {
       catchError((error) => {
         if (error.status === 401 || error.status === 403) {
           return this.refresh().pipe(
-            catchError(error => {
+            catchError((error) => {
               if (error.status === 401 || error.status === 403 || error.status === 404) {
                 /*return this.adminUserExists().pipe(
                   untilDestroyed(this),
@@ -135,18 +147,17 @@ export class AuthService {
               }
               tries++;
               return apiCall();
-            })
+            }),
           );
-        }
-        else {
+        } else {
           return this.healthCheck().pipe(
             switchMap((isHealthy) => {
               if (isHealthy) {
                 return throwError(() => error); // Propagate the original error if the server is healthy
               } else {
-                return throwError(() => new Error("Server is unhealthy")); // Return a new error if the server is unhealthy
+                return throwError(() => new Error('Server is unhealthy')); // Return a new error if the server is unhealthy
               }
-            })
+            }),
           );
         }
       }),
@@ -156,11 +167,11 @@ export class AuthService {
             id: 0,
             title: error.error.errorCode,
             message: JSON.stringify(error.error.message),
-            type: 'debug'
+            type: 'debug',
           });
         }
         return throwError(() => error);
-      })
+      }),
     );
   }
 
@@ -170,25 +181,27 @@ export class AuthService {
         id: 0,
         title: 'Error!',
         message: JSON.stringify(error),
-        type: 'error'
+        type: 'error',
       });
     }
   }
 
   healthCheck(): Observable<boolean> {
-    return this.httpClient.get<any>(`${this.configURLService.baseURL}/${this.configURLService.apiVersion}/health`).pipe(
-      catchError(() => {
-        return of(false);
-      }),
-      switchMap((data) => {
-        if (data && data.status === "healthy") {
-          return of(true);
-        } else {
-          this.healthNotification();
+    return this.httpClient
+      .get<any>(`${this.configURLService.baseURL}/${this.configURLService.apiVersion}/health`)
+      .pipe(
+        catchError(() => {
           return of(false);
-        }
-      })
-    );
+        }),
+        switchMap((data) => {
+          if (data && data.status === 'healthy') {
+            return of(true);
+          } else {
+            this.healthNotification();
+            return of(false);
+          }
+        }),
+      );
   }
 
   healthNotification() {
@@ -196,20 +209,24 @@ export class AuthService {
       id: 0,
       title: 'Error!',
       message: 'Error health check of the server',
-      type: 'error'
+      type: 'error',
     });
   }
 
   session(): Observable<UserInfoResponse> {
     return this.handleApiCallError(() => {
-      return this.httpClient.get<UserInfoResponse>(`${this.configURLService.baseURL}/${this.configURLService.apiVersion}/users/session`);
+      return this.httpClient.get<UserInfoResponse>(
+        `${this.configURLService.baseURL}/${this.configURLService.apiVersion}/users/session`,
+      );
     });
   }
 
   refresh(): Observable<any> {
-    return this.httpClient.get<any>(
-      `${this.configURLService.baseURL}/${this.configURLService.apiVersion}/users/refresh`,
-    ).pipe(
+    return this.httpClient
+      .get<any>(
+        `${this.configURLService.baseURL}/${this.configURLService.apiVersion}/users/refresh`,
+      )
+      .pipe
       /*catchError(error => {
         this.notifier.appendNotification({
           id: 0,
@@ -225,24 +242,31 @@ export class AuthService {
         message: '',
         type: 'success'
       }))*/
-    );
+      ();
   }
 
   forgetMe(): Observable<any> {
     return this.httpClient.get<any>(
-      `${this.configURLService.baseURL}/${this.configURLService.apiVersion}/users/forgetMe`
+      `${this.configURLService.baseURL}/${this.configURLService.apiVersion}/users/forgetMe`,
     );
   }
 
   adminUserExists(): Observable<Boolean> {
     return this.handleApiCallError(() => {
-      return this.httpClient.get<Boolean>(`${this.configURLService.baseURL}/${this.configURLService.apiVersion}/users/adminUserExists`);
+      return this.httpClient.get<Boolean>(
+        `${this.configURLService.baseURL}/${this.configURLService.apiVersion}/users/adminUserExists`,
+      );
     });
   }
 
-  authenticate(authentificationRequest: AuthentificationRequest): Observable<AuthentificationResponse> {
+  authenticate(
+    authentificationRequest: AuthentificationRequest,
+  ): Observable<AuthentificationResponse> {
     return this.handleApiCallError(() => {
-      return this.httpClient.post<AuthentificationResponse>(`${this.configURLService.baseURL}/${this.configURLService.apiVersion}/users/authenticate`, authentificationRequest);
+      return this.httpClient.post<AuthentificationResponse>(
+        `${this.configURLService.baseURL}/${this.configURLService.apiVersion}/users/authenticate`,
+        authentificationRequest,
+      );
     });
   }
 
@@ -257,5 +281,4 @@ export class AuthService {
   getUser(): UserInfoResponse {
     return this.user;
   }
-
 }

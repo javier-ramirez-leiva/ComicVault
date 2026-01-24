@@ -6,7 +6,7 @@ import { ConfigURLService } from 'services';
 @Component({
   selector: 'app-series',
   imports: [CoverCardComponent],
-  templateUrl: './series.component.html'
+  templateUrl: './series.component.html',
 })
 export class SeriesComponent implements OnInit {
   @Input() public series!: Series;
@@ -19,7 +19,8 @@ export class SeriesComponent implements OnInit {
   ngOnInit(): void {
     this.imageURL = `${this.configURLService.baseURL}/${this.configURLService.apiVersion}/series/${this.series.id}/cover/small`;
     this.url = ['/series', this.series.id, 'details'];
-    this.number = !this.series.readStatus ? this.series.totalIssues - this.series.readIssues : undefined;
+    this.number = !this.series.readStatus
+      ? this.series.totalIssues - this.series.readIssues
+      : undefined;
   }
-
 }

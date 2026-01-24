@@ -8,11 +8,10 @@ import { isNonResetRoute, isStoredRoute } from '../strategy_providers/custom-reu
 import { ComicCard } from 'interfaces';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 @UntilDestroy()
 export class CoverCardClickCollectorService {
-
   private readonly router = inject(Router);
   private readonly route = inject(ActivatedRoute);
 
@@ -21,24 +20,25 @@ export class CoverCardClickCollectorService {
   public multiSelect$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   constructor() {
-    this.router.events.pipe(
-      untilDestroyed(this),
-      filter(event => event instanceof NavigationEnd),
-    ).subscribe(_ => {
-      let currentRoute = this.route;
-      while (currentRoute.firstChild) {
-        currentRoute = currentRoute.firstChild;
-      }
-      const routePath = currentRoute.routeConfig?.path;
-      if (routePath && !isNonResetRoute(routePath) && !isStoredRoute(routePath)) {
-        this.multiSelect = false;
-        this.comicCards.forEach(cardID => this.removeActiveHover);
-        this.comicCards = [];
-        this.comicCards = [];
-      }
-    });
+    this.router.events
+      .pipe(
+        untilDestroyed(this),
+        filter((event) => event instanceof NavigationEnd),
+      )
+      .subscribe((_) => {
+        let currentRoute = this.route;
+        while (currentRoute.firstChild) {
+          currentRoute = currentRoute.firstChild;
+        }
+        const routePath = currentRoute.routeConfig?.path;
+        if (routePath && !isNonResetRoute(routePath) && !isStoredRoute(routePath)) {
+          this.multiSelect = false;
+          this.comicCards.forEach((cardID) => this.removeActiveHover);
+          this.comicCards = [];
+          this.comicCards = [];
+        }
+      });
   }
-
 
   setActiveHover(cardID: string): void {
     for (let comicCard of this.comicCards) {
@@ -52,27 +52,27 @@ export class CoverCardClickCollectorService {
   }
 
   pushActiveHover(comicCard: ComicCard): void {
-    if (!this.comicCards.find(cc => comicCard.getComic().id == cc.getComic().id)) {
+    if (!this.comicCards.find((cc) => comicCard.getComic().id == cc.getComic().id)) {
       this.comicCards.push(comicCard);
     }
   }
 
   removeActiveHover(cardID: string): void {
-    this.comicCards = this.comicCards.filter(comicCard => comicCard.getComic().id !== cardID);
+    this.comicCards = this.comicCards.filter((comicCard) => comicCard.getComic().id !== cardID);
   }
 
   clearActiveHovers() {
-    this.comicCards.forEach(comicCard => comicCard.setHovered(false));
+    this.comicCards.forEach((comicCard) => comicCard.setHovered(false));
     this.comicCards = [];
   }
 
   isCardActiveHover(cardID: string): boolean {
-    return this.comicCards.map(comicCard => comicCard.getComic().id).includes(cardID);
+    return this.comicCards.map((comicCard) => comicCard.getComic().id).includes(cardID);
   }
 
   setMultiSelect(value: boolean): void {
     this.multiSelect = value;
-    this.comicCards.forEach(comicCard => comicCard.setHovered(false));
+    this.comicCards.forEach((comicCard) => comicCard.setHovered(false));
     this.comicCards = [];
   }
 
@@ -83,5 +83,4 @@ export class CoverCardClickCollectorService {
   getActiveCards(): ComicCard[] {
     return this.comicCards;
   }
-
 }

@@ -1,99 +1,92 @@
 <ng-container *ngIf="comicSearchDetailsLinks$ | async as comicSearchDetailsLinks">
-    <div class="details-page-container">
-        <div class="lg:w-1/4 md:w-1/2 w-[100%] relative p-4 flex flex-col justify-center items-center">
-            <div class="relative w-full">
-                <div
-                    *ngIf="!imageLoaded"
-                    class="relative w-full rounded-md animate-pulse bg-cover-card-pulsing"
-                    style="padding-bottom: 153.8%;"
-                >
-                </div>
-                <img
-                    [src]="comicSearchDetailsLinks.image"
-                    [alt]="comicSearchDetailsLinks.title"
-                    class="relative inset-0 w-full h-full object-contain object-center rounded-xl block border-2 border-cover-card-border"
-                    [class.hidden]="!imageLoaded"
-                    (load)="imageLoaded = true"
-                >
-                <ng-container *ngIf="comicSearchDetailsLinks.downloadingStatus == 'downloading'">
-                    <div class="relative w-full mt-2 bg-cover-card-progress-background rounded-full h-4 ">
-                        <div
-                            class="bg-cover-card-download h-4 rounded-full"
-                            [style]="widthStyle"
-                        ></div>
-                    </div>
-                </ng-container>
-                <div
-                    *ngIf="remainingComics"
-                    class="cover-card-badge-large bg-cover-card-number-download text-cover-card-badge-text text-2xl"
-                >
-                    {{remainingComics}}
-                </div>
-            </div>
-        </div>
+  <div class="details-page-container">
+    <div class="lg:w-1/4 md:w-1/2 w-[100%] relative p-4 flex flex-col justify-center items-center">
+      <div class="relative w-full">
         <div
-            *ngIf="rows$ | async as rows"
-            class="flex flex-col-reverse md:flex-col lg:w-2/3 md:w-3/5  p-4 items-center justify-center"
+          *ngIf="!imageLoaded"
+          class="relative w-full rounded-md animate-pulse bg-cover-card-pulsing"
+          style="padding-bottom: 153.8%"
+        ></div>
+        <img
+          [src]="comicSearchDetailsLinks.image"
+          [alt]="comicSearchDetailsLinks.title"
+          class="relative inset-0 w-full h-full object-contain object-center rounded-xl block border-2 border-cover-card-border"
+          [class.hidden]="!imageLoaded"
+          (load)="imageLoaded = true"
+        />
+        <ng-container *ngIf="comicSearchDetailsLinks.downloadingStatus == 'downloading'">
+          <div class="relative w-full mt-2 bg-cover-card-progress-background rounded-full h-4">
+            <div class="bg-cover-card-download h-4 rounded-full" [style]="widthStyle"></div>
+          </div>
+        </ng-container>
+        <div
+          *ngIf="remainingComics"
+          class="cover-card-badge-large bg-cover-card-number-download text-cover-card-badge-text text-2xl"
         >
-            <app-two-columns-table
-                class="w-full"
-                [rows]="rows"
-            ></app-two-columns-table>
-            <div
-                *ngIf="comicSearchDetailsLinks.downloadingStatus == 'not-downloaded' || comicSearchDetailsLinks.downloadingStatus == 'downloaded'"
-                class="flex items-center justify-center md:mx-10 md:mt-6 md:pb-0 pb-8 w-full"
-            >
-                <app-download-button
-                    *ngIf="comicSearchDetailsLinks.downloadingStatus == 'not-downloaded'"
-                    appHideRoles
-                    [appHideForRoles]="[Role.Requester, Role.Viewer]"
-                    class="relative w-64"
-                    [comic]="comicSearchDetailsLinks"
-                    [comicSearchDetailsLinks]="comicSearchDetailsLinks"
-                ></app-download-button>
-                <app-go-to-comic-button
-                    *ngIf="comicSearchDetailsLinks.downloadingStatus == 'downloaded'"
-                    class="relative w-64"
-                    [comicSearchDetailsLinks]="comicSearchDetailsLinks"
-                ></app-go-to-comic-button>
-            </div>
+          {{ remainingComics }}
         </div>
+      </div>
     </div>
-    <ng-container *ngIf="comicSearchDetailsLinks.tags.length > 0">
-        <div class=" flex justify-center align-middle flex-wrap my-4">
-            <app-tag-chip
-                *ngFor="let tag of comicSearchDetailsLinks.tags"
-                [tag]="tag"
-            ></app-tag-chip>
-        </div>
-    </ng-container>
-    <div class="py-4 pb-4">
-        <div class="text-box ">
-            <p class="text-box-p ">{{comicSearchDetailsLinks.description}}</p>
-        </div>
+    <div
+      *ngIf="rows$ | async as rows"
+      class="flex flex-col-reverse md:flex-col lg:w-2/3 md:w-3/5 p-4 items-center justify-center"
+    >
+      <app-two-columns-table class="w-full" [rows]="rows"></app-two-columns-table>
+      <div
+        *ngIf="
+          comicSearchDetailsLinks.downloadingStatus == 'not-downloaded' ||
+          comicSearchDetailsLinks.downloadingStatus == 'downloaded'
+        "
+        class="flex items-center justify-center md:mx-10 md:mt-6 md:pb-0 pb-8 w-full"
+      >
+        <app-download-button
+          *ngIf="comicSearchDetailsLinks.downloadingStatus == 'not-downloaded'"
+          appHideRoles
+          [appHideForRoles]="[Role.Requester, Role.Viewer]"
+          class="relative w-64"
+          [comic]="comicSearchDetailsLinks"
+          [comicSearchDetailsLinks]="comicSearchDetailsLinks"
+        ></app-download-button>
+        <app-go-to-comic-button
+          *ngIf="comicSearchDetailsLinks.downloadingStatus == 'downloaded'"
+          class="relative w-64"
+          [comicSearchDetailsLinks]="comicSearchDetailsLinks"
+        ></app-go-to-comic-button>
+      </div>
     </div>
-    <div class="justify-center pb-20 md:pb-4 pt-4 h-[28rem] md:h-96 w-full max-w-screen">
-        <div *ngIf="comicsCarousel$ | async as comicsCarousel; else loadingCarousel">
-            <app-carousel-series-comics
-                [tag]="tag"
-                [header]="tag?.name"
-                [scrollToIndex$]="scrollToIndex$"
-                [comicSearchs]="comicsCarousel"
-            ></app-carousel-series-comics>
-        </div>
-        <ng-template #loadingCarousel>
-            <div class="flex items-center justify-center w-full h-full px-4">
-                <app-mini-spinner class="w-full"></app-mini-spinner>
-            </div>
-        </ng-template>
+  </div>
+  <ng-container *ngIf="comicSearchDetailsLinks.tags.length > 0">
+    <div class="flex justify-center align-middle flex-wrap my-4">
+      <app-tag-chip *ngFor="let tag of comicSearchDetailsLinks.tags" [tag]="tag"></app-tag-chip>
     </div>
+  </ng-container>
+  <div class="py-4 pb-4">
+    <div class="text-box">
+      <p class="text-box-p">{{ comicSearchDetailsLinks.description }}</p>
+    </div>
+  </div>
+  <div class="justify-center pb-20 md:pb-4 pt-4 h-[28rem] md:h-96 w-full max-w-screen">
+    <div *ngIf="comicsCarousel$ | async as comicsCarousel; else loadingCarousel">
+      <app-carousel-series-comics
+        [tag]="tag"
+        [header]="tag?.name"
+        [scrollToIndex$]="scrollToIndex$"
+        [comicSearchs]="comicsCarousel"
+      ></app-carousel-series-comics>
+    </div>
+    <ng-template #loadingCarousel>
+      <div class="flex items-center justify-center w-full h-full px-4">
+        <app-mini-spinner class="w-full"></app-mini-spinner>
+      </div>
+    </ng-template>
+  </div>
 </ng-container>
-<ng-container *ngIf="(notFoundID$ | async) as notFoundID ">
-    <app-comic-not-found [id]="notFoundID"></app-comic-not-found>
+<ng-container *ngIf="notFoundID$ | async as notFoundID">
+  <app-comic-not-found [id]="notFoundID"></app-comic-not-found>
 </ng-container>
 <ng-container *ngIf="errorMessage$ | async as errorMessage">
-    <app-error-page [message]="errorMessage.message"></app-error-page>
+  <app-error-page [message]="errorMessage.message"></app-error-page>
 </ng-container>
 <ng-container *ngIf="!(comicSearchDetailsLinks$ | async) && !(notFoundID$ | async)">
-    <app-loading-spinner-page></app-loading-spinner-page>
+  <app-loading-spinner-page></app-loading-spinner-page>
 </ng-container>

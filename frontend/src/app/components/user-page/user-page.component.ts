@@ -1,5 +1,12 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { HistoryService, AuthService, UsersService, ModalService, NotifierService, TopBarService } from 'services';
+import {
+  HistoryService,
+  AuthService,
+  UsersService,
+  ModalService,
+  NotifierService,
+  TopBarService,
+} from 'services';
 import { Observable, filter, map, switchMap, tap } from 'rxjs';
 import { HistoryTableComponent } from '../history-table/history-table.component';
 import { CommonModule } from '@angular/common';
@@ -8,20 +15,27 @@ import { History } from 'interfaces';
 import { RegisterRequest, UserInfoResponse } from 'interfaces';
 import { notNullOrUndefined } from 'src/app/utils/rsjx-operators';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { ModalUsersComponent, ModalUsersComponentInput } from '../modal-users/modal-users.component';
+import {
+  ModalUsersComponent,
+  ModalUsersComponentInput,
+} from '../modal-users/modal-users.component';
 import { FilterHistory } from 'interfaces';
-import { NoResultsComponent } from "../no-results/no-results.component";
+import { NoResultsComponent } from '../no-results/no-results.component';
 import { FunnelButtonHistoryComponent } from '../funnel-button-history/funnel-button-history.component';
 
 @Component({
   selector: 'app-user-me',
-  imports: [HistoryTableComponent, CommonModule, RouterModule, NoResultsComponent, FunnelButtonHistoryComponent],
-  templateUrl: './user-page.component.html'
+  imports: [
+    HistoryTableComponent,
+    CommonModule,
+    RouterModule,
+    NoResultsComponent,
+    FunnelButtonHistoryComponent,
+  ],
+  templateUrl: './user-page.component.html',
 })
-
 @UntilDestroy()
 export class UserPageComponent implements OnInit {
-
   private readonly historyService = inject(HistoryService);
   private readonly route = inject(ActivatedRoute);
   private readonly router = inject(Router);
@@ -41,24 +55,21 @@ export class UserPageComponent implements OnInit {
     inLibraryNo: true,
     inLibraryYes: true,
     readStatusOnGoing: true,
-    readStatusRead: true
-  }
+    readStatusRead: true,
+  };
 
-
-  constructor() {
-
-  }
+  constructor() {}
 
   ngOnInit(): void {
     this.userParamID = this.route.snapshot.params['username'];
     this.updateUserStream();
 
-    this.user$.pipe(untilDestroyed(this)).subscribe(user => {
+    this.user$.pipe(untilDestroyed(this)).subscribe((user) => {
       this.userRegister = {
         username: user.username,
-        password: "",
+        password: '',
         role: user.role,
-        color: user.color
+        color: user.color,
       };
     });
 
@@ -67,7 +78,6 @@ export class UserPageComponent implements OnInit {
         this.filterHistory = data as FilterHistory;
         this.updateUserStream();
       }
-
     });
 
     this.filterHistory = this.getHistoryFilter();
@@ -78,16 +88,16 @@ export class UserPageComponent implements OnInit {
   updateUserStream() {
     if (this.userParamID) {
       this.user$ = this.userService.allUsers().pipe(
-        map(users => users.find(user => user.username === this.userParamID)),
-        filter(notNullOrUndefined())
+        map((users) => users.find((user) => user.username === this.userParamID)),
+        filter(notNullOrUndefined()),
       );
       this.histories$ = this.user$.pipe(
-        switchMap(user => this.historyService.historyUsername(user.username, this.filterHistory))
+        switchMap((user) => this.historyService.historyUsername(user.username, this.filterHistory)),
       );
     } else {
       this.user$ = this.userService.getMeUser();
       this.histories$ = this.user$.pipe(
-        switchMap(user => this.historyService.historyMe(this.filterHistory))
+        switchMap((user) => this.historyService.historyMe(this.filterHistory)),
       );
     }
   }
@@ -105,41 +115,46 @@ export class UserPageComponent implements OnInit {
     };
   }
 
-
   editUser() {
     const input: ModalUsersComponentInput = {
       modifyUser: false,
       modifyRole: this.userParamID ? true : false,
-      user: this.userRegister
-    }
+      user: this.userRegister,
+    };
     this.triggerModal(input);
   }
 
   triggerModal(input: ModalUsersComponentInput): void {
-    this.modalService.open<RegisterRequest, { input: ModalUsersComponentInput | undefined }>(ModalUsersComponent, { input: input }).pipe(
-      filter(response => response !== undefined),
-      untilDestroyed(this)
-    ).subscribe(response => {
-      let userObs$: Observable<UserInfoResponse> = new Observable<UserInfoResponse>();
-      if (this.userParamID) {
-        userObs$ = this.userService.editUser(this.userRegister.username, this.userRegister);
-      } else {
-        userObs$ = this.userService.editMeUser(this.userRegister);
-      }
-      userObs$.pipe(
-        /*Trigger other updates*/
-        switchMap(_ => this.authService.sessionInit()),
-        tap(() => this.updateUserStream()),
-        untilDestroyed(this)
-      ).subscribe((_) => {
-        this.notifierService.appendNotification({
-          id: 0,
-          title: 'Success',
-          message: 'User updated!',
-          type: 'success'
-        });
+    this.modalService
+      .open<RegisterRequest, { input: ModalUsersComponentInput | undefined }>(ModalUsersComponent, {
+        input: input,
+      })
+      .pipe(
+        filter((response) => response !== undefined),
+        untilDestroyed(this),
+      )
+      .subscribe((response) => {
+        let userObs$: Observable<UserInfoResponse> = new Observable<UserInfoResponse>();
+        if (this.userParamID) {
+          userObs$ = this.userService.editUser(this.userRegister.username, this.userRegister);
+        } else {
+          userObs$ = this.userService.editMeUser(this.userRegister);
+        }
+        userObs$
+          .pipe(
+            /*Trigger other updates*/
+            switchMap((_) => this.authService.sessionInit()),
+            tap(() => this.updateUserStream()),
+            untilDestroyed(this),
+          )
+          .subscribe((_) => {
+            this.notifierService.appendNotification({
+              id: 0,
+              title: 'Success',
+              message: 'User updated!',
+              type: 'success',
+            });
+          });
       });
-    })
-  };
-
+  }
 }

@@ -1,81 +1,79 @@
-<div class="fixed z-40 w-full max-w-lg -translate-x-1/2 bottom-0 left-1/2 transition-transform md:hidden">
-    <app-bottom-drawer-buttons
-        [open]="false"
-        (onDrawerOpen)="onDrawerOpen($event)"
-    ></app-bottom-drawer-buttons>
+<div
+  class="fixed z-40 w-full max-w-lg -translate-x-1/2 bottom-0 left-1/2 transition-transform md:hidden"
+>
+  <app-bottom-drawer-buttons
+    [open]="false"
+    (onDrawerOpen)="onDrawerOpen($event)"
+  ></app-bottom-drawer-buttons>
 </div>
 <div
-    class="fixed bottom-0 left-0 right-0 z-40 w-full overflow-y-auto  transform md:hidden"
-    [class.translate-y-full]="!drawerOpen"
+  class="fixed bottom-0 left-0 right-0 z-40 w-full overflow-y-auto transform md:hidden"
+  [class.translate-y-full]="!drawerOpen"
 >
-    <ul
-        appOutsideClick
-        (outsideClick)="onDrawerOpen(false)"
-        class="flex flex-col font-medium rounded-t-lg  bg-nav-menu-button-active text-nav-menu-bottom-text mb-0"
+  <ul
+    appOutsideClick
+    (outsideClick)="onDrawerOpen(false)"
+    class="flex flex-col font-medium rounded-t-lg bg-nav-menu-button-active text-nav-menu-bottom-text mb-0"
+  >
+    <li>
+      <app-bottom-drawer-line label="Home" route="home" activeRoute="home"></app-bottom-drawer-line>
+    </li>
+    <li>
+      <app-bottom-drawer-line
+        label="Library"
+        activeRoute="library"
+        route="library"
+      ></app-bottom-drawer-line>
+    </li>
+    <li>
+      <app-bottom-drawer-line
+        label="Search"
+        route="search"
+        activeRoute="search"
+        [queryParams]="{ category: 'all' }"
+      ></app-bottom-drawer-line>
+    </li>
+    <li>
+      <app-bottom-drawer-line
+        label="Downloads"
+        route="downloads"
+        activeRoute="downloads"
+      ></app-bottom-drawer-line>
+    </li>
+    <li
+      appHideRoles
+      [appHideForRoles]="[Role.Owner, Role.Contributor, Role.Requester, Role.Viewer]"
     >
-        <li>
-            <app-bottom-drawer-line
-                label="Home"
-                route="home"
-                activeRoute="home"
-            ></app-bottom-drawer-line>
-        </li>
-        <li>
-            <app-bottom-drawer-line
-                label="Library"
-                activeRoute="library"
-                route="library"
-            ></app-bottom-drawer-line>
-        </li>
-        <li>
-            <app-bottom-drawer-line
-                label="Search"
-                route="search"
-                activeRoute="search"
-                [queryParams]="{category: 'all'}"
-            ></app-bottom-drawer-line>
-        </li>
-        <li>
-            <app-bottom-drawer-line
-                label="Downloads"
-                route="downloads"
-                activeRoute="downloads"
-            ></app-bottom-drawer-line>
-        </li>
-        <li
-            appHideRoles
-            [appHideForRoles]="[Role.Owner, Role.Contributor,Role.Requester, Role.Viewer]"
-        >
-            <app-bottom-drawer-line
-                label="Users"
-                route="users"
-                activeRoute="users"
-            ></app-bottom-drawer-line>
-        </li>
-        <li>
-            <app-bottom-drawer-line
-                label="Devices"
-                route="devices"
-                activeRoute="devices"
-            ></app-bottom-drawer-line>
-        </li>
-        <li>
-            <app-bottom-drawer-line
-                label="Settings"
-                route="settings"
-                activeRoute="settings"
-            ></app-bottom-drawer-line>
-        </li>
-        <li>
-            <app-bottom-drawer-line
-                label="Sign Out"
-                route="login"
-                activeRoute="login"
-            ></app-bottom-drawer-line>
-        </li>
-    </ul>
-    <app-bottom-drawer-buttons
-        [open]="true"
-        (onDrawerOpen)="onDrawerOpen($event)"
-    ></app-bottom-drawer-buttons>
+      <app-bottom-drawer-line
+        label="Users"
+        route="users"
+        activeRoute="users"
+      ></app-bottom-drawer-line>
+    </li>
+    <li>
+      <app-bottom-drawer-line
+        label="Devices"
+        route="devices"
+        activeRoute="devices"
+      ></app-bottom-drawer-line>
+    </li>
+    <li>
+      <app-bottom-drawer-line
+        label="Settings"
+        route="settings"
+        activeRoute="settings"
+      ></app-bottom-drawer-line>
+    </li>
+    <li>
+      <app-bottom-drawer-line
+        label="Sign Out"
+        route="login"
+        activeRoute="login"
+      ></app-bottom-drawer-line>
+    </li>
+  </ul>
+  <app-bottom-drawer-buttons
+    [open]="true"
+    (onDrawerOpen)="onDrawerOpen($event)"
+  ></app-bottom-drawer-buttons>
 </div>

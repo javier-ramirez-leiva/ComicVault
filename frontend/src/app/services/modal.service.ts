@@ -1,9 +1,16 @@
-import { Injectable, ComponentRef, Injector, ApplicationRef, ComponentFactoryResolver, Type } from '@angular/core';
+import {
+  Injectable,
+  ComponentRef,
+  Injector,
+  ApplicationRef,
+  ComponentFactoryResolver,
+  Type,
+} from '@angular/core';
 import { Subject, Observable, BehaviorSubject } from 'rxjs';
 import { ModalComponent } from 'interfaces';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ModalService {
   private modalContainer!: HTMLElement;
@@ -14,12 +21,11 @@ export class ModalService {
   public activeModal$ = new BehaviorSubject<boolean>(false);
   public animationModal$ = new BehaviorSubject<boolean>(false);
 
-
   constructor(
     private resolver: ComponentFactoryResolver,
     private appRef: ApplicationRef,
-    private injector: Injector
-  ) { }
+    private injector: Injector,
+  ) {}
 
   setModalContainer(container: HTMLElement) {
     this.modalContainer = container;

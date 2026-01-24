@@ -1,4 +1,4 @@
 export const environment = {
-    production: false,
-    logTraceEnabled: true
+  production: false,
+  logTraceEnabled: true,
 };

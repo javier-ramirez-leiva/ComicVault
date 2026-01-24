@@ -9,14 +9,15 @@ export const loginGuard: CanActivateFn = (route, state) => {
   const activePageService = inject(ActivePageService);
   const router = inject(Router);
 
-  authService.adminUserExists().pipe(
-    catchError(error => of(false))
-  ).subscribe((exists: Boolean) => {
-    if (!exists) {
-      allowRegisterAccess();
-      activePageService.activePage$.next('register');
-      router.navigate(['/register']);
-    }
-  });
+  authService
+    .adminUserExists()
+    .pipe(catchError((error) => of(false)))
+    .subscribe((exists: Boolean) => {
+      if (!exists) {
+        allowRegisterAccess();
+        activePageService.activePage$.next('register');
+        router.navigate(['/register']);
+      }
+    });
   return true;
 };

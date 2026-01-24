@@ -6,10 +6,9 @@ import { DeleteReadOptions, ModalComponent } from 'interfaces';
 @Component({
   selector: 'app-modal-delete-library',
   imports: [CrossModalComponent, RadioButtonInputComponent],
-  templateUrl: './modal-delete-library.component.html'
+  templateUrl: './modal-delete-library.component.html',
 })
 export class ModalDeleteLibraryComponent implements ModalComponent<DeleteReadOptions, {}> {
-
   private deleteReadOptions: DeleteReadOptions = 'READ_BY_ALL';
 
   close!: (response?: DeleteReadOptions) => void;

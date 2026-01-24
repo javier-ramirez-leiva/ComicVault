@@ -1,9 +1,9 @@
 <a
-    href="#"
-    [routerLink]="route"
-    [queryParams]="queryParams"
-    [class.text-nav-menu-bottom-text-active]="(activePageService.activePage$ | async) === activeRoute"
-    class="block py-3 px-8"
+  href="#"
+  [routerLink]="route"
+  [queryParams]="queryParams"
+  [class.text-nav-menu-bottom-text-active]="(activePageService.activePage$ | async) === activeRoute"
+  class="block py-3 px-8"
 >
-    {{label}}
+  {{ label }}
 </a>

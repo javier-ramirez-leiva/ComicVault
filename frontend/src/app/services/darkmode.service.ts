@@ -3,21 +3,16 @@ import { LocalStorageService } from './local-storage.service';
 import { Observable, map } from 'rxjs';
 import { toObservable } from '@angular/core/rxjs-interop';
 
-
-
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class DarkmodeService {
-
   darkModeSignal = signal<string>('dark');
   private readonly localStorageService: LocalStorageService = inject(LocalStorageService);
   isDarkMode$: Observable<boolean>;
 
   constructor() {
-    this.isDarkMode$ = toObservable(this.darkModeSignal).pipe(
-      map(value => value === 'dark')
-    );
+    this.isDarkMode$ = toObservable(this.darkModeSignal).pipe(map((value) => value === 'dark'));
   }
 
   init() {
@@ -28,17 +23,16 @@ export class DarkmodeService {
       this.darkModeSignal.set('dark');
     }
     this.setDarkModeHtml(mode);
-
   }
 
   updateDarkMode() {
-    this.darkModeSignal.update(value => value === 'dark' ? 'null' : 'dark');
+    this.darkModeSignal.update((value) => (value === 'dark' ? 'null' : 'dark'));
     this.localStorageService.setItem('darkMode', this.darkModeSignal());
     this.setDarkModeHtml(this.darkModeSignal());
   }
 
   toggleDarkMode() {
-    this.darkModeSignal.update(value => value === 'dark' ? 'null' : 'dark');
+    this.darkModeSignal.update((value) => (value === 'dark' ? 'null' : 'dark'));
     this.localStorageService.setItem('darkMode', this.darkModeSignal());
     this.setDarkModeHtml(this.darkModeSignal());
   }

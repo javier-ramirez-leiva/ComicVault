@@ -9,7 +9,7 @@ import { resetRouteCache } from 'src/app/strategy_providers/custom-reuse-strateg
 @Component({
   selector: 'app-seen-button',
   imports: [CommonModule],
-  templateUrl: './seen-button.component.html'
+  templateUrl: './seen-button.component.html',
 })
 export class SeenButtonComponent {
   private readonly comicsService = inject(ComicsService);
@@ -20,5 +20,4 @@ export class SeenButtonComponent {
   click(event: Event) {
     this.onClick.emit();
   }
-
 }

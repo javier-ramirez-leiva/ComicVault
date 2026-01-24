@@ -5,7 +5,7 @@ import { CommonModule } from '@angular/common';
 @Component({
   selector: 'app-processing-notification',
   imports: [CommonModule],
-  templateUrl: './processing-notification.component.html'
+  templateUrl: './processing-notification.component.html',
 })
 export class ProcessingNotificationComponent {
   @Input() processingNotification!: ProcessingNotifications;

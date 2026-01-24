@@ -1,32 +1,23 @@
-<div
-    *ngIf="helpMessage; else noHelpTmpl"
-    class="flex gap-4 items-center"
->
-    <label
-        *ngIf="title"
-        class="block mb-2 text-sm font-medium text-generic-text h-full text-center"
-    >
-        {{title}}
-    </label>
-    <app-help-button [message]="helpMessage"></app-help-button>
+<div *ngIf="helpMessage; else noHelpTmpl" class="flex gap-4 items-center">
+  <label *ngIf="title" class="block mb-2 text-sm font-medium text-generic-text h-full text-center">
+    {{ title }}
+  </label>
+  <app-help-button [message]="helpMessage"></app-help-button>
 </div>
 <ng-template #noHelpTmpl>
-    <label
-        *ngIf="title"
-        class="block mb-2 text-sm font-medium text-generic-text"
-    >
-        {{title}}
-    </label>
+  <label *ngIf="title" class="block mb-2 text-sm font-medium text-generic-text">
+    {{ title }}
+  </label>
 </ng-template>
 
 <input
-    [(ngModel)]="value"
-    (ngModelChange)="onValueChange($event)"
-    [id]="id"
-    class="bg-input-background border border-input-border text-generic-text text-sm rounded-lg focus:ring-input-field-focus-ring focus:border-input-button-focus-ring block w-full p-2.5"
-    required
-    [disabled]="disabled"
-    [readOnly]="disabled"
-    [type]="password ? 'password' : 'text'"
-    [placeholder]="password ? '••••••••' : ''"
->
+  [(ngModel)]="value"
+  (ngModelChange)="onValueChange($event)"
+  [id]="id"
+  class="bg-input-background border border-input-border text-generic-text text-sm rounded-lg focus:ring-input-field-focus-ring focus:border-input-button-focus-ring block w-full p-2.5"
+  required
+  [disabled]="disabled"
+  [readOnly]="disabled"
+  [type]="password ? 'password' : 'text'"
+  [placeholder]="password ? '••••••••' : ''"
+/>

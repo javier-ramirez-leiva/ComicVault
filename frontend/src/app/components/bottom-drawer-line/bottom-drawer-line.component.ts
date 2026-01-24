@@ -6,7 +6,7 @@ import { RouterModule } from '@angular/router';
 @Component({
   selector: 'app-bottom-drawer-line',
   imports: [CommonModule, RouterModule],
-  templateUrl: './bottom-drawer-line.component.html'
+  templateUrl: './bottom-drawer-line.component.html',
 })
 export class BottomDrawerLineComponent {
   @Input({ required: true }) label!: string;

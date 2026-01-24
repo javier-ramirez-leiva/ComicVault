@@ -1,6 +1,6 @@
-import { ComicsDatabase } from "./comics";
+import { ComicsDatabase } from './comics';
 
 export interface ComicCard {
-    setHovered(isHovered: boolean): void,
-    getComic(): ComicsDatabase
+  setHovered(isHovered: boolean): void;
+  getComic(): ComicsDatabase;
 }

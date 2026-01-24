@@ -1,19 +1,19 @@
 <ng-container *ngIf="template$ | async as template">
-    <app-cover-card
-        [id]="comic.idGc"
-        [title]="comic.title"
-        [firstLine]="'Year: ' + comic.year"
-        [secondLine]="'Size: ' + comic.size"
-        [imageURL]="comic.image"
-        [navigationURL]="template.url"
-        [queryParams]="queryParams"
-        [searchOrDatabase]="true"
-        [progress$]="progress$"
-        [numberBadge$]="remainingComic$"
-        [checked]="template.checked"
-        [comicsSearch]="comic"
-        [displayButton]="template.displayButton"
-        [highlight]="comic.highlight"
-        [queryParams]="queryParams"
-    ></app-cover-card>
+  <app-cover-card
+    [id]="comic.idGc"
+    [title]="comic.title"
+    [firstLine]="'Year: ' + comic.year"
+    [secondLine]="'Size: ' + comic.size"
+    [imageURL]="comic.image"
+    [navigationURL]="template.url"
+    [queryParams]="queryParams"
+    [searchOrDatabase]="true"
+    [progress$]="progress$"
+    [numberBadge$]="remainingComic$"
+    [checked]="template.checked"
+    [comicsSearch]="comic"
+    [displayButton]="template.displayButton"
+    [highlight]="comic.highlight"
+    [queryParams]="queryParams"
+  ></app-cover-card>
 </ng-container>

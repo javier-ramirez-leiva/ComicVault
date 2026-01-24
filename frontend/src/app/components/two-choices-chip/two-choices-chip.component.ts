@@ -1,11 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
-
 @Component({
   selector: 'app-two-choices-chip',
   imports: [CommonModule],
-  templateUrl: './two-choices-chip.component.html'
+  templateUrl: './two-choices-chip.component.html',
 })
 export class TwoChoicesChipComponent {
   @Input({ required: false }) value: boolean = false;

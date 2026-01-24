@@ -8,17 +8,15 @@ import { NotifierService } from 'services';
 import { DarkmodeService } from 'services';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { InputTextComponent } from "../input-text/input-text.component";
-
+import { InputTextComponent } from '../input-text/input-text.component';
 
 @UntilDestroy()
 @Component({
   selector: 'app-login-page',
   imports: [CommonModule, FormsModule, InputTextComponent],
-  templateUrl: './login-page.component.html'
+  templateUrl: './login-page.component.html',
 })
 export class LoginPageComponent implements OnInit {
-
   authService: AuthService = inject(AuthService);
   username: string = '';
   device: string = '';
@@ -27,7 +25,10 @@ export class LoginPageComponent implements OnInit {
   notifier: NotifierService = inject(NotifierService);
   darkMode: DarkmodeService = inject(DarkmodeService);
   deviceDetectorService: DeviceDetectorService = inject(DeviceDetectorService);
-  iconSrc: string = (this.darkMode.darkModeSignal() === 'dark') ? 'assets/icon-192x192.png' : 'assets/icon-192x192.png';
+  iconSrc: string =
+    this.darkMode.darkModeSignal() === 'dark'
+      ? 'assets/icon-192x192.png'
+      : 'assets/icon-192x192.png';
 
   ngOnInit(): void {
     this.authService.signOut();
@@ -46,20 +47,21 @@ export class LoginPageComponent implements OnInit {
       device: this.device,
       osVersion: deviceInfo.os_version,
       browserVersion: deviceInfo.browser_version,
-      orientation: deviceInfo.orientation
+      orientation: deviceInfo.orientation,
     };
-    this.authService.authenticate(authData)
+    this.authService
+      .authenticate(authData)
       .pipe(
         catchError((error) => {
           this.notifier.appendNotification({
             id: 0,
             title: 'Login Error!',
             message: 'Username and password are incorrect',
-            type: 'error'
+            type: 'error',
           });
           return throwError(() => error);
         }),
-        untilDestroyed(this)
+        untilDestroyed(this),
       )
       .subscribe((data) => {
         if (data) {
@@ -68,5 +70,4 @@ export class LoginPageComponent implements OnInit {
         }
       });
   }
-
 }

@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { ModalComponent } from 'interfaces';
-import { CrossModalComponent } from "../cross-modal/cross-modal.component";
+import { CrossModalComponent } from '../cross-modal/cross-modal.component';
 
 @Component({
   selector: 'app-modal-help',

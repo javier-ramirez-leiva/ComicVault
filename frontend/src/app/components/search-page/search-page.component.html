@@ -1,25 +1,25 @@
 <ng-container *ngIf="errorMessage$ | async as errorMessage; else contentTmpl">
-    <app-error-page [message]="errorMessage.message"></app-error-page>
+  <app-error-page [message]="errorMessage.message"></app-error-page>
 </ng-container>
 <ng-template #contentTmpl>
-    <ng-container *ngIf="comics$ | async as comics; else loadingTmpl">
-        <div class="whole-page-container">
-            <ng-container *ngIf="comics.length; else emptyResult">
-                <app-comics-search-grid
-                    *ngIf="gridService.gridOptionActivePage$ | async; else tableTmpl"
-                    [comics]="comics"
-                ></app-comics-search-grid>
-                <ng-template #tableTmpl>
-                    <app-comic-search-table [comics]="comics"></app-comic-search-table>
-                </ng-template>
-            </ng-container>
-            <ng-template #emptyResult>
-                <app-no-results></app-no-results>
-            </ng-template>
-            <app-mini-spinner *ngIf="miniSpinner$ | async"></app-mini-spinner>
-        </div>
-    </ng-container>
-    <ng-template #loadingTmpl>
-        <app-loading-spinner-page></app-loading-spinner-page>
-    </ng-template>
+  <ng-container *ngIf="comics$ | async as comics; else loadingTmpl">
+    <div class="whole-page-container">
+      <ng-container *ngIf="comics.length; else emptyResult">
+        <app-comics-search-grid
+          *ngIf="gridService.gridOptionActivePage$ | async; else tableTmpl"
+          [comics]="comics"
+        ></app-comics-search-grid>
+        <ng-template #tableTmpl>
+          <app-comic-search-table [comics]="comics"></app-comic-search-table>
+        </ng-template>
+      </ng-container>
+      <ng-template #emptyResult>
+        <app-no-results></app-no-results>
+      </ng-template>
+      <app-mini-spinner *ngIf="miniSpinner$ | async"></app-mini-spinner>
+    </div>
+  </ng-container>
+  <ng-template #loadingTmpl>
+    <app-loading-spinner-page></app-loading-spinner-page>
+  </ng-template>
 </ng-template>

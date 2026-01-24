@@ -3,16 +3,25 @@ import { NavigationEnd, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { BehaviorSubject } from 'rxjs';
 
-const pages = ['login', 'home', 'library', 'search', 'downloads', 'users', 'devices', 'settings', 'user'];
+const pages = [
+  'login',
+  'home',
+  'library',
+  'search',
+  'downloads',
+  'users',
+  'devices',
+  'settings',
+  'user',
+];
 
-type Pages = typeof pages[number];
+type Pages = (typeof pages)[number];
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 @UntilDestroy()
 export class ActivePageService {
-
   activePage$: BehaviorSubject<Pages> = new BehaviorSubject<Pages>('home');
   activeRoot$: BehaviorSubject<Pages> = new BehaviorSubject<Pages>('home');
   isDetailsPage$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);

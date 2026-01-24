@@ -9,7 +9,7 @@ import { ActivePageService } from 'services';
 @Component({
   selector: 'app-left-nav-button',
   imports: [CommonModule, RouterModule],
-  templateUrl: './left-nav-button.component.html'
+  templateUrl: './left-nav-button.component.html',
 })
 export class LeftNavButtonComponent {
   @Input({ required: true }) label!: string;

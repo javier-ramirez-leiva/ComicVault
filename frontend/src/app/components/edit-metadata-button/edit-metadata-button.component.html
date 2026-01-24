@@ -1,9 +1,26 @@
-<button
-    class="button-icon button-edit"
-    (click)="click()"
-    *ngIf="!editStatus; else confirmDialog"
->
-    <svg
+<button class="button-icon button-edit" (click)="click()" *ngIf="!editStatus; else confirmDialog">
+  <svg
+    class="w-6 h-6"
+    aria-hidden="true"
+    xmlns="http://www.w3.org/2000/svg"
+    width="24"
+    height="24"
+    fill="none"
+    viewBox="0 0 24 24"
+  >
+    <path
+      stroke="currentColor"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      stroke-width="2"
+      d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z"
+    ></path>
+  </svg>
+</button>
+<ng-template #confirmDialog>
+  <div class="flex gap-4 w-full">
+    <button class="button-icon button-edit-ok" (click)="ok()">
+      <svg
         class="w-6 h-6"
         aria-hidden="true"
         xmlns="http://www.w3.org/2000/svg"
@@ -11,61 +28,34 @@
         height="24"
         fill="none"
         viewBox="0 0 24 24"
-    >
+      >
         <path
-            stroke="currentColor"
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z"
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M5 11.917 9.724 16.5 19 7.5"
         ></path>
-    </svg>
-</button>
-<ng-template #confirmDialog>
-    <div class="flex gap-4 w-full">
-        <button
-            class="button-icon button-edit-ok"
-            (click)="ok()"
-        >
-            <svg
-                class="w-6 h-6 "
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                fill="none"
-                viewBox="0 0 24 24"
-            >
-                <path
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M5 11.917 9.724 16.5 19 7.5"
-                ></path>
-            </svg>
-        </button>
-        <button
-            class="button-icon button-edit-cancel"
-            (click)="cancel()"
-        >
-            <svg
-                class="w-6 h-6"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                width="24"
-                height="24"
-                fill="none"
-                viewBox="0 0 24 24"
-            >
-                <path
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M6 6L18 18M6 18L18 6"
-                ></path>
-            </svg>
-        </button>
-    </div>
+      </svg>
+    </button>
+    <button class="button-icon button-edit-cancel" (click)="cancel()">
+      <svg
+        class="w-6 h-6"
+        aria-hidden="true"
+        xmlns="http://www.w3.org/2000/svg"
+        width="24"
+        height="24"
+        fill="none"
+        viewBox="0 0 24 24"
+      >
+        <path
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M6 6L18 18M6 18L18 6"
+        ></path>
+      </svg>
+    </button>
+  </div>
 </ng-template>

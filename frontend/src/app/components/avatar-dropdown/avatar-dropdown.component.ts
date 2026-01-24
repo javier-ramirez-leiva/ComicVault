@@ -4,17 +4,14 @@ import { CommonModule } from '@angular/common';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { OutsideClickDirective } from 'directives';
 import { DarkmodeService } from 'services';
-import { AvatarUserComponent } from "../avatar-user/avatar-user.component";
-
-
+import { AvatarUserComponent } from '../avatar-user/avatar-user.component';
 
 @Component({
   selector: 'app-avatar-dropdown',
   imports: [CommonModule, RouterModule, OutsideClickDirective, AvatarUserComponent],
-  templateUrl: './avatar-dropdown.component.html'
+  templateUrl: './avatar-dropdown.component.html',
 })
 export class AvatarDropdownComponent {
-
   protected authService = inject(AuthService);
   private readonly router = inject(Router);
   private readonly darkModeService = inject(DarkmodeService);
@@ -39,5 +36,4 @@ export class AvatarDropdownComponent {
   toggleDarkMode() {
     this.darkModeService.toggleDarkMode();
   }
-
 }

@@ -11,10 +11,9 @@ import { notNullOrUndefined } from 'src/app/utils/rsjx-operators';
 @Component({
   selector: 'app-trending-button',
   imports: [CommonModule, ReactiveFormsModule],
-  templateUrl: './trending-button.component.html'
+  templateUrl: './trending-button.component.html',
 })
 export class TrendingButtonComponent implements OnInit {
-
   categoryControl = new FormControl<Category | null>(null);
 
   renderer = inject(Renderer2);
@@ -31,22 +30,18 @@ export class TrendingButtonComponent implements OnInit {
     } else {
       this.categoryControl.setValue(val, { emitEvent: false });
     }
-
   }
   get category(): Category | null {
     return this._category;
   }
 
   ngOnInit(): void {
-    this.categoryControl.valueChanges.pipe(
-      filter(notNullOrUndefined()),
-      untilDestroyed(this)
-    )
+    this.categoryControl.valueChanges
+      .pipe(filter(notNullOrUndefined()), untilDestroyed(this))
       .subscribe((value: Category | null) => {
         if (value !== null) {
           this.categoryChange.emit(value);
         }
       });
   }
-
 }

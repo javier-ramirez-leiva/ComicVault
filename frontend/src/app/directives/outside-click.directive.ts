@@ -2,14 +2,14 @@ import { Directive, ElementRef, EventEmitter, Output, OnInit, OnDestroy } from '
 
 @Directive({
   selector: '[appOutsideClick]',
-  standalone: true
+  standalone: true,
 })
 export class OutsideClickDirective implements OnInit, OnDestroy {
   @Output() outsideClick = new EventEmitter<void>();
 
   private clickListener!: (event: Event) => void;
 
-  constructor(private elementRef: ElementRef) { }
+  constructor(private elementRef: ElementRef) {}
 
   ngOnInit() {
     this.clickListener = (event: Event) => {

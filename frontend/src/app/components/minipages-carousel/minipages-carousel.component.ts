@@ -1,14 +1,24 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, EventEmitter, inject, Input, OnInit, Output, QueryList, ViewChild, ViewChildren } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  EventEmitter,
+  inject,
+  Input,
+  OnInit,
+  Output,
+  QueryList,
+  ViewChild,
+  ViewChildren,
+} from '@angular/core';
 import { ComicsDatabase } from 'interfaces';
 import { ConfigURLService } from 'services';
 import { range } from 'src/app/utils/number';
 
-
 @Component({
   selector: 'app-minipages-carousel',
   imports: [CommonModule],
-  templateUrl: './minipages-carousel.component.html'
+  templateUrl: './minipages-carousel.component.html',
 })
 export class MinipagesCarouselComponent implements OnInit {
   @Input({ required: true }) comic!: ComicsDatabase;
@@ -16,7 +26,7 @@ export class MinipagesCarouselComponent implements OnInit {
 
   private readonly configURLService = inject(ConfigURLService);
 
-  protected pagesURL: string = "";
+  protected pagesURL: string = '';
   protected widthStyle: string = '';
 
   protected imageErrors: boolean[] = [];
@@ -30,7 +40,6 @@ export class MinipagesCarouselComponent implements OnInit {
     this.pagesURL = `${this.configURLService.baseURL}/${this.configURLService.apiVersion}/comics/${this.comic.id}/minipages/`;
     this.imageErrors = Array(this.comic.pages).fill(false);
   }
-
 
   private _visible = false;
 
@@ -84,8 +93,8 @@ export class MinipagesCarouselComponent implements OnInit {
 
     cardElement.scrollIntoView({
       behavior: largeDistance ? 'auto' : 'smooth',
-      block: 'nearest',    // vertical alignment (irrelevant for horizontal scrolling)
-      inline: 'center'     // horizontal alignment: center of container
+      block: 'nearest', // vertical alignment (irrelevant for horizontal scrolling)
+      inline: 'center', // horizontal alignment: center of container
     });
 
     // Fallback: ensure it's visible after animation ends
@@ -94,10 +103,7 @@ export class MinipagesCarouselComponent implements OnInit {
         imageElement.scrollIntoView({ behavior: 'auto', inline: 'center', block: 'nearest' });
       }, 600);
     }*/
-
-
   }
-
 
   emitPageChange(index: number) {
     const progress = 100 * (index / this.comic.pages);
@@ -107,13 +113,12 @@ export class MinipagesCarouselComponent implements OnInit {
   }
 
   isIndexesActive(indexes: number[]) {
-    return this.page === indexes[0] || (indexes.length > 1 && this.page === indexes[1])
+    return this.page === indexes[0] || (indexes.length > 1 && this.page === indexes[1]);
   }
 
   getPageText(indexes: number[]): string {
     return indexes.length > 1 ? `${indexes[0]} - ${indexes[1]}` : `${indexes[0]}`;
   }
-
 }
 
 export function computeDoublePages(comic: ComicsDatabase, doublePages: boolean): number[][] {
@@ -124,8 +129,7 @@ export function computeDoublePages(comic: ComicsDatabase, doublePages: boolean):
     } else {
       if (comic.doublePages.includes(i) || comic.doublePages.includes(i + 1)) {
         range.push([i]);
-      }
-      else if (i === 0 && !comic.doublePageCover) {
+      } else if (i === 0 && !comic.doublePageCover) {
         range.push([i]);
       } else if (i === comic.pages - 1) {
         range.push([i]);

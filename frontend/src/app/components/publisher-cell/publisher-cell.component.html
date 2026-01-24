@@ -1,13 +1,8 @@
 <img
-    *ngIf="category==='marvel'"
-    src="assets/marvel-240.png"
-    alt="marvel"
-    class=" relative w-12 h-12"
->
-<img
-    *ngIf="category==='dc'"
-    src="assets/dc-240.png"
-    alt="dc"
-    class=" relative w-12 h-12"
->
-<span *ngIf="category==='other-comics'">Other</span>
+  *ngIf="category === 'marvel'"
+  src="assets/marvel-240.png"
+  alt="marvel"
+  class="relative w-12 h-12"
+/>
+<img *ngIf="category === 'dc'" src="assets/dc-240.png" alt="dc" class="relative w-12 h-12" />
+<span *ngIf="category === 'other-comics'">Other</span>

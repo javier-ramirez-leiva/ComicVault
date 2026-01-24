@@ -5,7 +5,7 @@ import { FormsModule } from '@angular/forms';
 @Component({
   selector: 'app-digit-input',
   imports: [CommonModule, FormsModule],
-  templateUrl: './digit-input.component.html'
+  templateUrl: './digit-input.component.html',
 })
 export class DigitInputComponent {
   @Input({ required: true }) value: number = 0;
@@ -15,5 +15,4 @@ export class DigitInputComponent {
     this.value = Number(value); // convert to number safely
     this.valueChange.emit(this.value);
   }
-
 }

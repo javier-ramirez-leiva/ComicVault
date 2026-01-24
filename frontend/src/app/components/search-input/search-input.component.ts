@@ -9,7 +9,7 @@ import { Observable } from 'rxjs';
 @Component({
   selector: 'app-search-input',
   imports: [CommonModule, FormsModule],
-  templateUrl: './search-input.component.html'
+  templateUrl: './search-input.component.html',
 })
 export class SearchInputComponent implements OnInit {
   @Input({ required: false }) searchButton: boolean = true;
@@ -22,10 +22,9 @@ export class SearchInputComponent implements OnInit {
 
   ngOnInit(): void {
     if (this.textModifier$) {
-      this.textModifier$.pipe(untilDestroyed(this)).subscribe(text => {
+      this.textModifier$.pipe(untilDestroyed(this)).subscribe((text) => {
         this.query = text;
       });
-
     }
   }
 
@@ -36,11 +35,4 @@ export class SearchInputComponent implements OnInit {
   onTextChange(input: string) {
     this.textChange.emit(input);
   }
-
-
-
-
-
-
-
 }

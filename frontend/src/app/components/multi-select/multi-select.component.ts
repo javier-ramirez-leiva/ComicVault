@@ -18,11 +18,10 @@ import { ModalMessageListComponent } from '../modal-message-list/modal-message-l
 @Component({
   selector: 'app-multi-select',
   imports: [CommonModule, HideRolesDirective],
-  templateUrl: './multi-select.component.html'
+  templateUrl: './multi-select.component.html',
 })
 @UntilDestroy()
 export class MultiSelectComponent implements OnInit {
-
   protected readonly coverCardClickCollectorService = inject(CoverCardClickCollectorService);
   protected readonly multiSelectService = inject(MultiSelectService);
   private readonly comicService = inject(ComicsService);
@@ -42,7 +41,8 @@ export class MultiSelectComponent implements OnInit {
     this.router.events.pipe(untilDestroyed(this)).subscribe((event) => {
       if (event instanceof NavigationEnd) {
         const routeString = event.urlAfterRedirects;
-        this.displayed = routeString.startsWith('/series') || routeString.startsWith('/library/issues');
+        this.displayed =
+          routeString.startsWith('/series') || routeString.startsWith('/library/issues');
         if (!this.displayed) {
           this.displayDropdown = false;
           this.coverCardClickCollectorService.clearActiveHovers();
@@ -66,60 +66,82 @@ export class MultiSelectComponent implements OnInit {
   }
 
   markAsRead(value: boolean): void {
-    const comicIDs = this.coverCardClickCollectorService.getActiveCards().map(card => card.getComic().id);
-    const listTitles = this.coverCardClickCollectorService.getActiveCards().map(card => card.getComic().title);
+    const comicIDs = this.coverCardClickCollectorService
+      .getActiveCards()
+      .map((card) => card.getComic().id);
+    const listTitles = this.coverCardClickCollectorService
+      .getActiveCards()
+      .map((card) => card.getComic().title);
     const message = `Are you sure you want to mark ${comicIDs.length} comics as ${value ? 'read' : 'not read'}?`;
     this.toggleActivation();
-    this.modalService.open<boolean, { message: string, list: string[] }>(ModalMessageListComponent, { message: message, list: listTitles }).pipe(
-      filter(response => response === true),
-      switchMap(_ => this.comicService.setComicListReadStatus(comicIDs, value))
-    ).pipe(untilDestroyed(this)).subscribe(() => {
-      this.notifier.appendNotification({
-        id: 0,
-        title: 'Comics updated',
-        message: `${comicIDs.length} comics marked as ${value ? 'read' : 'not read'}`,
-        type: 'success'
+    this.modalService
+      .open<boolean, { message: string; list: string[] }>(ModalMessageListComponent, {
+        message: message,
+        list: listTitles,
+      })
+      .pipe(
+        filter((response) => response === true),
+        switchMap((_) => this.comicService.setComicListReadStatus(comicIDs, value)),
+      )
+      .pipe(untilDestroyed(this))
+      .subscribe(() => {
+        this.notifier.appendNotification({
+          id: 0,
+          title: 'Comics updated',
+          message: `${comicIDs.length} comics marked as ${value ? 'read' : 'not read'}`,
+          type: 'success',
+        });
+        this.multiSelectService.refresh();
       });
-      this.multiSelectService.refresh();
-
-    });
     this.coverCardClickCollectorService.setMultiSelect(false);
     resetRouteCache();
   }
 
   delete(): void {
-    const comicIDs = this.coverCardClickCollectorService.getActiveCards().map(card => card.getComic().id);
-    const listTitles = this.coverCardClickCollectorService.getActiveCards().map(card => card.getComic().title);
+    const comicIDs = this.coverCardClickCollectorService
+      .getActiveCards()
+      .map((card) => card.getComic().id);
+    const listTitles = this.coverCardClickCollectorService
+      .getActiveCards()
+      .map((card) => card.getComic().title);
     const message = `Are you sure you want to delete ${comicIDs.length} comics?`;
     this.toggleActivation();
-    this.modalService.open<boolean, { message: string, list: string[] }>(ModalMessageListComponent, { message: message, list: listTitles }).pipe(
-      switchMap(_ => this.comicService.deleteComicList(comicIDs)),
-      untilDestroyed(this)
-    ).pipe(untilDestroyed(this)).subscribe(() => {
-      this.notifier.appendNotification({
-        id: 0,
-        title: 'Comics deleted',
-        message: `${comicIDs.length} comics deleted'}`,
-        type: 'warning'
+    this.modalService
+      .open<boolean, { message: string; list: string[] }>(ModalMessageListComponent, {
+        message: message,
+        list: listTitles,
       })
-      this.multiSelectService.refresh();
-      resetRouteCache();
-    });
-
+      .pipe(
+        switchMap((_) => this.comicService.deleteComicList(comicIDs)),
+        untilDestroyed(this),
+      )
+      .pipe(untilDestroyed(this))
+      .subscribe(() => {
+        this.notifier.appendNotification({
+          id: 0,
+          title: 'Comics deleted',
+          message: `${comicIDs.length} comics deleted'}`,
+          type: 'warning',
+        });
+        this.multiSelectService.refresh();
+        resetRouteCache();
+      });
   }
 
   download(): void {
-    const comics = this.coverCardClickCollectorService.getActiveCards().map(card => card.getComic()).filter(notNullOrUndefined());
+    const comics = this.coverCardClickCollectorService
+      .getActiveCards()
+      .map((card) => card.getComic())
+      .filter(notNullOrUndefined());
     this.notifier.appendNotification({
       id: 0,
       title: 'Download on device launched',
       message: `${comics.length} comics downloading`,
-      type: 'info'
+      type: 'info',
     });
     this.downloadService.downloadComicList(comics);
     this.coverCardClickCollectorService.setMultiSelect(false);
     this.multiSelectService.refresh();
-    this.toggleActivation()
+    this.toggleActivation();
   }
-
 }

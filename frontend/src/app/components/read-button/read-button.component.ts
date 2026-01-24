@@ -8,11 +8,10 @@ import { ModalReadComponent, ReadOption } from '../modal-read/modal-read.compone
 import { notNullOrUndefined } from 'src/app/utils/rsjx-operators';
 import { filter } from 'rxjs';
 
-
 @Component({
   selector: 'app-read-button',
   imports: [CommonModule],
-  templateUrl: './read-button.component.html'
+  templateUrl: './read-button.component.html',
 })
 @UntilDestroy()
 export class ReadButtonComponent {
@@ -23,22 +22,22 @@ export class ReadButtonComponent {
   @Input({ required: true }) comic!: ComicsDatabase;
 
   displayReadModal() {
-    this.modalService.open<ReadOption, undefined>(ModalReadComponent, undefined).pipe(
-      filter(notNullOrUndefined()),
-      untilDestroyed(this)
-    ).subscribe(response => {
-      switch (response) {
-        case 'read':
-          this.read();
-          break;
-        case 'incognito':
-          this.readIncongnito();
-          break;
-        case 'beginning':
-          this.startFromTheBeginning();
-          break;
-      }
-    })
+    this.modalService
+      .open<ReadOption, undefined>(ModalReadComponent, undefined)
+      .pipe(filter(notNullOrUndefined()), untilDestroyed(this))
+      .subscribe((response) => {
+        switch (response) {
+          case 'read':
+            this.read();
+            break;
+          case 'incognito':
+            this.readIncongnito();
+            break;
+          case 'beginning':
+            this.startFromTheBeginning();
+            break;
+        }
+      });
   }
 
   read() {
@@ -52,8 +51,9 @@ export class ReadButtonComponent {
   }
 
   startFromTheBeginning() {
-    this.comicsService.setComicPageStatus(this.comic?.id, 0).pipe(
-      untilDestroyed(this)
-    ).subscribe(() => this.read());
+    this.comicsService
+      .setComicPageStatus(this.comic?.id, 0)
+      .pipe(untilDestroyed(this))
+      .subscribe(() => this.read());
   }
 }

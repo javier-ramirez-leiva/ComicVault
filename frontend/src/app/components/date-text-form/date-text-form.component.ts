@@ -11,8 +11,8 @@ import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => DateTextFormComponent),
       multi: true,
-    }
-  ]
+    },
+  ],
 })
 export class DateTextFormComponent {
   @Input({ required: false }) title: string = '';
@@ -22,8 +22,8 @@ export class DateTextFormComponent {
 
   @ViewChild('input', { static: false }) input!: ElementRef<HTMLInputElement>;
 
-  private onChange = (_: any) => { };
-  protected onTouched = () => { };
+  private onChange = (_: any) => {};
+  protected onTouched = () => {};
 
   // Called by Angular when external model changes
   writeValue(value: any): void {

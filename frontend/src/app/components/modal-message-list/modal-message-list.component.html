@@ -1,53 +1,44 @@
 <div class="fixed inset-0 z-50 flex items-center justify-center p-4">
-    <div class="relative w-full max-w-[70vw] bg-modal-background rounded-lg shadow-sm flex flex-col overflow-hidden">
-        <app-cross-modal (onCloseClick)="cancel()"></app-cross-modal>
-        <div class="p-4 md:p-5 text-center">
-            <svg
-                class="mx-auto mb-4 text-modal-message-warning w-12 h-12"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 20 20"
-            >
-                <path
-                    stroke="currentColor"
-                    stroke-linecap="round"
-                    stroke-linejoin="round"
-                    stroke-width="2"
-                    d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-                ></path>
-            </svg>
+  <div
+    class="relative w-full max-w-[70vw] bg-modal-background rounded-lg shadow-sm flex flex-col overflow-hidden"
+  >
+    <app-cross-modal (onCloseClick)="cancel()"></app-cross-modal>
+    <div class="p-4 md:p-5 text-center">
+      <svg
+        class="mx-auto mb-4 text-modal-message-warning w-12 h-12"
+        aria-hidden="true"
+        xmlns="http://www.w3.org/2000/svg"
+        fill="none"
+        viewBox="0 0 20 20"
+      >
+        <path
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M10 11V6m0 8h.01M19 10a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+        ></path>
+      </svg>
 
-            <h3 class="mb-5 text-lg font-normal text-modal-message-text shrink-1">{{data?.message}}</h3>
-            <div class="py-4 pb-4">
-                <div
-                    class="text-box overflow-x-auto overflow-y-auto max-h-[60vh]"
-                    *ngIf="data && data.list.length > 0"
-                >
-                    <p
-                        *ngFor="let line of data.list"
-                        class="text-box-p"
-                    >
-                        {{ line }}
-                    </p>
-                </div>
-            </div>
-            <div class="flex justify-center gap-6">
-                <button
-                    (click)="confirm(true)"
-                    type="button"
-                    class="button-text button-error"
-                >
-                    Yes, I'm sure
-                </button>
-                <button
-                    (click)="confirm(false)"
-                    type="button"
-                    class="button-text button-deactivated "
-                >
-                    No, cancel
-                </button>
-            </div>
+      <h3 class="mb-5 text-lg font-normal text-modal-message-text shrink-1">{{ data?.message }}</h3>
+      <div class="py-4 pb-4">
+        <div
+          class="text-box overflow-x-auto overflow-y-auto max-h-[60vh]"
+          *ngIf="data && data.list.length > 0"
+        >
+          <p *ngFor="let line of data.list" class="text-box-p">
+            {{ line }}
+          </p>
         </div>
+      </div>
+      <div class="flex justify-center gap-6">
+        <button (click)="confirm(true)" type="button" class="button-text button-error">
+          Yes, I'm sure
+        </button>
+        <button (click)="confirm(false)" type="button" class="button-text button-deactivated">
+          No, cancel
+        </button>
+      </div>
     </div>
+  </div>
 </div>

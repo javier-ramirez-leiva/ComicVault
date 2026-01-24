@@ -1,23 +1,30 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { SearchInputComponent } from "../search-input/search-input.component";
+import { SearchInputComponent } from '../search-input/search-input.component';
 import { NavigationEnd, Router } from '@angular/router';
 import { TopBarService } from 'services';
 import { FilterFunnel, FunnelButtonComponent } from '../funnel-button/funnel-button.component';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { CommonModule } from '@angular/common';
-import { BackButtonComponent } from "../back-button/back-button.component";
-import { AvatarDropdownComponent } from "../avatar-dropdown/avatar-dropdown.component";
-import { SearchAndCategoryComponent } from "../search-and-category/search-and-category.component";
-import { GridButtonComponent } from "../grid-button/grid-button.component";
+import { BackButtonComponent } from '../back-button/back-button.component';
+import { AvatarDropdownComponent } from '../avatar-dropdown/avatar-dropdown.component';
+import { SearchAndCategoryComponent } from '../search-and-category/search-and-category.component';
+import { GridButtonComponent } from '../grid-button/grid-button.component';
 
 @UntilDestroy()
 @Component({
   selector: 'app-top-bar',
-  imports: [SearchInputComponent, FunnelButtonComponent, CommonModule, BackButtonComponent, AvatarDropdownComponent, SearchAndCategoryComponent, GridButtonComponent],
-  templateUrl: './top-bar.component.html'
+  imports: [
+    SearchInputComponent,
+    FunnelButtonComponent,
+    CommonModule,
+    BackButtonComponent,
+    AvatarDropdownComponent,
+    SearchAndCategoryComponent,
+    GridButtonComponent,
+  ],
+  templateUrl: './top-bar.component.html',
 })
 export class TopBarComponent implements OnInit {
-
   protected displaySettings: DisplaySettings = {
     displaySearchInputLibrary: false,
     displaySearchInputSearch: false,
@@ -25,7 +32,7 @@ export class TopBarComponent implements OnInit {
     displayFunnel: false,
     displayTrending: false,
     displayGridButton: false,
-  }
+  };
 
   private readonly router: Router = inject(Router);
   protected readonly topBarService: TopBarService = inject(TopBarService);
@@ -49,7 +56,6 @@ export class TopBarComponent implements OnInit {
   emitContentChange(content: boolean) {
     this.topBarService.emitContentChangeEvent(content);
   }
-
 
   private updateDisplaySettings(currentRoute: string): void {
     switch (true) {
@@ -154,4 +160,4 @@ type DisplaySettings = {
   displayFunnel: boolean;
   displayTrending: boolean;
   displayGridButton: boolean;
-}
+};

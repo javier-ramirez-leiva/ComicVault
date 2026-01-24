@@ -24,4 +24,4 @@ export * from './grid.service';
 export * from './server-info.service';
 export * from './blur-mask.service';
 export * from './zoom.service';
-export * from './jobs.service'
+export * from './jobs.service';

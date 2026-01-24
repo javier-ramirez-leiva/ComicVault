@@ -2,10 +2,9 @@ import { Injectable, inject } from '@angular/core';
 import { LocalStorageService } from './local-storage.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class PaginationRatioService {
-
   private readonly localStorageService: LocalStorageService = inject(LocalStorageService);
 
   private paginationRatio: number = 1;

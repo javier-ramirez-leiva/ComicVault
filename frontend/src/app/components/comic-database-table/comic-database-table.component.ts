@@ -3,14 +3,29 @@ import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular
 import { RouterLink } from '@angular/router';
 import { ComicCard, ComicsDatabase } from 'interfaces';
 import { ConfigURLService, CoverCardClickCollectorService, MultiSelectService } from 'services';
-import { PublisherCellComponent } from "../publisher-cell/publisher-cell.component";
-import { CdkDrag, CdkDragDrop, CdkDragHandle, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
-import { StatusCellComponent } from "../status-cell/status-cell.component";
-import { BooleanCheckboxComponent } from "../boolean-checkbox/boolean-checkbox.component";
+import { PublisherCellComponent } from '../publisher-cell/publisher-cell.component';
+import {
+  CdkDrag,
+  CdkDragDrop,
+  CdkDragHandle,
+  CdkDropList,
+  moveItemInArray,
+} from '@angular/cdk/drag-drop';
+import { StatusCellComponent } from '../status-cell/status-cell.component';
+import { BooleanCheckboxComponent } from '../boolean-checkbox/boolean-checkbox.component';
 
 @Component({
   selector: 'app-comic-database-table',
-  imports: [CommonModule, RouterLink, PublisherCellComponent, CdkDropList, CdkDrag, CdkDragHandle, StatusCellComponent, BooleanCheckboxComponent],
+  imports: [
+    CommonModule,
+    RouterLink,
+    PublisherCellComponent,
+    CdkDropList,
+    CdkDrag,
+    CdkDragHandle,
+    StatusCellComponent,
+    BooleanCheckboxComponent,
+  ],
   templateUrl: './comic-database-table.component.html',
 })
 export class ComicDatabaseTableComponent {
@@ -27,9 +42,11 @@ export class ComicDatabaseTableComponent {
   @Input({ required: true })
   set comics(comics: ComicsDatabase[]) {
     this._comics = comics;
-    this.listIssues = this._comics.map(comic => comic.issue);
+    this.listIssues = this._comics.map((comic) => comic.issue);
 
-    this.rowComics = this._comics.map(comic => new RowComic(comic, this.coverCardClickCollector.isCardActiveHover(comic.id)));
+    this.rowComics = this._comics.map(
+      (comic) => new RowComic(comic, this.coverCardClickCollector.isCardActiveHover(comic.id)),
+    );
   }
 
   get comics(): ComicsDatabase[] {
@@ -70,7 +87,6 @@ export class ComicDatabaseTableComponent {
       }
     }
   }
-
 }
 
 class RowComic implements ComicCard {

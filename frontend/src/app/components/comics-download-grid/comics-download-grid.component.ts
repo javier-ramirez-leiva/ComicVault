@@ -7,7 +7,7 @@ import { ComicSearchWithDownloadComponent } from '../comic-search-with-download/
 @Component({
   selector: 'app-comics-download-grid',
   imports: [ComicSearchWithDownloadComponent, CommonModule],
-  templateUrl: './comics-download-grid.component.html'
+  templateUrl: './comics-download-grid.component.html',
 })
 export class ComicsDownloadGridComponent {
   @Input() public comics!: ComicsSearch[];
@@ -15,5 +15,4 @@ export class ComicsDownloadGridComponent {
   trackByComic(index: number, comic: ComicsSearch): string {
     return comic.idGc;
   }
-
 }

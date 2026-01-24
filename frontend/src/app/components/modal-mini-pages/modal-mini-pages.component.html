@@ -1,53 +1,45 @@
 <div class="fixed inset-0 z-50 flex items-center justify-center p-4">
-    <div class="relative w-full max-w-[90vw] max-h-[90vh] bg-modal-background rounded-lg shadow-sm flex flex-col overflow-hidden">
-        <!-- Header / Close button -->
-        <app-cross-modal (onCloseClick)="cancel()"></app-cross-modal>
+  <div
+    class="relative w-full max-w-[90vw] max-h-[90vh] bg-modal-background rounded-lg shadow-sm flex flex-col overflow-hidden"
+  >
+    <!-- Header / Close button -->
+    <app-cross-modal (onCloseClick)="cancel()"></app-cross-modal>
 
-        <!-- Scrollable content -->
-        <section
-            class="flex-1 overflow-y-auto pb-8 px-4 mt-16 touch-pan-y"
-            style="-webkit-overflow-scrolling: touch;"
-        >
-            <ul class="grid-mini-pages">
-                <li *ngFor="let index of range">
-                    <div
-                        #image
-                        class="flex flex-col items-center h-full"
-                        (click)="updatePage(index)"
-                    >
-                        <ng-container *ngIf="!imageErrors[index]; else pageNumberTpl">
-                            <div class="flex items-center h-full">
-                                <img
-                                    [src]="pagesURL + index"
-                                    class="border-cover-card-active-border"
-                                    [class.border-4]="index === page"
-                                    (error)="imageErrors[index] = true"
-                                >
-                            </div>
-                        </ng-container>
-                        <ng-template #pageNumberTpl>
-                            <div
-                                class="h-full aspect-[3/5] border-cover-card-active-border font-extrabold text-2xl flex justify-center items-center bg-background text-generic-text"
-                                [class.border-4]="index === page"
-                            >
-                                {{ index }}
-                            </div>
-                        </ng-template>
-                        <div class="text-generic-text mt-2">{{index}}</div>
-                    </div>
-                </li>
-            </ul>
-        </section>
+    <!-- Scrollable content -->
+    <section
+      class="flex-1 overflow-y-auto pb-8 px-4 mt-16 touch-pan-y"
+      style="-webkit-overflow-scrolling: touch"
+    >
+      <ul class="grid-mini-pages">
+        <li *ngFor="let index of range">
+          <div #image class="flex flex-col items-center h-full" (click)="updatePage(index)">
+            <ng-container *ngIf="!imageErrors[index]; else pageNumberTpl">
+              <div class="flex items-center h-full">
+                <img
+                  [src]="pagesURL + index"
+                  class="border-cover-card-active-border"
+                  [class.border-4]="index === page"
+                  (error)="imageErrors[index] = true"
+                />
+              </div>
+            </ng-container>
+            <ng-template #pageNumberTpl>
+              <div
+                class="h-full aspect-[3/5] border-cover-card-active-border font-extrabold text-2xl flex justify-center items-center bg-background text-generic-text"
+                [class.border-4]="index === page"
+              >
+                {{ index }}
+              </div>
+            </ng-template>
+            <div class="text-generic-text mt-2">{{ index }}</div>
+          </div>
+        </li>
+      </ul>
+    </section>
 
-        <!-- Footer / Button -->
-        <div class="flex justify-center px-4 py-2">
-            <button
-                type="button"
-                (click)="confirm()"
-                class="button-text button-primary w-18"
-            >
-                OK
-            </button>
-        </div>
+    <!-- Footer / Button -->
+    <div class="flex justify-center px-4 py-2">
+      <button type="button" (click)="confirm()" class="button-text button-primary w-18">OK</button>
     </div>
+  </div>
 </div>

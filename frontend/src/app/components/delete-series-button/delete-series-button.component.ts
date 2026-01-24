@@ -13,7 +13,7 @@ import { resetRouteCache } from 'src/app/strategy_providers/custom-reuse-strateg
 @Component({
   selector: 'app-delete-series-button',
   imports: [],
-  templateUrl: './delete-series-button.component.html'
+  templateUrl: './delete-series-button.component.html',
 })
 @UntilDestroy()
 export class DeleteSeriesButtonComponent {
@@ -26,27 +26,29 @@ export class DeleteSeriesButtonComponent {
 
   @Input() series!: Series | null;
 
-
   triggerModal() {
     const message = `Are you sure you want to delete ${this.series?.title} with ${this.series?.comics.length} comics?`;
-    this.modalService.open<boolean, { message: string | undefined }>(ModalMessageComponent, { message: message }).pipe(
-      filter(response => response === true),
-      switchMap(_ => {
-        return this.comicsService.deleteComicList(
-          this.series!.comics.map((comic: ComicsDatabase) => comic.id)
-        );
-      }),
-      untilDestroyed(this)
-    ).subscribe(response => {
-      this.notifierService.appendNotification({
-        id: 0,
-        title: 'Series deleted',
-        message: this.series!.title,
-        type: 'warning'
-      });
-      resetRouteCache();
+    this.modalService
+      .open<boolean, { message: string | undefined }>(ModalMessageComponent, { message: message })
+      .pipe(
+        filter((response) => response === true),
+        switchMap((_) => {
+          return this.comicsService.deleteComicList(
+            this.series!.comics.map((comic: ComicsDatabase) => comic.id),
+          );
+        }),
+        untilDestroyed(this),
+      )
+      .subscribe((response) => {
+        this.notifierService.appendNotification({
+          id: 0,
+          title: 'Series deleted',
+          message: this.series!.title,
+          type: 'warning',
+        });
+        resetRouteCache();
 
-      this.router.navigate(['/' + this.activePageService.activePage$.getValue()]);
-    });
+        this.router.navigate(['/' + this.activePageService.activePage$.getValue()]);
+      });
   }
 }

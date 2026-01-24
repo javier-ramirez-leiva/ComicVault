@@ -2,9 +2,8 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { Notifications, ProcessingNotifications } from 'interfaces';
 
-
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class NotifierService {
   private notifications: Notifications[] = [];
@@ -15,8 +14,7 @@ export class NotifierService {
   private processingNotifications$ = this.processingNotificationsSubject.asObservable();
   private index: number = 1;
 
-
-  constructor() { }
+  constructor() {}
 
   appendNotification(notification: Notifications) {
     this.removeProcessingNotification(this.index);
@@ -27,7 +25,7 @@ export class NotifierService {
   }
 
   removeNotification(id: number) {
-    this.notifications = this.notifications.filter(notification => notification.id !== id);
+    this.notifications = this.notifications.filter((notification) => notification.id !== id);
     this.notificationsSubject.next(this.notifications);
   }
 
@@ -35,18 +33,19 @@ export class NotifierService {
     return this.notifications$;
   }
 
-
   appendProcessingNotification(processingNotification: ProcessingNotifications) {
     processingNotification.id = this.index;
     this.processingNotifications.push(processingNotification);
     this.processingNotificationsSubject.next(this.processingNotifications);
     setTimeout(() => {
       this.removeProcessingNotification(processingNotification.id);
-    }, 2000);// Clear the notification after 2 seconds
+    }, 2000); // Clear the notification after 2 seconds
   }
 
   removeProcessingNotification(id: number) {
-    this.processingNotifications = this.processingNotifications.filter(processingNotification => processingNotification.id !== id);
+    this.processingNotifications = this.processingNotifications.filter(
+      (processingNotification) => processingNotification.id !== id,
+    );
     this.processingNotificationsSubject.next(this.processingNotifications);
   }
 

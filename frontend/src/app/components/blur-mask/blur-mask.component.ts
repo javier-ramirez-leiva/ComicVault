@@ -5,6 +5,4 @@ import { Component } from '@angular/core';
   imports: [],
   templateUrl: './blur-mask.component.html',
 })
-export class BlurMaskComponent {
-
-}
+export class BlurMaskComponent {}

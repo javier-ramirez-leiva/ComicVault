@@ -9,5 +9,4 @@ import { ComicsDatabase } from 'interfaces';
 })
 export class StatusCellComponent {
   @Input({ required: true }) comic!: ComicsDatabase;
-
 }

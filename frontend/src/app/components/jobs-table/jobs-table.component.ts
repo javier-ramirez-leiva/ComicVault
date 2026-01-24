@@ -4,7 +4,7 @@ import { Router, RouterModule } from '@angular/router';
 import { Job, JobStatus, JobType } from 'interfaces';
 import { ModalService } from 'services';
 import { RouterService } from 'src/app/services/router.service';
-import { CdkDropList } from "@angular/cdk/drag-drop";
+import { CdkDropList } from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-jobs-table',
@@ -21,8 +21,8 @@ export class JobsTableComponent {
   readonly statusLabels: Record<JobStatus, String> = {
     COMPLETED: 'COMPLETED',
     ERROR: 'ERROR',
-    ON_GOING: 'ON GOING'
-  }
+    ON_GOING: 'ON GOING',
+  };
 
   readonly typeLabels: Record<JobType, String> = {
     DOWNLOAD: 'DOWNLOAD',
@@ -30,8 +30,8 @@ export class JobsTableComponent {
     SCAN_LIB: 'SCAN LIB',
     DELETE: 'DELETE',
     DELETE_LIB: 'DELETE LIB',
-    CLEAN_LIB: 'CLEAN LIB'
-  }
+    CLEAN_LIB: 'CLEAN LIB',
+  };
 
   trackJobs(index: number, job: Job): string {
     return job.timeStamp.toString();

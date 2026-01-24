@@ -6,7 +6,7 @@ import { delay, map, Observable } from 'rxjs';
 @Component({
   selector: 'app-root',
   imports: [SideNavMenuComponent, CommonModule, LoadingSpinnerPageComponent],
-  templateUrl: './app.component.html'
+  templateUrl: './app.component.html',
 })
 export class AppComponent {
   loggedIn: boolean | undefined = undefined;
@@ -18,7 +18,6 @@ export class AppComponent {
 
   constructor() {
     this.darkModeService.init();
-    this.initDone$ = this.authService.sessionInit().pipe(map(result => true));
+    this.initDone$ = this.authService.sessionInit().pipe(map((result) => true));
   }
-
 }

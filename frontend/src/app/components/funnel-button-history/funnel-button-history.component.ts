@@ -6,20 +6,27 @@ import { TopBarService } from 'services';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { FilterHistory } from 'interfaces';
 import { BooleanSliderFormComponent } from '../boolean-slider-form/boolean-slider-form.component';
-import { RightPanelFunnelButtonComponent } from "../right-panel-funnel-button/right-panel-funnel-button.component";
-import { RightPanelTitleComponent } from "../right-panel-title/right-panel-title.component";
-import { InputTextFormComponent } from "../input-text-form/input-text-form.component";
-import { DateTextFormComponent } from "../date-text-form/date-text-form.component";
+import { RightPanelFunnelButtonComponent } from '../right-panel-funnel-button/right-panel-funnel-button.component';
+import { RightPanelTitleComponent } from '../right-panel-title/right-panel-title.component';
+import { InputTextFormComponent } from '../input-text-form/input-text-form.component';
+import { DateTextFormComponent } from '../date-text-form/date-text-form.component';
 import { ActivatedRoute, Router } from '@angular/router';
 
 @UntilDestroy()
 @Component({
   selector: 'app-funnel-button-history',
-  imports: [CommonModule, ReactiveFormsModule, BooleanSliderFormComponent, RightPanelFunnelButtonComponent, RightPanelTitleComponent, InputTextFormComponent, DateTextFormComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    BooleanSliderFormComponent,
+    RightPanelFunnelButtonComponent,
+    RightPanelTitleComponent,
+    InputTextFormComponent,
+    DateTextFormComponent,
+  ],
   templateUrl: './funnel-button-history.component.html',
 })
 export class FunnelButtonHistoryComponent implements AfterViewInit {
-
   isDrawerOpen$ = new BehaviorSubject<boolean>(false);
   form: FormGroup;
 
@@ -42,14 +49,14 @@ export class FunnelButtonHistoryComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.route.queryParams.pipe(
-      untilDestroyed(this)
-    ).subscribe(params => {
+    this.route.queryParams.pipe(untilDestroyed(this)).subscribe((params) => {
       const filterHistory = {
         comicTitle: params['comicTitle'] || '',
         dateStart: params['dateStart'] || '',
         dateEnd: params['dateEnd'] || '',
-        readStatusOnGoing: params['readStatusOnGoing'] ? params['readStatusOnGoing'] === 'true' : true,
+        readStatusOnGoing: params['readStatusOnGoing']
+          ? params['readStatusOnGoing'] === 'true'
+          : true,
         readStatusRead: params['readStatusRead'] ? params['readStatusRead'] === 'true' : true,
         inLibraryYes: params['inLibraryYes'] ? params['inLibraryYes'] === 'true' : true,
         inLibraryNo: params['inLibraryNo'] ? params['inLibraryNo'] === 'true' : true,
@@ -70,5 +77,3 @@ export class FunnelButtonHistoryComponent implements AfterViewInit {
     });
   }
 }
-
-

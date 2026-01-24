@@ -1,26 +1,51 @@
 import { Component, HostListener, inject, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ComicsDatabase } from 'interfaces';
-import { ComicsService, DownloadService, OrientationService, ReaderSettingsService, WindowService, ZoomService } from 'services';
+import {
+  ComicsService,
+  DownloadService,
+  OrientationService,
+  ReaderSettingsService,
+  WindowService,
+  ZoomService,
+} from 'services';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { combineLatest, EMPTY, forkJoin, Observable, of, Subject } from 'rxjs';
-import { debounceTime, delay, distinctUntilChanged, filter, map, startWith, switchMap, tap } from 'rxjs/operators';
+import {
+  debounceTime,
+  delay,
+  distinctUntilChanged,
+  filter,
+  map,
+  startWith,
+  switchMap,
+  tap,
+} from 'rxjs/operators';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { BackButtonComponent } from "../back-button/back-button.component";
+import { BackButtonComponent } from '../back-button/back-button.component';
 import { Location } from '@angular/common';
 import { SwipeDirective } from 'directives';
 import { resetRouteCache } from 'src/app/strategy_providers/custom-reuse-strategy';
-import { computeDoublePages, MinipagesCarouselComponent } from "../minipages-carousel/minipages-carousel.component";
-import { ReaderSettingsButtonComponent } from "../reader-settings-button/reader-settings-button.component";
+import {
+  computeDoublePages,
+  MinipagesCarouselComponent,
+} from '../minipages-carousel/minipages-carousel.component';
+import { ReaderSettingsButtonComponent } from '../reader-settings-button/reader-settings-button.component';
 import { RouterService } from 'src/app/services/router.service';
-
 
 @UntilDestroy()
 @Component({
   selector: 'app-reader-page',
-  imports: [CommonModule, FormsModule, BackButtonComponent, SwipeDirective, MinipagesCarouselComponent, ReaderSettingsButtonComponent],
-  templateUrl: './reader-page.component.html'
+  imports: [
+    CommonModule,
+    FormsModule,
+    BackButtonComponent,
+    SwipeDirective,
+    MinipagesCarouselComponent,
+    ReaderSettingsButtonComponent,
+  ],
+  templateUrl: './reader-page.component.html',
 })
 export class ReaderPageComponent implements OnDestroy {
   comicId!: string;
@@ -50,69 +75,74 @@ export class ReaderPageComponent implements OnDestroy {
   private rangePages: number[][] = [];
 
   constructor() {
-    this.route.url.subscribe(segments => {
+    this.route.url.subscribe((segments) => {
       const last = segments[segments.length - 1]?.path;
       this.incognito = last === 'incognito';
     });
     this.comic$ = this.route.params.pipe(
-      map(params => params['id']),
-      switchMap(id => {
+      map((params) => params['id']),
+      switchMap((id) => {
         this.comicId = id;
         return this.comicsService.getComic(this.comicId);
-      })
+      }),
     );
 
-    combineLatest([
-      this.comic$,
-      this.route.queryParams
-    ]).pipe(
-      untilDestroyed(this)
-    ).subscribe(([comic, queryParams]) => {
-      this.comic = comic;
-      if (queryParams['page']) {
-        this.page = Number(queryParams['page']);
-      } else {
-        this.page = comic.pageStatus;
-      }
-      this.loadPage();
-    })
+    combineLatest([this.comic$, this.route.queryParams])
+      .pipe(untilDestroyed(this))
+      .subscribe(([comic, queryParams]) => {
+        this.comic = comic;
+        if (queryParams['page']) {
+          this.page = Number(queryParams['page']);
+        } else {
+          this.page = comic.pageStatus;
+        }
+        this.loadPage();
+      });
 
-    this.debouncer.pipe(debounceTime(300)).pipe(untilDestroyed(this)).subscribe((page) => {
-      this.page = page;
-      this.loadPage();
-    });
+    this.debouncer
+      .pipe(debounceTime(300))
+      .pipe(untilDestroyed(this))
+      .subscribe((page) => {
+        this.page = page;
+        this.loadPage();
+      });
 
-    this.orientationService.orientationChange$.pipe(
-      filter(() => this.readerSettingsService.getValue('resetZoom')),
-      untilDestroyed(this)
-    ).subscribe(() => {
-      //On pwa only reloading the page works
-      //this.routerService.reloadCurrentRouteForce();
-      this.resetZoomWithReload();
-      //this.zoomService.resetZoom()
-    });
+    this.orientationService.orientationChange$
+      .pipe(
+        filter(() => this.readerSettingsService.getValue('resetZoom')),
+        untilDestroyed(this),
+      )
+      .subscribe(() => {
+        //On pwa only reloading the page works
+        //this.routerService.reloadCurrentRouteForce();
+        this.resetZoomWithReload();
+        //this.zoomService.resetZoom()
+      });
 
     this.doublePage$ = combineLatest(
       this.readerSettingsService.doublePageConfiguration$,
       this.orientationService.orientationChange$.pipe(
         startWith(this.orientationService.getOrientation()),
-      )
+      ),
     ).pipe(
-      map(([doublePageConfiguration, orientation]) => doublePageConfiguration === 'double' || orientation === 'landscape' && doublePageConfiguration === 'auto' ? 'double' : 'single'),
-      tap(value => this.activatedDoublePage = value === 'double'),
-      distinctUntilChanged()
+      map(([doublePageConfiguration, orientation]) =>
+        doublePageConfiguration === 'double' ||
+        (orientation === 'landscape' && doublePageConfiguration === 'auto')
+          ? 'double'
+          : 'single',
+      ),
+      tap((value) => (this.activatedDoublePage = value === 'double')),
+      distinctUntilChanged(),
     );
 
-    combineLatest([
-      this.comic$,
-      this.doublePage$
-    ]).pipe(untilDestroyed(this)).subscribe(([comic, doublePages]) => {
-      this.rangePages = computeDoublePages(comic, doublePages === 'double');
-      this.loadPage();
-    })
+    combineLatest([this.comic$, this.doublePage$])
+      .pipe(untilDestroyed(this))
+      .subscribe(([comic, doublePages]) => {
+        this.rangePages = computeDoublePages(comic, doublePages === 'double');
+        this.loadPage();
+      });
 
     this.zoomService.setZoomEnabled(true);
-
   }
 
   ngOnDestroy(): void {
@@ -129,37 +159,39 @@ export class ReaderPageComponent implements OnDestroy {
         // double page
         forkJoin([
           this.blobToImage$(this.currentPageBlob[0]),
-          this.blobToImage$(this.currentPageBlob[1])
-        ]).pipe(
-          switchMap(([leftImg, rightImg]) => {
-            const width = leftImg.width + rightImg.width;
-            const height = Math.max(leftImg.height, rightImg.height);
+          this.blobToImage$(this.currentPageBlob[1]),
+        ])
+          .pipe(
+            switchMap(([leftImg, rightImg]) => {
+              const width = leftImg.width + rightImg.width;
+              const height = Math.max(leftImg.height, rightImg.height);
 
-            const canvas = document.createElement('canvas');
-            canvas.width = width;
-            canvas.height = height;
-            const ctx = canvas.getContext('2d')!;
+              const canvas = document.createElement('canvas');
+              canvas.width = width;
+              canvas.height = height;
+              const ctx = canvas.getContext('2d')!;
 
-            ctx.drawImage(leftImg, 0, 0);
-            ctx.drawImage(rightImg, leftImg.width, 0);
+              ctx.drawImage(leftImg, 0, 0);
+              ctx.drawImage(rightImg, leftImg.width, 0);
 
-            // wrap toBlob in an observable
-            return new Observable<Blob>((observer) => {
-              canvas.toBlob((blob) => {
-                if (blob) {
-                  observer.next(blob);
-                  observer.complete();
-                } else {
-                  observer.error('Canvas toBlob failed');
-                }
-              }, 'image/png');
-            });
-          })
-        ).subscribe((blob: Blob) => {
-          const imageUrl = URL.createObjectURL(blob);
-          const imgElement = document.getElementById('comicImage') as HTMLImageElement;
-          imgElement.src = imageUrl;
-        });
+              // wrap toBlob in an observable
+              return new Observable<Blob>((observer) => {
+                canvas.toBlob((blob) => {
+                  if (blob) {
+                    observer.next(blob);
+                    observer.complete();
+                  } else {
+                    observer.error('Canvas toBlob failed');
+                  }
+                }, 'image/png');
+              });
+            }),
+          )
+          .subscribe((blob: Blob) => {
+            const imageUrl = URL.createObjectURL(blob);
+            const imgElement = document.getElementById('comicImage') as HTMLImageElement;
+            imgElement.src = imageUrl;
+          });
       }
     }
   }
@@ -178,16 +210,16 @@ export class ReaderPageComponent implements OnDestroy {
     });
   }
 
-
   getComicPage(page: number): Observable<DoublePageBlob> {
     this.lockNextPrevious = true;
-    const pageCouple = this.rangePages.find(pair => pair.includes(page));
+    const pageCouple = this.rangePages.find((pair) => pair.includes(page));
     if (pageCouple) {
       const page0$ = this.downloadService.getComicPage(this.comicId, pageCouple[0]);
-      const page1$ = pageCouple.length > 1 ? this.downloadService.getComicPage(this.comicId, pageCouple[1]) : of(undefined);
-      return forkJoin([page0$, page1$]).pipe(
-        tap(() => this.lockNextPrevious = false)
-      );
+      const page1$ =
+        pageCouple.length > 1
+          ? this.downloadService.getComicPage(this.comicId, pageCouple[1])
+          : of(undefined);
+      return forkJoin([page0$, page1$]).pipe(tap(() => (this.lockNextPrevious = false)));
     }
     //SHOULD NEVER HAPPEN
     return EMPTY;
@@ -198,10 +230,12 @@ export class ReaderPageComponent implements OnDestroy {
       this.previousPageBlob = undefined;
       this.nextPageBlob = undefined;
       this.setComicPage();
-      this.getComicPage(this.page).pipe(untilDestroyed(this)).subscribe((response) => {
-        this.currentPageBlob = response;
-        this.setPageImage();
-      });
+      this.getComicPage(this.page)
+        .pipe(untilDestroyed(this))
+        .subscribe((response) => {
+          this.currentPageBlob = response;
+          this.setPageImage();
+        });
       this.storeNextPage();
       this.storePreviousPage();
     }
@@ -210,20 +244,27 @@ export class ReaderPageComponent implements OnDestroy {
   storePreviousPage() {
     const decreasePage = this.decreasePage(this.page);
     if (decreasePage >= 0) {
-      this.getComicPage(decreasePage).pipe(untilDestroyed(this)).subscribe((response) => this.previousPageBlob = response);
-    };
+      this.getComicPage(decreasePage)
+        .pipe(untilDestroyed(this))
+        .subscribe((response) => (this.previousPageBlob = response));
+    }
   }
 
   storeNextPage() {
     const nextPage = this.increasePage(this.page);
     if (this.comic && nextPage < this.comic.pages) {
-      this.getComicPage(nextPage).pipe(untilDestroyed(this)).subscribe((response) => this.nextPageBlob = response);
+      this.getComicPage(nextPage)
+        .pipe(untilDestroyed(this))
+        .subscribe((response) => (this.nextPageBlob = response));
     }
   }
 
   setComicPage() {
     if (!this.incognito) {
-      this.comicsService.setComicPageStatus(this.comicId, this.page).pipe(untilDestroyed(this)).subscribe();
+      this.comicsService
+        .setComicPageStatus(this.comicId, this.page)
+        .pipe(untilDestroyed(this))
+        .subscribe();
     }
     const newParams = new URLSearchParams(window.location.search);
     newParams.set('page', String(this.page));
@@ -251,7 +292,6 @@ export class ReaderPageComponent implements OnDestroy {
     }
   }
 
-
   increasePage(page: number): number {
     if (this.activatedDoublePage && this.comic) {
       if (this.comic.doublePages.includes(page + 1) || this.comic.doublePages.includes(page)) {
@@ -274,7 +314,10 @@ export class ReaderPageComponent implements OnDestroy {
           }
           this.comic.readStatus = true;
           if (!this.incognito) {
-            this.comicsService.setComicListReadStatus([this.comic.id], true).pipe(untilDestroyed(this)).subscribe(() => this.backToDetails());
+            this.comicsService
+              .setComicListReadStatus([this.comic.id], true)
+              .pipe(untilDestroyed(this))
+              .subscribe(() => this.backToDetails());
           } else {
             this.backToDetails();
           }
@@ -313,7 +356,8 @@ export class ReaderPageComponent implements OnDestroy {
   }
 
   toggleNavigation() {
-    const lockZoom = this.windowService.isZoomed() && this.readerSettingsService.getValue('noMenuZoom');
+    const lockZoom =
+      this.windowService.isZoomed() && this.readerSettingsService.getValue('noMenuZoom');
     if (!lockZoom) {
       this.navigationDisplay = !this.navigationDisplay;
     }

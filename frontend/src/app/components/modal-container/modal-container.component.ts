@@ -8,17 +8,16 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 @Component({
   selector: 'app-modal-container',
   imports: [CommonModule],
-  templateUrl: './modal-container.component.html'
+  templateUrl: './modal-container.component.html',
 })
 export class ModalContainerComponent implements OnInit, AfterViewInit {
-
   protected readonly modalService = inject(ModalService);
   private readonly router = inject(Router);
 
   protected display: boolean = false;
 
   ngOnInit(): void {
-    this.router.events.pipe(untilDestroyed(this)).subscribe(event => {
+    this.router.events.pipe(untilDestroyed(this)).subscribe((event) => {
       this.closeModal();
     });
   }
@@ -38,6 +37,5 @@ export class ModalContainerComponent implements OnInit, AfterViewInit {
     if (this.modalService.isActive()) {
       this.modalService.close();
     }
-
   }
 }

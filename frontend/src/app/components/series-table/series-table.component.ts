@@ -3,7 +3,7 @@ import { Component, inject, Input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Series } from 'interfaces';
 import { ConfigURLService } from 'services';
-import { PublisherCellComponent } from "../publisher-cell/publisher-cell.component";
+import { PublisherCellComponent } from '../publisher-cell/publisher-cell.component';
 
 @Component({
   selector: 'app-series-table',

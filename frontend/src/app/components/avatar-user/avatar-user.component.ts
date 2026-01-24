@@ -1,11 +1,10 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
-
 @Component({
   selector: 'app-avatar-user',
   imports: [CommonModule],
-  templateUrl: './avatar-user.component.html'
+  templateUrl: './avatar-user.component.html',
 })
 export class AvatarUserComponent {
   @Input({ required: true }) username!: string;
@@ -16,5 +15,4 @@ export class AvatarUserComponent {
   onClickHandler() {
     this.onClick.emit();
   }
-
 }

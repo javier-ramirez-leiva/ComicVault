@@ -1,45 +1,44 @@
 <div class="whole-page-container">
-    <ng-container *ngIf="!contentSeries; else seriesContentTmpl">
-        <ng-container *ngIf="filteredComics$ | async as filteredComics; else loadingTmpl">
-            <ng-container *ngIf="filteredComics.length===0; else comicsTmpl">
-                <app-no-results></app-no-results>
-            </ng-container>
-            <ng-template #comicsTmpl>
-                <app-comics-database-grid
-                    *ngIf="gridService.gridOptionActivePage$ | async; else tmplTable"
-                    [comics]="filteredComics"
-                    class="mb-4"
-                ></app-comics-database-grid>
-                <ng-template #tmplTable>
-                    <app-comic-database-table
-                        [comics]="filteredComics"
-                        class="mb-4"
-                    ></app-comic-database-table>
-                </ng-template>
-            </ng-template>
-        </ng-container>
+  <ng-container *ngIf="!contentSeries; else seriesContentTmpl">
+    <ng-container *ngIf="filteredComics$ | async as filteredComics; else loadingTmpl">
+      <ng-container *ngIf="filteredComics.length === 0; else comicsTmpl">
+        <app-no-results></app-no-results>
+      </ng-container>
+      <ng-template #comicsTmpl>
+        <app-comics-database-grid
+          *ngIf="gridService.gridOptionActivePage$ | async; else tmplTable"
+          [comics]="filteredComics"
+          class="mb-4"
+        ></app-comics-database-grid>
+        <ng-template #tmplTable>
+          <app-comic-database-table
+            [comics]="filteredComics"
+            class="mb-4"
+          ></app-comic-database-table>
+        </ng-template>
+      </ng-template>
     </ng-container>
-    <ng-template #seriesContentTmpl>
-        <ng-container *ngIf="filteredSeries$ | async as filteredSeries; else loadingTmpl">
-            <ng-container *ngIf="(filteredSeries$ | async)?.length===0; else seriesTmpl">
-                <app-no-results></app-no-results>
-            </ng-container>
-            <ng-template #seriesTmpl>
-                <app-series-grid
-                    *ngIf="gridService.gridOptionActivePage$ | async; else tmplTable"
-                    [series]="filteredSeries"
-                    class="mb-4"
-                ></app-series-grid>
-                <ng-template #tmplTable>
-                    <app-series-table
-                        [series]="filteredSeries"
-                        class="mb-4"
-                    ></app-series-table>
-                </ng-template>
-            </ng-template>
-        </ng-container>
-    </ng-template>
+  </ng-container>
+  <ng-template #seriesContentTmpl>
+    <ng-container *ngIf="filteredSeries$ | async as filteredSeries; else loadingTmpl">
+      <ng-container *ngIf="(filteredSeries$ | async)?.length === 0; else seriesTmpl">
+        <app-no-results></app-no-results>
+      </ng-container>
+      <ng-template #seriesTmpl>
+        <app-series-grid
+          *ngIf="gridService.gridOptionActivePage$ | async; else tmplTable"
+          [series]="filteredSeries"
+          class="mb-4"
+        ></app-series-grid>
+        <ng-template #tmplTable>
+          <app-series-table [series]="filteredSeries" class="mb-4"></app-series-table>
+        </ng-template>
+      </ng-template>
+    </ng-container>
+  </ng-template>
 </div>
 <ng-template #loadingTmpl>
-    <app-loading-spinner-page class="absolute top-0 right-0 left-0 bottom-0 min-h-screen"></app-loading-spinner-page>
+  <app-loading-spinner-page
+    class="absolute top-0 right-0 left-0 bottom-0 min-h-screen"
+  ></app-loading-spinner-page>
 </ng-template>

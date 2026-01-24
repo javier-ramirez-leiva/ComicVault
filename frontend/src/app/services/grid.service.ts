@@ -5,25 +5,31 @@ import { ActivePageService } from './active-page.service';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 @UntilDestroy()
 export class GridService {
-
   private readonly localStorageService = inject(LocalStorageService);
   private readonly activePageService = inject(ActivePageService);
 
-  gridOptions$ = new BehaviorSubject<GridOptions>({ library: true, search: true, seriesDetails: true, downloads: true });
+  gridOptions$ = new BehaviorSubject<GridOptions>({
+    library: true,
+    search: true,
+    seriesDetails: true,
+    downloads: true,
+  });
   gridOptionActivePage$: Observable<boolean>;
   constructor() {
-    const initialValue = this.localStorageService.getItem('gridOptions') ?? { library: true, search: true };
+    const initialValue = this.localStorageService.getItem('gridOptions') ?? {
+      library: true,
+      search: true,
+    };
     this.gridOptions$.next(initialValue);
 
     this.gridOptionActivePage$ = combineLatest([
       this.activePageService.activeRoot$,
-      this.gridOptions$
+      this.gridOptions$,
     ]).pipe(
-
       map(([activeRoot, gridOptions]) => {
         if (activeRoot === 'library') {
           return gridOptions.library;
@@ -35,7 +41,7 @@ export class GridService {
           return gridOptions.downloads;
         }
       }),
-      shareReplay({ bufferSize: 1, refCount: true })
+      shareReplay({ bufferSize: 1, refCount: true }),
     );
   }
 
@@ -46,11 +52,9 @@ export class GridService {
       value.library = !value.library;
     } else if (activeRoot === 'search') {
       value.search = !value.search;
-    }
-    else if (activeRoot === 'series') {
+    } else if (activeRoot === 'series') {
       value.seriesDetails = !value.seriesDetails;
-    }
-    else if (activeRoot === 'downloads') {
+    } else if (activeRoot === 'downloads') {
       value.downloads = !value.downloads;
     }
     this.localStorageService.setItem('gridOptions', value);
@@ -63,4 +67,4 @@ type GridOptions = {
   search: boolean;
   seriesDetails: boolean;
   downloads: boolean;
-}
+};

@@ -4,16 +4,12 @@ import { HttpService } from './http.service';
 import { Observable } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ServerInfoService {
-
   private readonly httpService = inject(HttpService);
 
   getServerInfo(): Observable<ServerInfo> {
-    return this.httpService.request<ServerInfo>(
-      'GET',
-      `/serverInfo`,
-    );
+    return this.httpService.request<ServerInfo>('GET', `/serverInfo`);
   }
 }

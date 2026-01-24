@@ -7,13 +7,12 @@ import { DownloadService } from 'services';
 @Component({
   selector: 'app-download-series-button',
   imports: [],
-  templateUrl: './download-series-button.component.html'
+  templateUrl: './download-series-button.component.html',
 })
 export class DownloadSeriesButtonComponent {
   @Input() series!: Series | null;
   private readonly downloadService = inject(DownloadService);
   private readonly notifier = inject(NotifierService);
-
 
   downloadSeries(): void {
     if (this.series) {
@@ -21,7 +20,7 @@ export class DownloadSeriesButtonComponent {
         id: 0,
         title: 'Download on device launched',
         message: this.series.title,
-        type: 'info'
+        type: 'info',
       });
       const comics = this.series.comics;
       this.downloadService.downloadComicList(comics);

@@ -9,5 +9,4 @@ import { Category } from 'interfaces';
 })
 export class PublisherCellComponent {
   @Input({ required: true }) category!: Category;
-
 }
