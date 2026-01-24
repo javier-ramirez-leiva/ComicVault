@@ -7,7 +7,7 @@
       'button-other-comics': category === 'other-comics',
     }"
     class="w-fit font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center"
-    >
+  >
     @if (category === null) {
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -16,7 +16,7 @@
         stroke-width="1.5"
         stroke="currentColor"
         class="size-6"
-        >
+      >
         <path
           stroke-linecap="round"
           stroke-linejoin="round"
@@ -32,7 +32,7 @@
         stroke-width="1.5"
         stroke="currentColor"
         class="size-6"
-        >
+      >
         <path
           stroke-linecap="round"
           stroke-linejoin="round"
@@ -46,11 +46,7 @@
       </svg>
     }
     @if (category === 'marvel') {
-      <img
-        src="assets/mini-marvel.png"
-        alt="Marvel Comics Logo"
-        class="size-6"
-        />
+      <img src="assets/mini-marvel.png" alt="Marvel Comics Logo" class="size-6" />
     }
     @if (category === 'dc') {
       <img src="assets/mini-dc.png" alt="DC Comics Logo" class="size-6" />
@@ -63,7 +59,7 @@
         stroke-width="1.5"
         stroke="currentColor"
         class="size-6"
-        >
+      >
         <path
           stroke-linecap="round"
           stroke-linejoin="round"
@@ -74,7 +70,7 @@
     <select
       [formControl]="categoryControl"
       class="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer"
-      >
+    >
       <option value="all">All Trending</option>
       <option value="marvel">Marvel</option>
       <option value="dc">DC</option>

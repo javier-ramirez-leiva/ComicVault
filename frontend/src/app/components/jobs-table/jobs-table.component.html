@@ -22,7 +22,7 @@
                 [class.chip-success]="job.status == 'COMPLETED'"
                 [class.chip-error]="job.status == 'ERROR'"
                 [class.chip-warning]="job.status == 'ON_GOING'"
-                >
+              >
                 {{ statusLabels[job.status] }}
               </span>
             </th>
@@ -33,7 +33,7 @@
                 [class.chip-info]="job.type == 'DOWNLOAD' || job.type == 'DOWNLOAD_LIST'"
                 [class.chip-error]="job.type == 'DELETE_LIB' || job.type == 'DELETE'"
                 [class.chip-warning]="job.type == 'CLEAN_LIB'"
-                >
+              >
                 {{ typeLabels[job.type] }}
               </span>
             </td>
@@ -60,7 +60,7 @@
                   type="button"
                   (click)="gotToJobPage(job)"
                   class="button-icon button-details p-2.5"
-                  >
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -68,7 +68,7 @@
                     stroke-width="1.5"
                     stroke="currentColor"
                     class="size-6"
-                    >
+                  >
                     <path
                       stroke-linecap="round"
                       stroke-linejoin="round"

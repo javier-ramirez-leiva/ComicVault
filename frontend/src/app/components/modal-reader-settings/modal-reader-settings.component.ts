@@ -25,8 +25,8 @@ export type ReaderSettings = {
     CrossModalComponent,
     ReactiveFormsModule,
     BooleanSliderFormComponent,
-    HideRolesDirective
-],
+    HideRolesDirective,
+  ],
   templateUrl: './modal-reader-settings.component.html',
 })
 @UntilDestroy()

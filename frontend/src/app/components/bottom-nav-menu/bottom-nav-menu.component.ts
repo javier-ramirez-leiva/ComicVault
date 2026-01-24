@@ -1,4 +1,3 @@
-
 import { Component, inject } from '@angular/core';
 import { ActivePageService, BlurMaskService } from 'services';
 import { HideRolesDirective, OutsideClickDirective } from 'directives';
@@ -15,8 +14,8 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
     HideRolesDirective,
     BottomDrawerLineComponent,
     BottomDrawerButtonsComponent,
-    OutsideClickDirective
-],
+    OutsideClickDirective,
+  ],
   templateUrl: './bottom-nav-menu.component.html',
 })
 @UntilDestroy()

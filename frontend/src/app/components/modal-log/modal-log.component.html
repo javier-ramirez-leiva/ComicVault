@@ -5,20 +5,12 @@
   </div>
   <div class="flex items-center justify-end p-4 md:p-5 rounded-b gap-4">
     @if (comicUrl) {
-      <button
-        type="button"
-        class="button-text button-go-To"
-        (click)="goTo(comicUrl)"
-        >
+      <button type="button" class="button-text button-go-To" (click)="goTo(comicUrl)">
         Go to comic
       </button>
     }
     @if (seriesUrl) {
-      <button
-        type="button"
-        class="button-text button-go-To"
-        (click)="goTo(seriesUrl)"
-        >
+      <button type="button" class="button-text button-go-To" (click)="goTo(seriesUrl)">
         Go to series
       </button>
     }

@@ -10,7 +10,7 @@
       class="z-10 divide-y bg-nav-menu-background border-2 border-nav-menu-section-border divide-nav-menu-section-border rounded-lg shadow-xs w-44 absolute top-16 right-2"
       appOutsideClick
       (outsideClick)="hideDropdown()"
-      >
+    >
       <div class="px-4 py-3 text-sm text-generic-text">
         <div class="py-1">{{ user.username }}</div>
         <div class="font-medium truncate">{{ user.role }}</div>
@@ -31,7 +31,7 @@
         <a
           [routerLink]="['/login']"
           class="block px-4 py-2 text-sm hover:bg-nav-menu-button-active text-nav-menu-button-text"
-          >
+        >
           Sign out
         </a>
       </div>

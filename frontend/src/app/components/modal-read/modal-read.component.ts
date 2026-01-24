@@ -1,4 +1,3 @@
-
 import { Component } from '@angular/core';
 import { ModalComponent } from 'interfaces';
 import { RadioButtonInputComponent } from '../radio-button-input/radio-button-input.component';

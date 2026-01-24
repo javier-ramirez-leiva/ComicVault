@@ -24,8 +24,8 @@ export type ModalUsersComponentInput = {
     FormsModule,
     InputTextComponent,
     CrossModalComponent,
-    InputColorComponent
-],
+    InputColorComponent,
+  ],
   templateUrl: './modal-users.component.html',
 })
 export class ModalUsersComponent

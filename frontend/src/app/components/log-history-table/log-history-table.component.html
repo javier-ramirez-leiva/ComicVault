@@ -24,17 +24,14 @@
                 [class.chip-info]="log.severity == 'Info'"
                 [class.chip-warning]="log.severity == 'Warning'"
                 [class.chip-desactivated]="log.severity == 'Desactivated'"
-                >
+              >
                 {{ log.severityMessage }}
               </span>
             </th>
             <td scope="row" class="px-6 py-4">
               @if (!log.comicId && !log.seriesId) {
                 @if (log.messageHref) {
-                  <a
-                    [href]="log.message"
-                    class="font-medium text-table-link hover:underline"
-                    >
+                  <a [href]="log.message" class="font-medium text-table-link hover:underline">
                     {{ log.message }}
                   </a>
                 }
@@ -46,7 +43,7 @@
                 <a
                   [routerLink]="`/comics/${log.comicId}/details`"
                   class="font-medium text-table-link hover:underline"
-                  >
+                >
                   {{ log.message }}
                 </a>
               }
@@ -54,7 +51,7 @@
                 <a
                   [routerLink]="`/series/${log.seriesId}/details`"
                   class="font-medium text-table-link hover:underline"
-                  >
+                >
                   {{ log.message }}
                 </a>
               }
@@ -84,7 +81,7 @@
                   type="button"
                   (click)="displayDetails(log)"
                   class="button-icon button-details p-2.5"
-                  >
+                >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     fill="none"
@@ -92,7 +89,7 @@
                     stroke-width="1.5"
                     stroke="currentColor"
                     class="size-6"
-                    >
+                  >
                     <path
                       stroke-linecap="round"
                       stroke-linejoin="round"

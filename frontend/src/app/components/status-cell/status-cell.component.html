@@ -1,24 +1,15 @@
 @if (comic.readStatus) {
-  <td
-    scope="row"
-    class="px-6 py-4 font-medium whitespace-nowrap flex items-center gap-2"
-    >
+  <td scope="row" class="px-6 py-4 font-medium whitespace-nowrap flex items-center gap-2">
     <span class="chip chip-success">READ</span>
   </td>
 }
 @if (!comic.readStatus && comic.pageStatus === 0) {
-  <td
-    scope="row"
-    class="px-6 py-4 font-medium whitespace-nowrap flex items-center gap-2"
-    >
+  <td scope="row" class="px-6 py-4 font-medium whitespace-nowrap flex items-center gap-2">
     <span class="chip chip-warning">NEW</span>
   </td>
 }
 @if (!comic.readStatus && comic.pageStatus > 0) {
-  <td
-    scope="row"
-    class="px-6 py-4 font-medium whitespace-nowrap flex items-center gap-2"
-    >
+  <td scope="row" class="px-6 py-4 font-medium whitespace-nowrap flex items-center gap-2">
     <span>{{ comic.pageStatus }} / {{ comic.pages }}</span>
   </td>
 }

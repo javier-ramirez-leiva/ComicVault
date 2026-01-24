@@ -4,7 +4,7 @@
     swipe
     (next)="swipeNext()"
     (previous)="swipePrevious()"
-    >
+  >
     <div class="relative w-full h-full flex justify-center pointer-events-none">
       @if (navigationDisplay) {
         <div
@@ -15,16 +15,16 @@
         (click)="toggleNavigation()"
         id="comicImage"
         class="relative max-h-full max-w-full object-contain group pointer-events-auto"
-        />
+      />
       @if (navigationDisplay) {
         <div
           class="flex items-center gap-2 fixed top-0 h-16 w-full max-w-screen z-50 pointer-events-auto"
-          >
+        >
           <app-back-button class="absolute left-0 top-1 text-white-text"></app-back-button>
           <div class="flex grow justify-center px-14 max-w-full">
             <h3
               class="text-xl font-bold text-white-text truncate text-center overflow-hidden whitespace-nowrap w-full"
-              >
+            >
               {{ comic.title }}
             </h3>
           </div>
@@ -40,7 +40,7 @@
         <div
           class="absolute px-8 bottom-0 pb-8 pt-4 w-full pointer-events-auto z-50"
           [class.hidden]="!navigationDisplay"
-          >
+        >
           @if (doublePage$ | async; as doublePage) {
             <app-minipages-carousel
               [comic]="comic"
@@ -53,9 +53,7 @@
         </div>
       }
       @if (navigationDisplay && !readerSettingsService.getValue('thumbnailNavigation')) {
-        <div
-          class="absolute px-8 bottom-0 pb-8 pt-4 w-full pointer-events-auto z-50"
-          >
+        <div class="absolute px-8 bottom-0 pb-8 pt-4 w-full pointer-events-auto z-50">
           <input
             [(ngModel)]="page"
             (ngModelChange)="onStepChange($event)"
@@ -66,10 +64,12 @@
             [value]="page"
             step="1"
             class="w-full h-2 bg-bar-slider-background rounded-lg appearance-none cursor-pointer"
-            />
+          />
           <div class="flex w-full">
             <span class="text-lg text-white-text start-0 -bottom-6">{{ page }}</span>
-            <span class="text-lg text-white-text start-0 -bottom-6 ml-auto">{{ comic.pages - 1 }}</span>
+            <span class="text-lg text-white-text start-0 -bottom-6 ml-auto">{{
+              comic.pages - 1
+            }}</span>
           </div>
         </div>
       }

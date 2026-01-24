@@ -9,17 +9,18 @@
           </tr>
         </thead>
         <tbody>
-          @for (devicesAndUser of devicesAndUsers$ | async; track trackByDeviceUser($index, devicesAndUser)) {
-            <tr
-              class="table-row"
-              >
+          @for (
+            devicesAndUser of devicesAndUsers$ | async;
+            track trackByDeviceUser($index, devicesAndUser)
+          ) {
+            <tr class="table-row">
               @if (devicesAndUser.user) {
                 <th scope="row" class="px-6 py-6 gap-4 flex items-center">
                   <app-avatar-user
                     [username]="devicesAndUser.user.username"
                     [color]="devicesAndUser.user.color"
                     [size]="'small'"
-                    >
+                  >
                   </app-avatar-user>
                 </th>
               }
@@ -31,7 +32,7 @@
                       type="button"
                       (click)="displayDetails(devicesAndUser.deviceInfo)"
                       class="button-icon button-details p-2.5"
-                      >
+                    >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
@@ -39,7 +40,7 @@
                         stroke-width="1.5"
                         stroke="currentColor"
                         class="size-6"
-                        >
+                      >
                         <path
                           stroke-linecap="round"
                           stroke-linejoin="round"
@@ -52,7 +53,7 @@
                       type="button"
                       (click)="deleteDeviceId(devicesAndUser)"
                       class="button-icon button-delete p-2.5"
-                      >
+                    >
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
                         fill="none"
@@ -60,7 +61,7 @@
                         stroke-width="1.5"
                         stroke="currentColor"
                         class="size-4"
-                        >
+                      >
                         <path
                           stroke-linecap="round"
                           stroke-linejoin="round"

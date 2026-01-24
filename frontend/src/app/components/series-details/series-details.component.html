@@ -41,14 +41,12 @@
           }
         </div>
         @if (nextComicID && series?.readStatus === false) {
-          <div
-            class="py-4 flex relative w-full justify-center"
-            >
+          <div class="py-4 flex relative w-full justify-center">
             <button
               [routerLink]="['/comics', nextComicID, 'details']"
               type="button"
               class="relative button-text inline-flex items-center button-next-issue me-2 mb-2"
-              >
+            >
               Go to next issue
               <svg
                 class="rtl:rotate-180 w-3.5 h-3.5 ms-2"
@@ -56,7 +54,7 @@
                 xmlns="http://www.w3.org/2000/svg"
                 fill="none"
                 viewBox="0 0 14 10"
-                >
+              >
                 <path
                   stroke="currentColor"
                   stroke-linecap="round"

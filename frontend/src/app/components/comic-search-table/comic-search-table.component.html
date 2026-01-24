@@ -16,15 +16,13 @@
     <tbody>
       @for (comic$ of comicObservables; track comic$) {
         @if (comic$ | async; as comic) {
-          <tr
-            class="bg-table-row-not-selected-background border-b border-table-border"
-            >
+          <tr class="bg-table-row-not-selected-background border-b border-table-border">
             <td class="py-4 px-6">
               <img
                 [src]="comic.image"
                 [routerLink]="comic.url"
                 class="w-24 md:w-24 max-w-full max-h-full rounded-md border-1 border-cover-card-border"
-                />
+              />
             </td>
             <td class="px-6 py-2">
               <span class="font-semibold text-table-link hover:underline" [routerLink]="comic.url">
@@ -39,7 +37,7 @@
                 <div>
                   <div
                     class="relative w-full mt-1 bg-cover-card-progress-background rounded-full h-2.5 mb-0"
-                    >
+                  >
                     <div
                       class="bg-cover-card-download h-2.5 rounded-full"
                       [style]="comic.progress"
@@ -49,14 +47,10 @@
               } @else {
                 <div class="w-full flex align-center justify-center">
                   @if (comic.downloadingStatus === 'downloaded') {
-                    <span class="chip chip-yes">
-                      YES
-                    </span>
+                    <span class="chip chip-yes"> YES </span>
                   }
                   @if (comic.downloadingStatus === 'not-downloaded') {
-                    <span class="chip chip-no">
-                      NO
-                    </span>
+                    <span class="chip chip-no"> NO </span>
                   }
                 </div>
               }

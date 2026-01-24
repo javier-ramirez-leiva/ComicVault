@@ -1,7 +1,7 @@
 <div class="fixed inset-0 z-50 flex items-center justify-center p-4">
   <div
     class="relative w-full max-w-[90vw] max-h-[90vh] bg-modal-background rounded-lg shadow-sm flex flex-col overflow-hidden"
-    >
+  >
     <!-- Header / Close button -->
     <app-cross-modal (onCloseClick)="cancel()"></app-cross-modal>
 
@@ -9,7 +9,7 @@
     <section
       class="flex-1 overflow-y-auto pb-8 px-4 mt-16 touch-pan-y"
       style="-webkit-overflow-scrolling: touch"
-      >
+    >
       <ul class="grid-mini-pages">
         @for (index of range; track index) {
           <li>
@@ -21,13 +21,13 @@
                     class="border-cover-card-active-border"
                     [class.border-4]="index === page"
                     (error)="imageErrors[index] = true"
-                    />
+                  />
                 </div>
               } @else {
                 <div
                   class="h-full aspect-[3/5] border-cover-card-active-border font-extrabold text-2xl flex justify-center items-center bg-background text-generic-text"
                   [class.border-4]="index === page"
-                  >
+                >
                   {{ index }}
                 </div>
               }

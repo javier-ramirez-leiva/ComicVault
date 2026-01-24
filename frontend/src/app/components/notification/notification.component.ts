@@ -2,7 +2,6 @@ import { Component, Input } from '@angular/core';
 import { Notifications } from 'interfaces';
 import { NotifierService } from 'services';
 
-
 @Component({
   selector: 'app-notification',
   imports: [],

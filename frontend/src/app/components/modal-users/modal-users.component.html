@@ -7,7 +7,7 @@
         [(value)]="user.username"
         [disabled]="!data?.input?.modifyUser"
         id="username"
-        >
+      >
       </app-input-text>
     </div>
     <div>
@@ -25,7 +25,7 @@
         <label for="role" class="block mb-2 text-sm font-medium"> Select a role </label>
         <div
           class="bg-input-select-background border border-input-select-border text-input-select-text text-sm rounded-lg focus:ring-input-select-focus-ring p-2.5"
-          >
+        >
           <select id="role" [formControl]="roleControl" class="w-full">
             <option value="ADMIN">ADMIN</option>
             <option value="OWNER">OWNER</option>

@@ -9,11 +9,7 @@ import { formatDate } from 'src/app/utils/dates';
 
 @Component({
   selector: 'app-modal-device-info',
-  imports: [
-    TwoColumnsTableComponent,
-    ModalDetailsTopComponent,
-    ModalDetailsBottomComponent
-],
+  imports: [TwoColumnsTableComponent, ModalDetailsTopComponent, ModalDetailsBottomComponent],
   templateUrl: './modal-device-info.component.html',
 })
 export class ModalDeviceInfoComponent

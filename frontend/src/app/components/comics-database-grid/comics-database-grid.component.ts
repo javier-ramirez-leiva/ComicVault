@@ -15,13 +15,7 @@ import { ConfigURLService, CoverCardClickCollectorService } from 'services';
 
 @Component({
   selector: 'app-comics-database-grid',
-  imports: [
-    ComicDatabaseComponent,
-    CdkDropList,
-    CdkDrag,
-    CdkDragHandle,
-    CdkDragPreview
-],
+  imports: [ComicDatabaseComponent, CdkDropList, CdkDrag, CdkDragHandle, CdkDragPreview],
   styleUrls: ['./comics-database-grid.component.css'],
   templateUrl: './comics-database-grid.component.html',
 })

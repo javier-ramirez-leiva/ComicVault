@@ -1,7 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { ProcessingNotifications } from 'interfaces';
 
-
 @Component({
   selector: 'app-processing-notification',
   imports: [],

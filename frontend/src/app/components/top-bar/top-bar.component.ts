@@ -19,8 +19,8 @@ import { GridButtonComponent } from '../grid-button/grid-button.component';
     BackButtonComponent,
     AvatarDropdownComponent,
     SearchAndCategoryComponent,
-    GridButtonComponent
-],
+    GridButtonComponent,
+  ],
   templateUrl: './top-bar.component.html',
 })
 export class TopBarComponent implements OnInit {

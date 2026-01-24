@@ -1,7 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { DarkmodeService } from 'services';
 
-
 @Component({
   selector: 'app-dark-mode-button',
   imports: [],

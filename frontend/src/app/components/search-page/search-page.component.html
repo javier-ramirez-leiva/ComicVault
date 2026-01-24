@@ -5,9 +5,7 @@
     <div class="whole-page-container">
       @if (comics.length) {
         @if (gridService.gridOptionActivePage$ | async) {
-          <app-comics-search-grid
-            [comics]="comics"
-          ></app-comics-search-grid>
+          <app-comics-search-grid [comics]="comics"></app-comics-search-grid>
         } @else {
           <app-comic-search-table [comics]="comics"></app-comic-search-table>
         }

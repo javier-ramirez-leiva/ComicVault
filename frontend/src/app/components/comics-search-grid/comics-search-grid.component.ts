@@ -3,7 +3,6 @@ import { ComicsSearch } from 'interfaces';
 import { Observable, tap } from 'rxjs';
 import { ComicSearchComponent } from '../comic-search/comic-search.component';
 
-
 @Component({
   selector: 'app-comics-search-grid',
   imports: [ComicSearchComponent],

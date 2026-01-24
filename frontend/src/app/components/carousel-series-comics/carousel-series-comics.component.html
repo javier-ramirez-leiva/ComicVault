@@ -1,7 +1,5 @@
 @if ((canScrollLeft$ | async) || (canScrollRight$ | async) || header) {
-  <div
-    class="pl-4 flex flex-row justify-between gap-8 items-center w-full text-generic-text"
-    >
+  <div class="pl-4 flex flex-row justify-between gap-8 items-center w-full text-generic-text">
     <h3 class="text-2xl font-bold">{{ header }}</h3>
     <div class="flex flex-row gap-2">
       <div class="size-10">
@@ -10,14 +8,14 @@
             type="button"
             (click)="scrollFullScreen('left')"
             class="flex items-center justify-center h-10 w-10 rounded-full focus:outline-hidden group"
-            >
+          >
             <svg
               class="w-4 h-4"
               aria-hidden="true"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 6 10"
-              >
+            >
               <path
                 stroke="currentColor"
                 stroke-linecap="round"
@@ -35,14 +33,14 @@
             type="button"
             (click)="scrollFullScreen('right')"
             class="flex items-center justify-center h-10 w-10 rounded-full focus:outline-hidden group"
-            >
+          >
             <svg
               class="w-4 h-4"
               aria-hidden="true"
               xmlns="http://www.w3.org/2000/svg"
               fill="none"
               viewBox="0 0 6 10"
-              >
+            >
               <path
                 stroke="currentColor"
                 stroke-linecap="round"
@@ -61,12 +59,9 @@
   <div
     #scrollContainer
     class="flex flex-nowrap overflow-x-auto overflow-y-hidden overflow-section no-scrollbar"
-    >
+  >
     @for (serie of series; track trackBySeries($index, serie)) {
-      <div
-        class="p-4 shrink-0"
-        style="width: 200px"
-        >
+      <div class="p-4 shrink-0" style="width: 200px">
         <app-series [series]="serie"></app-series>
       </div>
     }
@@ -76,13 +71,9 @@
   <div
     #scrollContainer
     class="flex flex-nowrap overflow-x-auto overflow-y-hidden overflow-section no-scrollbar"
-    >
+  >
     @for (comic of comics; track trackByComic($index, comic)) {
-      <div
-        class="p-4 shrink-0"
-        style="width: 200px"
-        #comicItem
-        >
+      <div class="p-4 shrink-0" style="width: 200px" #comicItem>
         <app-comic-database [highlight]="comic.highlight" [comic]="comic"></app-comic-database>
       </div>
     }
@@ -92,13 +83,9 @@
   <div
     #scrollContainer
     class="flex flex-nowrap overflow-x-auto overflow-y-hidden overflow-section no-scrollbar"
-    >
+  >
     @for (comic of comicSearchs; track trackByComicSearch($index, comic)) {
-      <div
-        class="p-4 shrink-0"
-        style="width: 200px"
-        #comicItem
-        >
+      <div class="p-4 shrink-0" style="width: 200px" #comicItem>
         <app-comic-search
           [comic]="comic"
           [queryParams]="tag ? { tag: serializedTag } : null"

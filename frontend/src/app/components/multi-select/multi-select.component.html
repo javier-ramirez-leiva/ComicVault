@@ -1,7 +1,7 @@
 @if (displayDropdown && displayed) {
   <div
     class="z-10 bg-nav-menu-background border-2 border-nav-menu-section-border divide-y divide-nav-menu-section-border rounded-lg shadow-xs w-44 absolute bottom-16 right-2 text-nav-menu-button-text"
-    >
+  >
     <ul class="py-2 text-sm">
       <li>
         <span (click)="markAsRead(true)" class="block px-4 py-2 hover:bg-nav-menu-button-active">
@@ -23,7 +23,7 @@
       class="py-1"
       appHideRoles
       [appHideForRoles]="[Role.Contributor, Role.Requester, Role.Viewer]"
-      >
+    >
       <span (click)="delete()" class="block px-4 py-2 text-sm hover:bg-nav-menu-button-active">
         Delete
       </span>
@@ -35,11 +35,11 @@
     type="button"
     (click)="toggleActivation()"
     class="button-icon-circle size-16 flex items-center justify-center"
-  [ngClass]="{
-    'button-primary': activated,
-    'button-multiselect': !activated,
-  }"
-    >
+    [ngClass]="{
+      'button-primary': activated,
+      'button-multiselect': !activated,
+    }"
+  >
     @if (!activated) {
       <svg
         xmlns="http://www.w3.org/2000/svg"
@@ -48,7 +48,7 @@
         stroke-width="1.5"
         stroke="currentColor"
         class="size-8"
-        >
+      >
         <path
           stroke-linecap="round"
           stroke-linejoin="round"

@@ -6,7 +6,7 @@
   appOutsideClick
   (outsideClick)="hoverFalse()"
   [class.scale-105]="isHovered"
-  >
+>
   <div class="flex relative">
     @if (!imageLoaded) {
       <div class="relative w-full" style="padding-bottom: 153.8%">
@@ -25,20 +25,20 @@
       alt="{{ title }}"
       [src]="imageURL"
       (load)="imageLoaded = true"
-      />
+    />
     <div
       id="details"
       class="inset-0 absolute z-10 w-full h-full rounded-md bg-opacity-0 flex flex-col p-2"
       [ngClass]="{ 'bg-cover-card-background': isHovered || draggableStatus }"
-      >
+    >
       <!-- Title Section -->
       <div
         [class.hidden]="!isHovered && !draggableStatus"
         class="grow flex flex-col justify-center items-center"
-        >
+      >
         <h1
           class="text-lg title-font font-medium text-cover-card-title select-none overflow-hidden break-words w-full text-center"
-          >
+        >
           {{ title }}
         </h1>
       </div>
@@ -46,14 +46,14 @@
       <div
         [class.hidden]="!isHovered"
         class="flex flex-col justify-center items-center overflow-hidden text-center mb-2"
-        >
+      >
         <p class="leading-relaxed text-cover-card-text select-none">{{ firstLine }}</p>
         <p class="leading-relaxed text-cover-card-text select-none">{{ secondLine }}</p>
       </div>
       <div
         [class.hidden]="!draggableStatus"
         class="flex flex-col justify-center items-center overflow-hidden text-center mb-2"
-        >
+      >
         <p class="leading-relaxed text-cover-card-text select-none text-xl">{{ issueLine }}</p>
       </div>
       <!-- Bottom Section (Button or Last Line) -->
@@ -88,9 +88,7 @@
       </svg>
       </div -->
       @if (searchOrDatabase && checked) {
-        <div
-          class="cover-card-badge-circle bg-cover-card-download text-cover-card-badge-text"
-          >
+        <div class="cover-card-badge-circle bg-cover-card-download text-cover-card-badge-text">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -98,7 +96,7 @@
             stroke-width="2.5"
             stroke="currentColor"
             class="size-4"
-            >
+          >
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
@@ -108,21 +106,15 @@
         </div>
       }
       @if (!searchOrDatabase && new) {
-        <div
-          class="cover-card-badge-triangle cover-card-badge-triangle-new"
-        ></div>
+        <div class="cover-card-badge-triangle cover-card-badge-triangle-new"></div>
       }
       @if (numberBadge) {
-        <div
-          class="cover-card-badge bg-cover-card-number-read text-cover-card-badge-text"
-          >
+        <div class="cover-card-badge bg-cover-card-number-read text-cover-card-badge-text">
           {{ numberBadge }}
         </div>
       }
       @if (numberBadge$ | async; as numberBadgeProgress) {
-        <div
-          class="cover-card-badge bg-cover-card-number-download text-cover-card-badge-text"
-          >
+        <div class="cover-card-badge bg-cover-card-number-download text-cover-card-badge-text">
           {{ numberBadgeProgress }}
         </div>
       }
@@ -131,23 +123,17 @@
 
   @if (imageLoaded) {
     @if (!checked && !searchOrDatabase && progress && !progress$ && widthStyle) {
-      <div
-        class="relative w-full mt-1 bg-cover-card-progress-background rounded-full h-2.5 mb-0"
-        >
+      <div class="relative w-full mt-1 bg-cover-card-progress-background rounded-full h-2.5 mb-0">
         <div class="bg-cover-card-read h-2.5 rounded-full" [style]="widthStyle"></div>
       </div>
     }
     @if (!searchOrDatabase && progress$ && widthStyle) {
-      <div
-        class="relative w-full mt-1 bg-cover-card-progress-background rounded-full h-2.5 mb-0"
-        >
+      <div class="relative w-full mt-1 bg-cover-card-progress-background rounded-full h-2.5 mb-0">
         <div class="bg-cover-card-download h-2.5 rounded-full" [style]="widthStyle"></div>
       </div>
     }
     @if (searchOrDatabase && (progress$ || progress) && widthStyle) {
-      <div
-        class="relative w-full mt-1 bg-cover-card-progress-background rounded-full h-2.5 mb-0"
-        >
+      <div class="relative w-full mt-1 bg-cover-card-progress-background rounded-full h-2.5 mb-0">
         <div class="bg-cover-card-download h-2.5 rounded-full" [style]="widthStyle"></div>
       </div>
     }

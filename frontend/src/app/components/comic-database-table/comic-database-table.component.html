@@ -23,13 +23,13 @@
         <tr
           class="border-b border-table-border"
           cdkDrag
-        [ngClass]="{
-          'bg-table-row-selected-background': rowComic.hovered,
-          'bg-table-row-not-selected-background ': !rowComic.hovered,
-        }"
+          [ngClass]="{
+            'bg-table-row-selected-background': rowComic.hovered,
+            'bg-table-row-not-selected-background ': !rowComic.hovered,
+          }"
           [cdkDragDisabled]="!editStatus"
           (click)="onClickRow(rowComic)"
-          >
+        >
           @if (coverCardClickCollector.getMultiSelect()) {
             <td class="py-4 px-2">
               <div class="flex items-center justify-center">
@@ -51,7 +51,7 @@
                 height="24"
                 fill="none"
                 viewBox="0 0 24 24"
-                >
+              >
                 <path
                   stroke="currentColor"
                   stroke-linecap="round"
@@ -66,16 +66,16 @@
               [routerLink]="'/comics/' + rowComic.comic.id + '/details'"
               (click)="coverCardClickCollector.getMultiSelect() ? $event.preventDefault() : null"
               [class.pointer-events-none]="coverCardClickCollector.getMultiSelect()"
-            [src]="
-              configURLService.baseURL +
-              '/' +
-              configURLService.apiVersion +
-              '/comics/' +
-              rowComic.comic.id +
-              '/cover/small'
-            "
+              [src]="
+                configURLService.baseURL +
+                '/' +
+                configURLService.apiVersion +
+                '/comics/' +
+                rowComic.comic.id +
+                '/cover/small'
+              "
               class="m-4 w-24 md:w-24 max-w-full max-h-full rounded-md border-1 border-cover-card-border"
-              />
+            />
           </td>
           <td class="py-4 px-6">
             <span
@@ -83,7 +83,7 @@
               [routerLink]="'/comics/' + rowComic.comic.id + '/details'"
               (click)="coverCardClickCollector.getMultiSelect() ? $event.preventDefault() : null"
               [class.pointer-events-none]="coverCardClickCollector.getMultiSelect()"
-              >
+            >
               {{ rowComic.comic.title }}
             </span>
           </td>
@@ -93,7 +93,7 @@
               [routerLink]="'/series/' + rowComic.comic.seriesID + '/details'"
               (click)="coverCardClickCollector.getMultiSelect() ? $event.preventDefault() : null"
               [class.pointer-events-none]="coverCardClickCollector.getMultiSelect()"
-              >
+            >
               {{ rowComic.comic.seriesTitle }}
             </span>
           </td>

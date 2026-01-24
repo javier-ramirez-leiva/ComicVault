@@ -3,7 +3,6 @@ import { SeriesComponent } from '../series/series.component';
 import { Series } from 'interfaces';
 import { Observable } from 'rxjs';
 
-
 @Component({
   selector: 'app-series-grid',
   imports: [SeriesComponent],

@@ -4,7 +4,7 @@
     aria-controls="separator-sidebar"
     type="button"
     class="hidden md:inline-flex z-40 items-center p-2 mt-3 mb-2 ms-3 text-sm"
-    >
+  >
     <span class="sr-only">Open sidebar</span>
     <svg class="w-6 h-6 text-topBar-left-corner">
       <use href="/assets/icons.svg#sidenav-collapser" />
@@ -18,7 +18,7 @@
     [class.translate-x-0]="leftMenu === 'open'"
     appOutsideMenuClick
     (outsideClick)="setLeftMenuOpen(false)"
-    >
+  >
     <app-left-nav-menu [open]="leftMenu === 'open'"></app-left-nav-menu>
   </aside>
 }
@@ -43,5 +43,5 @@
   <app-notification-grid
     [notifications$]="notifierService.getNotifications$()"
     class="pt-2 z-50 top-0 left-1/2 fixed transform -translate-x-1/2 flex flex-col gap-8"
-    />
+  />
 </div>

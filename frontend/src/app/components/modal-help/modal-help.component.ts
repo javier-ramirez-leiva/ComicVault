@@ -1,4 +1,3 @@
-
 import { Component, Input } from '@angular/core';
 import { ModalComponent } from 'interfaces';
 import { CrossModalComponent } from '../cross-modal/cross-modal.component';
