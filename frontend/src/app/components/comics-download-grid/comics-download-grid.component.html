@@ -1,7 +1,9 @@
 <section class="body-font">
   <ul class="grid-covers">
-    <li *ngFor="let comic of comics; trackBy: trackByComic">
-      <app-comic-search-with-download [comic]="comic"></app-comic-search-with-download>
-    </li>
+    @for (comic of comics; track trackByComic($index, comic)) {
+      <li>
+        <app-comic-search-with-download [comic]="comic"></app-comic-search-with-download>
+      </li>
+    }
   </ul>
 </section>

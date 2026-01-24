@@ -2,7 +2,7 @@ import { Component, inject, Input, OnInit } from '@angular/core';
 import { ComicsDatabase, ModalComponent, Role } from 'interfaces';
 import { CrossModalComponent } from '../cross-modal/cross-modal.component';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+
 import {
   ComicsService,
   NotifierService,
@@ -23,11 +23,10 @@ export type ReaderSettings = {
   selector: 'app-modal-reader-settings',
   imports: [
     CrossModalComponent,
-    CommonModule,
     ReactiveFormsModule,
     BooleanSliderFormComponent,
-    HideRolesDirective,
-  ],
+    HideRolesDirective
+],
   templateUrl: './modal-reader-settings.component.html',
 })
 @UntilDestroy()

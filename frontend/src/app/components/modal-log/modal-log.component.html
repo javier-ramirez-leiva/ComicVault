@@ -4,22 +4,24 @@
     <app-two-columns-table class="w-full" [modalMode]="true" [rows]="rows"></app-two-columns-table>
   </div>
   <div class="flex items-center justify-end p-4 md:p-5 rounded-b gap-4">
-    <button
-      type="button"
-      *ngIf="comicUrl"
-      class="button-text button-go-To"
-      (click)="goTo(comicUrl)"
-    >
-      Go to comic
-    </button>
-    <button
-      type="button"
-      *ngIf="seriesUrl"
-      class="button-text button-go-To"
-      (click)="goTo(seriesUrl)"
-    >
-      Go to series
-    </button>
+    @if (comicUrl) {
+      <button
+        type="button"
+        class="button-text button-go-To"
+        (click)="goTo(comicUrl)"
+        >
+        Go to comic
+      </button>
+    }
+    @if (seriesUrl) {
+      <button
+        type="button"
+        class="button-text button-go-To"
+        (click)="goTo(seriesUrl)"
+        >
+        Go to series
+      </button>
+    }
     <button type="button" class="button-text button-primary" (click)="close()">OK</button>
   </div>
 </div>

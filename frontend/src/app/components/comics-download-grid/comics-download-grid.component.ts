@@ -1,12 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { BehaviorSubject, Observable, from, map, tap } from 'rxjs';
 import { ComicsSearch } from 'interfaces';
-import { CommonModule } from '@angular/common';
+
 import { ComicSearchWithDownloadComponent } from '../comic-search-with-download/comic-search-with-download.component';
 
 @Component({
   selector: 'app-comics-download-grid',
-  imports: [ComicSearchWithDownloadComponent, CommonModule],
+  imports: [ComicSearchWithDownloadComponent],
   templateUrl: './comics-download-grid.component.html',
 })
 export class ComicsDownloadGridComponent {

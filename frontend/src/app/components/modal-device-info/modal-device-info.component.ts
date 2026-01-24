@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ModalComponent } from 'interfaces';
 import { DeviceInfo } from 'interfaces';
-import { CommonModule } from '@angular/common';
+
 import { Row, TwoColumnsTableComponent } from '../two-columns-table/two-columns-table.component';
 import { ModalDetailsTopComponent } from '../modal-details-top/modal-details-top.component';
 import { ModalDetailsBottomComponent } from '../modal-details-bottom/modal-details-bottom.component';
@@ -10,11 +10,10 @@ import { formatDate } from 'src/app/utils/dates';
 @Component({
   selector: 'app-modal-device-info',
   imports: [
-    CommonModule,
     TwoColumnsTableComponent,
     ModalDetailsTopComponent,
-    ModalDetailsBottomComponent,
-  ],
+    ModalDetailsBottomComponent
+],
   templateUrl: './modal-device-info.component.html',
 })
 export class ModalDeviceInfoComponent

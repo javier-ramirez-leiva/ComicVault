@@ -2,7 +2,7 @@ import { Component, Input, inject } from '@angular/core';
 import { ComicsDatabase } from 'interfaces';
 import { ComicsService, ModalService } from 'services';
 import { Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
+
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ModalReadComponent, ReadOption } from '../modal-read/modal-read.component';
 import { notNullOrUndefined } from 'src/app/utils/rsjx-operators';
@@ -10,7 +10,7 @@ import { filter } from 'rxjs';
 
 @Component({
   selector: 'app-read-button',
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './read-button.component.html',
 })
 @UntilDestroy()

@@ -1,30 +1,30 @@
 <div class="whole-page-container">
-  <ng-container *ngIf="comics$ | async as comics">
-    <ng-container *ngIf="comics.length">
-      <app-comics-download-grid
-        *ngIf="gridService.gridOptionActivePage$ | async; else tmplTable"
-        class="mb-4 pl-4 pt-4"
-        [comics]="comics"
-      ></app-comics-download-grid>
-      <ng-template #tmplTable>
+  @if (comics$ | async; as comics) {
+    @if (comics.length) {
+      @if (gridService.gridOptionActivePage$ | async) {
+        <app-comics-download-grid
+          class="mb-4 pl-4 pt-4"
+          [comics]="comics"
+        ></app-comics-download-grid>
+      } @else {
         <app-comic-search-table
           [comics]="comics"
           class="mb-4 pl-4 pt-4"
           [displayAddButton]="false"
         ></app-comic-search-table>
-      </ng-template>
-    </ng-container>
-  </ng-container>
+      }
+    }
+  }
   <!-- ng-container *ngIf="localDownloads$ | async as comics">
-        <ng-container *ngIf="comics.length">
-            <h3 class="pl-4 text-2xl font-bold text-generic-text mt-8">Local Downloads</h3>
-            <app-comics-database-download-grid
-                class="pl-4"
-                [localDownloads$]="localDownloads$"
-            ></app-comics-database-download-grid>
-        </ng-container>
-    </ng-container -->
-  <ng-container *ngIf="emptyResult$ | async">
-    <app-no-results></app-no-results>
+  <ng-container *ngIf="comics.length">
+    <h3 class="pl-4 text-2xl font-bold text-generic-text mt-8">Local Downloads</h3>
+    <app-comics-database-download-grid
+      class="pl-4"
+      [localDownloads$]="localDownloads$"
+    ></app-comics-database-download-grid>
   </ng-container>
+  </ng-container -->
+  @if (emptyResult$ | async) {
+    <app-no-results></app-no-results>
+  }
 </div>

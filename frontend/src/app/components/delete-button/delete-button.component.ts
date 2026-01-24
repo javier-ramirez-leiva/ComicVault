@@ -3,7 +3,7 @@ import { ComicsDatabase } from 'interfaces';
 import { ComicsService } from 'services';
 import { NotifierService } from 'services';
 import { Router } from '@angular/router';
-import { CommonModule } from '@angular/common';
+
 import { ActivePageService } from 'services';
 import { ModalService } from 'services';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -13,7 +13,7 @@ import { resetRouteCache } from 'src/app/strategy_providers/custom-reuse-strateg
 
 @Component({
   selector: 'app-delete-button',
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './delete-button.component.html',
 })
 @UntilDestroy()

@@ -1,14 +1,19 @@
-<div *ngIf="helpMessage; else noHelpTmpl" class="flex gap-4 items-center">
-  <label *ngIf="title" class="block mb-2 text-sm font-medium text-generic-text h-full text-center">
-    {{ title }}
-  </label>
-  <app-help-button [message]="helpMessage"></app-help-button>
-</div>
-<ng-template #noHelpTmpl>
-  <label *ngIf="title" class="block mb-2 text-sm font-medium text-generic-text">
-    {{ title }}
-  </label>
-</ng-template>
+@if (helpMessage) {
+  <div class="flex gap-4 items-center">
+    @if (title) {
+      <label class="block mb-2 text-sm font-medium text-generic-text h-full text-center">
+        {{ title }}
+      </label>
+    }
+    <app-help-button [message]="helpMessage"></app-help-button>
+  </div>
+} @else {
+  @if (title) {
+    <label class="block mb-2 text-sm font-medium text-generic-text">
+      {{ title }}
+    </label>
+  }
+}
 
 <input
   [(ngModel)]="value"
@@ -20,4 +25,4 @@
   [readOnly]="disabled"
   [type]="password ? 'password' : 'text'"
   [placeholder]="password ? '••••••••' : ''"
-/>
+  />

@@ -4,7 +4,7 @@ import { ModalService } from 'services';
 import { NotifierService } from 'services';
 import { filter, switchMap } from 'rxjs';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { CommonModule } from '@angular/common';
+
 import { ModalDeleteLibraryComponent } from '../modal-delete-library/modal-delete-library.component';
 import { DeleteReadOptions } from 'interfaces';
 import { notNullOrUndefined } from 'src/app/utils/rsjx-operators';
@@ -12,7 +12,7 @@ import { RouterService } from 'src/app/services/router.service';
 
 @Component({
   selector: 'app-delete-lib-button',
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './delete-lib-button.component.html',
 })
 export class DeleteLibButtonComponent {

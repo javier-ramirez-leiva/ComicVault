@@ -2,13 +2,13 @@ import { Component, Input, OnInit, WritableSignal, inject, signal } from '@angul
 import { CoverCardComponent } from '../cover-card/cover-card.component';
 import { ComicsSearch } from 'interfaces';
 import { Observable, filter, map } from 'rxjs';
-import { CommonModule } from '@angular/common';
+
 import { ComicsService } from 'services';
 import { notNullOrUndefined } from 'src/app/utils/rsjx-operators';
 
 @Component({
   selector: 'app-comic-search-with-download',
-  imports: [CoverCardComponent, CommonModule],
+  imports: [CoverCardComponent],
   templateUrl: './comic-search-with-download.component.html',
 })
 export class ComicSearchWithDownloadComponent implements OnInit {

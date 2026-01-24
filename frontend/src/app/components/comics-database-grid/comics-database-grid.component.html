@@ -4,46 +4,48 @@
     cdkDropList
     cdkDropListOrientation="mixed"
     (cdkDropListDropped)="drop($event)"
-  >
-    <li
-      *ngFor="let comicAndHover of comicsAndHovers; trackBy: trackByComic"
-      cdkDrag
-      [cdkDragDisabled]="!editStatus"
-      (cdkDragStarted)="dragStart()"
-      (cdkDragEnded)="dradgEnd()"
-      class="relative"
     >
-      <app-comic-database
-        [class.pointer-events-none]="editStatus"
-        [comic]="comicAndHover.comic"
-        [draggableStatus]="editStatus"
-        [isHovered]="comicAndHover.isHovered"
-      ></app-comic-database>
-      <div
-        cdkDragHandle
-        class="absolute top-0 left-0 flex flex-col gap-1 cursor-grab bg-cover-card-dragger-background p-2 rounded-br-lg z-20"
-        [class.hidden]="dragging"
-        *ngIf="editStatus"
-      >
-        <svg
-          class="w-6 h-6 text-white-text"
-          aria-hidden="true"
-          xmlns="http://www.w3.org/2000/svg"
-          width="24"
-          height="24"
-          fill="currentColor"
-          viewBox="0 0 24 24"
+    @for (comicAndHover of comicsAndHovers; track trackByComic($index, comicAndHover)) {
+      <li
+        cdkDrag
+        [cdkDragDisabled]="!editStatus"
+        (cdkDragStarted)="dragStart()"
+        (cdkDragEnded)="dradgEnd()"
+        class="relative"
         >
-          <path
-            fill-rule="evenodd"
-            d="M9 7V2.221a2 2 0 0 0-.5.365L4.586 6.5a2 2 0 0 0-.365.5H9Zm2 0V2h7a2 2 0 0 1 2 2v9.293l-2-2a1 1 0 0 0-1.414 1.414l.293.293h-6.586a1 1 0 1 0 0 2h6.586l-.293.293A1 1 0 0 0 18 16.707l2-2V20a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V9h5a2 2 0 0 0 2-2Z"
-            clip-rule="evenodd"
-          ></path>
-        </svg>
-      </div>
-      <div *cdkDragPreview>
-        <img [src]="getComicImageUrl(comicAndHover.comic.id)" />
-      </div>
-    </li>
+        <app-comic-database
+          [class.pointer-events-none]="editStatus"
+          [comic]="comicAndHover.comic"
+          [draggableStatus]="editStatus"
+          [isHovered]="comicAndHover.isHovered"
+        ></app-comic-database>
+        @if (editStatus) {
+          <div
+            cdkDragHandle
+            class="absolute top-0 left-0 flex flex-col gap-1 cursor-grab bg-cover-card-dragger-background p-2 rounded-br-lg z-20"
+            [class.hidden]="dragging"
+            >
+            <svg
+              class="w-6 h-6 text-white-text"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              width="24"
+              height="24"
+              fill="currentColor"
+              viewBox="0 0 24 24"
+              >
+              <path
+                fill-rule="evenodd"
+                d="M9 7V2.221a2 2 0 0 0-.5.365L4.586 6.5a2 2 0 0 0-.365.5H9Zm2 0V2h7a2 2 0 0 1 2 2v9.293l-2-2a1 1 0 0 0-1.414 1.414l.293.293h-6.586a1 1 0 1 0 0 2h6.586l-.293.293A1 1 0 0 0 18 16.707l2-2V20a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V9h5a2 2 0 0 0 2-2Z"
+                clip-rule="evenodd"
+              ></path>
+            </svg>
+          </div>
+        }
+        <div *cdkDragPreview>
+          <img [src]="getComicImageUrl(comicAndHover.comic.id)" />
+        </div>
+      </li>
+    }
   </ul>
 </section>

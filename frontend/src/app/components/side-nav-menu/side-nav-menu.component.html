@@ -4,7 +4,7 @@
     aria-controls="separator-sidebar"
     type="button"
     class="hidden md:inline-flex z-40 items-center p-2 mt-3 mb-2 ms-3 text-sm"
-  >
+    >
     <span class="sr-only">Open sidebar</span>
     <svg class="w-6 h-6 text-topBar-left-corner">
       <use href="/assets/icons.svg#sidenav-collapser" />
@@ -12,16 +12,16 @@
   </button>
 </div>
 
-<ng-container *ngIf="leftMenuOpen$ | async as leftMenu">
+@if (leftMenuOpen$ | async; as leftMenu) {
   <aside
     class="fixed top-0 left-0 z-40 w-52 h-screen transition-transform -translate-x-full lg:translate-x-0 md:block"
     [class.translate-x-0]="leftMenu === 'open'"
     appOutsideMenuClick
     (outsideClick)="setLeftMenuOpen(false)"
-  >
+    >
     <app-left-nav-menu [open]="leftMenu === 'open'"></app-left-nav-menu>
   </aside>
-</ng-container>
+}
 
 <app-bottom-nav-menu></app-bottom-nav-menu>
 
@@ -32,7 +32,9 @@
 
 <div class="lg:ml-52 bg-background min-h-screen h-full relative items-center">
   <app-modal-container></app-modal-container>
-  <app-blur-mask *ngIf="blurMaskService.active"></app-blur-mask>
+  @if (blurMaskService.active) {
+    <app-blur-mask></app-blur-mask>
+  }
   <router-outlet></router-outlet>
   <app-processing-notification-grid
     [processingNotifications$]="notifierService.getProcessingNotifications$()"
@@ -41,5 +43,5 @@
   <app-notification-grid
     [notifications$]="notifierService.getNotifications$()"
     class="pt-2 z-50 top-0 left-1/2 fixed transform -translate-x-1/2 flex flex-col gap-8"
-  />
+    />
 </div>

@@ -1,6 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { AuthService } from 'services';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { catchError, throwError } from 'rxjs';
@@ -13,7 +13,7 @@ import { InputTextComponent } from '../input-text/input-text.component';
 @UntilDestroy()
 @Component({
   selector: 'app-login-page',
-  imports: [CommonModule, FormsModule, InputTextComponent],
+  imports: [FormsModule, InputTextComponent],
   templateUrl: './login-page.component.html',
 })
 export class LoginPageComponent implements OnInit {

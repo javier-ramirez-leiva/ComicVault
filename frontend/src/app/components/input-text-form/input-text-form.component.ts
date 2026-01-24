@@ -1,10 +1,10 @@
 import { Component, Input, forwardRef } from '@angular/core';
 import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { CommonModule } from '@angular/common';
+
 
 @Component({
   selector: 'app-input-text-form',
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule],
   templateUrl: './input-text-form.component.html',
   providers: [
     {

@@ -2,12 +2,12 @@ import { Component, Input, OnInit, inject } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { EMPTY, Observable, catchError, of } from 'rxjs';
 import { ConfigService, NotifierService } from 'services';
-import { CommonModule } from '@angular/common';
+
 import { HttpResponseError } from 'interfaces';
 
 @Component({
   selector: 'app-test-button',
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './test-button.component.html',
 })
 @UntilDestroy()

@@ -12,7 +12,7 @@
     'translate-x-full': !(isDrawerOpen$ | async),
     '-translate-x-0': (isDrawerOpen$ | async),
   }"
->
+  >
   <app-right-panel-title title="Filters" (onCloseClick)="onCloseDrawer()"></app-right-panel-title>
 
   <form [formGroup]="form" class="flex flex-col justify-between flex-1">
@@ -87,42 +87,46 @@
       </div>
 
       <!-- Size -->
-      <div *ngIf="seriesContent === false" class="space-y-2" formGroupName="size">
-        <h6 class="text-base font-medium">Size (MB)</h6>
-        <div class="flex items-center justify-between col-span-2 space-x-3">
-          <div class="w-full">
-            <label class="block mb-2 text-sm font-medium text-generic-text" for="size-from">
-              From
-            </label>
-            <app-digit-input-form formControlName="from"></app-digit-input-form>
-          </div>
-          <div class="w-full">
-            <label class="block mb-2 text-sm font-medium text-generic-text" for="size-to">
-              To
-            </label>
-            <app-digit-input-form formControlName="to"></app-digit-input-form>
+      @if (seriesContent === false) {
+        <div class="space-y-2" formGroupName="size">
+          <h6 class="text-base font-medium">Size (MB)</h6>
+          <div class="flex items-center justify-between col-span-2 space-x-3">
+            <div class="w-full">
+              <label class="block mb-2 text-sm font-medium text-generic-text" for="size-from">
+                From
+              </label>
+              <app-digit-input-form formControlName="from"></app-digit-input-form>
+            </div>
+            <div class="w-full">
+              <label class="block mb-2 text-sm font-medium text-generic-text" for="size-to">
+                To
+              </label>
+              <app-digit-input-form formControlName="to"></app-digit-input-form>
+            </div>
           </div>
         </div>
-      </div>
+      }
 
       <!-- Issues -->
-      <div class="space-y-2" *ngIf="seriesContent === true" formGroupName="issues">
-        <h6 class="text-base font-medium">Issues</h6>
-        <div class="flex items-center justify-between col-span-2 space-x-3">
-          <div class="w-full">
-            <label class="block mb-2 text-sm font-medium text-generic-text" for="issues-from">
-              From
-            </label>
-            <app-digit-input-form formControlName="from"></app-digit-input-form>
-          </div>
-          <div class="w-full">
-            <label class="block mb-2 text-sm font-medium text-generic-text" for="issues-to">
-              To
-            </label>
-            <app-digit-input-form formControlName="to"></app-digit-input-form>
+      @if (seriesContent === true) {
+        <div class="space-y-2" formGroupName="issues">
+          <h6 class="text-base font-medium">Issues</h6>
+          <div class="flex items-center justify-between col-span-2 space-x-3">
+            <div class="w-full">
+              <label class="block mb-2 text-sm font-medium text-generic-text" for="issues-from">
+                From
+              </label>
+              <app-digit-input-form formControlName="from"></app-digit-input-form>
+            </div>
+            <div class="w-full">
+              <label class="block mb-2 text-sm font-medium text-generic-text" for="issues-to">
+                To
+              </label>
+              <app-digit-input-form formControlName="to"></app-digit-input-form>
+            </div>
           </div>
         </div>
-      </div>
+      }
     </div>
   </form>
 </div>

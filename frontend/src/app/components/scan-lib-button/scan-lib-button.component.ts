@@ -1,11 +1,11 @@
 import { Component, Input, inject } from '@angular/core';
 import { ComicsService, NotifierService } from 'services';
-import { CommonModule } from '@angular/common';
+
 import { RouterService } from 'src/app/services/router.service';
 
 @Component({
   selector: 'app-scan-lib-button',
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './scan-lib-button.component.html',
 })
 export class ScanLibButtonComponent {

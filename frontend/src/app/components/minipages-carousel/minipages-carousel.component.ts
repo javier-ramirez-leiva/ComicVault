@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import {
   Component,
   ElementRef,
@@ -17,7 +17,7 @@ import { range } from 'src/app/utils/number';
 
 @Component({
   selector: 'app-minipages-carousel',
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './minipages-carousel.component.html',
 })
 export class MinipagesCarouselComponent implements OnInit {

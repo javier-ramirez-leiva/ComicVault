@@ -4,14 +4,16 @@
     <label class="font-semibold text-lg text-generic-text">{{ data?.comicTitle }}</label>
   </div>
   <div class="p-4 md:p-5 text-center">
-    <div *ngFor="let link of data?.options" class="relative flex items-center mb-4">
-      <app-radio-button-input
-        [label]="link.platform"
-        [value]="link"
-        (valueChange)="updateLink($event)"
-        [initValue]="data?.options?.[0]"
-      ></app-radio-button-input>
-    </div>
+    @for (link of data?.options; track link) {
+      <div class="relative flex items-center mb-4">
+        <app-radio-button-input
+          [label]="link.platform"
+          [value]="link"
+          (valueChange)="updateLink($event)"
+          [initValue]="data?.options?.[0]"
+        ></app-radio-button-input>
+      </div>
+    }
   </div>
   <div class="align-middle w-full flex justify-center py-4">
     <button type="button" (click)="confirm()" class="button-text button-primary">Download</button>

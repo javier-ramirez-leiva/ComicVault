@@ -1,10 +1,10 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, Input, forwardRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
   selector: 'app-boolean-slider-form',
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './boolean-slider-form.component.html',
   providers: [
     {

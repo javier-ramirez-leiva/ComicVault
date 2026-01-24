@@ -1,5 +1,5 @@
 import { Component, OnInit, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { FormsModule } from '@angular/forms';
 import { Role } from 'interfaces';
 import { UsersService, AuthService, NotifierService, DarkmodeService } from 'services';
@@ -12,7 +12,7 @@ import { InputTextComponent } from '../input-text/input-text.component';
 @UntilDestroy()
 @Component({
   selector: 'app-register-page',
-  imports: [CommonModule, FormsModule, InputTextComponent],
+  imports: [FormsModule, InputTextComponent],
   templateUrl: './register-page.component.html',
 })
 export class RegisterPageComponent implements OnInit {

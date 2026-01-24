@@ -1,7 +1,7 @@
 <div class="fixed inset-0 z-50 flex items-center justify-center p-4">
   <div
     class="relative w-full max-w-[70vw] bg-modal-background rounded-lg shadow-sm flex flex-col overflow-hidden"
-  >
+    >
     <app-cross-modal (onCloseClick)="cancel()"></app-cross-modal>
     <div class="p-4 md:p-5 text-center">
       <svg
@@ -10,7 +10,7 @@
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 20 20"
-      >
+        >
         <path
           stroke="currentColor"
           stroke-linecap="round"
@@ -22,14 +22,17 @@
 
       <h3 class="mb-5 text-lg font-normal text-modal-message-text shrink-1">{{ data?.message }}</h3>
       <div class="py-4 pb-4">
-        <div
-          class="text-box overflow-x-auto overflow-y-auto max-h-[60vh]"
-          *ngIf="data && data.list.length > 0"
-        >
-          <p *ngFor="let line of data.list" class="text-box-p">
-            {{ line }}
-          </p>
-        </div>
+        @if (data && data.list.length > 0) {
+          <div
+            class="text-box overflow-x-auto overflow-y-auto max-h-[60vh]"
+            >
+            @for (line of data.list; track line) {
+              <p class="text-box-p">
+                {{ line }}
+              </p>
+            }
+          </div>
+        }
       </div>
       <div class="flex justify-center gap-6">
         <button (click)="confirm(true)" type="button" class="button-text button-error">

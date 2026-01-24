@@ -2,11 +2,11 @@ import { Component, Input, inject } from '@angular/core';
 import { ComicsSearch } from 'interfaces';
 import { Observable, tap } from 'rxjs';
 import { ComicSearchComponent } from '../comic-search/comic-search.component';
-import { CommonModule } from '@angular/common';
+
 
 @Component({
   selector: 'app-comics-search-grid',
-  imports: [ComicSearchComponent, CommonModule],
+  imports: [ComicSearchComponent],
   templateUrl: './comics-search-grid.component.html',
 })
 export class ComicsSearchGridComponent {

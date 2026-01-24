@@ -1,9 +1,9 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, Input } from '@angular/core';
 
 @Component({
   selector: 'app-comic-not-found',
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './comic-not-found.component.html',
 })
 export class ComicNotFoundComponent {

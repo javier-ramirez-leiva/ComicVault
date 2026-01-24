@@ -1,11 +1,11 @@
 <div class="whole-page-container">
   <div class="px-4 pb-4 sm:pb-0 overflow-x-auto">
-    <ng-container *ngIf="user$ | async as user">
+    @if (user$ | async; as user) {
       <div class="flex justify-start items-center mb-12 gap-8">
         <div
           class="relative inline-flex items-center justify-center size-20 overflow-hidden rounded-full"
           [ngStyle]="{ 'background-color': user.color }"
-        >
+          >
           <span class="font-normal text-3xl text-slate-200">{{
             user.username[0].toUpperCase()
           }}</span>
@@ -23,7 +23,7 @@
               stroke-width="1.5"
               stroke="currentColor"
               class="size-4"
-            >
+              >
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
@@ -34,18 +34,18 @@
           </button>
         </div>
       </div>
-    </ng-container>
-    <ng-container *ngIf="histories$ | async as histories">
+    }
+    @if (histories$ | async; as histories) {
       <div class="flex flex-col gap-4">
         <app-funnel-button-history class="w-12 ml-auto"></app-funnel-button-history>
-        <app-history-table
-          *ngIf="histories.length; else noResults"
-          [histories]="histories"
-        ></app-history-table>
+        @if (histories.length) {
+          <app-history-table
+            [histories]="histories"
+          ></app-history-table>
+        } @else {
+          <app-no-results></app-no-results>
+        }
       </div>
-      <ng-template #noResults>
-        <app-no-results></app-no-results>
-      </ng-template>
-    </ng-container>
+    }
   </div>
 </div>

@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, inject, Input } from '@angular/core';
 import { RouterLink } from '@angular/router';
 import { Series } from 'interfaces';
@@ -7,7 +7,7 @@ import { PublisherCellComponent } from '../publisher-cell/publisher-cell.compone
 
 @Component({
   selector: 'app-series-table',
-  imports: [CommonModule, RouterLink, PublisherCellComponent],
+  imports: [RouterLink, PublisherCellComponent],
   templateUrl: './series-table.component.html',
 })
 export class SeriesTableComponent {

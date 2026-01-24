@@ -1,11 +1,11 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { HelpButtonComponent } from '../help-button/help-button.component';
 
 @Component({
   selector: 'app-input-text',
-  imports: [CommonModule, FormsModule, HelpButtonComponent],
+  imports: [FormsModule, HelpButtonComponent],
   templateUrl: './input-text.component.html',
 })
 export class InputTextComponent {

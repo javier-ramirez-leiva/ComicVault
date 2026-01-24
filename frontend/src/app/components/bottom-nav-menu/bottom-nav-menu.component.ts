@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, inject } from '@angular/core';
 import { ActivePageService, BlurMaskService } from 'services';
 import { HideRolesDirective, OutsideClickDirective } from 'directives';
@@ -12,12 +12,11 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 @Component({
   selector: 'app-bottom-nav-menu',
   imports: [
-    CommonModule,
     HideRolesDirective,
     BottomDrawerLineComponent,
     BottomDrawerButtonsComponent,
-    OutsideClickDirective,
-  ],
+    OutsideClickDirective
+],
   templateUrl: './bottom-nav-menu.component.html',
 })
 @UntilDestroy()

@@ -1,7 +1,7 @@
 import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { ComicsDatabase } from 'interfaces';
 import { ComicDatabaseComponent } from '../comic-database/comic-database.component';
-import { CommonModule } from '@angular/common';
+
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
   CdkDrag,
@@ -16,13 +16,12 @@ import { ConfigURLService, CoverCardClickCollectorService } from 'services';
 @Component({
   selector: 'app-comics-database-grid',
   imports: [
-    CommonModule,
     ComicDatabaseComponent,
     CdkDropList,
     CdkDrag,
     CdkDragHandle,
-    CdkDragPreview,
-  ],
+    CdkDragPreview
+],
   styleUrls: ['./comics-database-grid.component.css'],
   templateUrl: './comics-database-grid.component.html',
 })

@@ -1,10 +1,10 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, ElementRef, Input, ViewChild, forwardRef } from '@angular/core';
 import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
   selector: 'app-date-text-form',
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule],
   templateUrl: './date-text-form.component.html',
   providers: [
     {

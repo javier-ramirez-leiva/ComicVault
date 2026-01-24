@@ -2,8 +2,12 @@
   <table class="table-container-full" cdkDropList (cdkDropListDropped)="drop($event)">
     <thead class="table-head">
       <tr>
-        <th class="px-6 py-3" *ngIf="editStatus"></th>
-        <th class="px-6 py-3" *ngIf="coverCardClickCollector.getMultiSelect()">Select</th>
+        @if (editStatus) {
+          <th class="px-6 py-3"></th>
+        }
+        @if (coverCardClickCollector.getMultiSelect()) {
+          <th class="px-6 py-3">Select</th>
+        }
         <th class="px-6 py-3">Cover</th>
         <th class="px-6 py-3">Comic</th>
         <th class="px-6 py-3">Series</th>
@@ -15,49 +19,53 @@
       </tr>
     </thead>
     <tbody>
-      <tr
-        *ngFor="let rowComic of rowComics; trackBy: trackByComicId"
-        class="border-b border-table-border"
-        cdkDrag
+      @for (rowComic of rowComics; track trackByComicId($index, rowComic)) {
+        <tr
+          class="border-b border-table-border"
+          cdkDrag
         [ngClass]="{
           'bg-table-row-selected-background': rowComic.hovered,
           'bg-table-row-not-selected-background ': !rowComic.hovered,
         }"
-        [cdkDragDisabled]="!editStatus"
-        (click)="onClickRow(rowComic)"
-      >
-        <td class="py-4 px-2" *ngIf="coverCardClickCollector.getMultiSelect()">
-          <div class="flex items-center justify-center">
-            <app-boolean-checkbox
-              class="lg:mr-10"
-              [value]="rowComic.hovered"
-              (valueChange)="onClickRowCheckbox(rowComic, $event)"
-            ></app-boolean-checkbox>
-          </div>
-        </td>
-        <td *ngIf="editStatus" class="py-4 px-6" cdkDragHandle>
-          <svg
-            class="w-6 h-6 text-generic-text"
-            aria-hidden="true"
-            xmlns="http://www.w3.org/2000/svg"
-            width="24"
-            height="24"
-            fill="none"
-            viewBox="0 0 24 24"
+          [cdkDragDisabled]="!editStatus"
+          (click)="onClickRow(rowComic)"
           >
-            <path
-              stroke="currentColor"
-              stroke-linecap="round"
-              stroke-width="2"
-              d="M9 8h10M9 12h10M9 16h10M4.99 8H5m-.02 4h.01m0 4H5"
-            ></path>
-          </svg>
-        </td>
-        <td class="py-4 px-6">
-          <img
-            [routerLink]="'/comics/' + rowComic.comic.id + '/details'"
-            (click)="coverCardClickCollector.getMultiSelect() ? $event.preventDefault() : null"
-            [class.pointer-events-none]="coverCardClickCollector.getMultiSelect()"
+          @if (coverCardClickCollector.getMultiSelect()) {
+            <td class="py-4 px-2">
+              <div class="flex items-center justify-center">
+                <app-boolean-checkbox
+                  class="lg:mr-10"
+                  [value]="rowComic.hovered"
+                  (valueChange)="onClickRowCheckbox(rowComic, $event)"
+                ></app-boolean-checkbox>
+              </div>
+            </td>
+          }
+          @if (editStatus) {
+            <td class="py-4 px-6" cdkDragHandle>
+              <svg
+                class="w-6 h-6 text-generic-text"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                fill="none"
+                viewBox="0 0 24 24"
+                >
+                <path
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-width="2"
+                  d="M9 8h10M9 12h10M9 16h10M4.99 8H5m-.02 4h.01m0 4H5"
+                ></path>
+              </svg>
+            </td>
+          }
+          <td class="py-4 px-6">
+            <img
+              [routerLink]="'/comics/' + rowComic.comic.id + '/details'"
+              (click)="coverCardClickCollector.getMultiSelect() ? $event.preventDefault() : null"
+              [class.pointer-events-none]="coverCardClickCollector.getMultiSelect()"
             [src]="
               configURLService.baseURL +
               '/' +
@@ -66,41 +74,42 @@
               rowComic.comic.id +
               '/cover/small'
             "
-            class="m-4 w-24 md:w-24 max-w-full max-h-full rounded-md border-1 border-cover-card-border"
-          />
-        </td>
-        <td class="py-4 px-6">
-          <span
-            class="font-semibold text-table-link hover:underline"
-            [routerLink]="'/comics/' + rowComic.comic.id + '/details'"
-            (click)="coverCardClickCollector.getMultiSelect() ? $event.preventDefault() : null"
-            [class.pointer-events-none]="coverCardClickCollector.getMultiSelect()"
-          >
-            {{ rowComic.comic.title }}
-          </span>
-        </td>
-        <td class="py-4 px-6">
-          <span
-            class="font-semibold text-table-link hover:underline"
-            [routerLink]="'/series/' + rowComic.comic.seriesID + '/details'"
-            (click)="coverCardClickCollector.getMultiSelect() ? $event.preventDefault() : null"
-            [class.pointer-events-none]="coverCardClickCollector.getMultiSelect()"
-          >
-            {{ rowComic.comic.seriesTitle }}
-          </span>
-        </td>
-        <td class="py-4 px-6 font-semibold text-generic-text">{{ rowComic.comic.issue }}</td>
-        <td class="py-4 px-6 font-semibold text-generic-text">
-          <app-status-cell [comic]="rowComic.comic"></app-status-cell>
-        </td>
-        <td class="py-4 px-6 font-semibold text-generic-text">
-          <app-publisher-cell [category]="rowComic.comic.category"></app-publisher-cell>
-        </td>
-        <td class="py-4 px-6 font-semibold text-generic-text">
-          {{ rowComic.comic.year.trim().length > 0 ? rowComic.comic.year : 'N/A' }}
-        </td>
-        <td class="py-4 px-6 font-semibold text-generic-text">{{ rowComic.comic.size }}</td>
-      </tr>
+              class="m-4 w-24 md:w-24 max-w-full max-h-full rounded-md border-1 border-cover-card-border"
+              />
+          </td>
+          <td class="py-4 px-6">
+            <span
+              class="font-semibold text-table-link hover:underline"
+              [routerLink]="'/comics/' + rowComic.comic.id + '/details'"
+              (click)="coverCardClickCollector.getMultiSelect() ? $event.preventDefault() : null"
+              [class.pointer-events-none]="coverCardClickCollector.getMultiSelect()"
+              >
+              {{ rowComic.comic.title }}
+            </span>
+          </td>
+          <td class="py-4 px-6">
+            <span
+              class="font-semibold text-table-link hover:underline"
+              [routerLink]="'/series/' + rowComic.comic.seriesID + '/details'"
+              (click)="coverCardClickCollector.getMultiSelect() ? $event.preventDefault() : null"
+              [class.pointer-events-none]="coverCardClickCollector.getMultiSelect()"
+              >
+              {{ rowComic.comic.seriesTitle }}
+            </span>
+          </td>
+          <td class="py-4 px-6 font-semibold text-generic-text">{{ rowComic.comic.issue }}</td>
+          <td class="py-4 px-6 font-semibold text-generic-text">
+            <app-status-cell [comic]="rowComic.comic"></app-status-cell>
+          </td>
+          <td class="py-4 px-6 font-semibold text-generic-text">
+            <app-publisher-cell [category]="rowComic.comic.category"></app-publisher-cell>
+          </td>
+          <td class="py-4 px-6 font-semibold text-generic-text">
+            {{ rowComic.comic.year.trim().length > 0 ? rowComic.comic.year : 'N/A' }}
+          </td>
+          <td class="py-4 px-6 font-semibold text-generic-text">{{ rowComic.comic.size }}</td>
+        </tr>
+      }
     </tbody>
   </table>
 </div>

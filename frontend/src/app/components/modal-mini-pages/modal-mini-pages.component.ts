@@ -1,13 +1,13 @@
 import { Component, inject, Input, OnInit } from '@angular/core';
 import { ComicsDatabase, ModalComponent } from 'interfaces';
 import { CrossModalComponent } from '../cross-modal/cross-modal.component';
-import { CommonModule } from '@angular/common';
+
 import { range } from 'src/app/utils/number';
 import { ConfigURLService } from 'services';
 
 @Component({
   selector: 'app-modal-mini-pages',
-  imports: [CrossModalComponent, CommonModule],
+  imports: [CrossModalComponent],
   templateUrl: './modal-mini-pages.component.html',
 })
 export class ModalMiniPagesComponent

@@ -1,3 +1,5 @@
-<div class="flex flex-col gap-8" *ngFor="let notification of notifications$ | async">
-  <app-notification [notification]="notification"></app-notification>
-</div>
+@for (notification of notifications$ | async; track notification) {
+  <div class="flex flex-col gap-8">
+    <app-notification [notification]="notification"></app-notification>
+  </div>
+}

@@ -1,11 +1,11 @@
 import { Component, Input } from '@angular/core';
 import { Notifications } from 'interfaces';
 import { NotifierService } from 'services';
-import { CommonModule } from '@angular/common';
+
 
 @Component({
   selector: 'app-notification',
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './notification.component.html',
 })
 export class NotificationComponent {

@@ -1,12 +1,12 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { DownloadIssue, DownloadIssueRequest, DownloadLink } from 'interfaces';
 import { ModalComponent } from 'interfaces';
-import { CommonModule } from '@angular/common';
+
 import { CrossModalComponent } from '../cross-modal/cross-modal.component';
 
 @Component({
   selector: 'app-modal-download-list',
-  imports: [CommonModule, CrossModalComponent],
+  imports: [CrossModalComponent],
   templateUrl: './modal-download-list.component.html',
 })
 export class ModalDownloadListComponent

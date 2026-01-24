@@ -5,12 +5,12 @@ import { ModalMessageComponent } from '../modal-message/modal-message.component'
 import { NotifierService } from 'services';
 import { filter, switchMap } from 'rxjs';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { CommonModule } from '@angular/common';
+
 import { RouterService } from 'src/app/services/router.service';
 
 @Component({
   selector: 'app-clean-lib-button',
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './clean-lib-button.component.html',
 })
 export class CleanLibButtonComponent {

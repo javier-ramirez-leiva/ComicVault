@@ -9,9 +9,11 @@
         'bg-checkbox-background-active ': value,
       }"
       class="size-6 text-checkbox-text border-checkbox-border rounded-sm focus:ring-checkbox-focus-ring focus:ring-2"
-    />
-    <label *ngIf="label" class="ms-2 text-sm font-medium text-generic-text">
-      {{ label }}
-    </label>
+      />
+    @if (label) {
+      <label class="ms-2 text-sm font-medium text-generic-text">
+        {{ label }}
+      </label>
+    }
   </div>
 </label>

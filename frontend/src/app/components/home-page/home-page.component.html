@@ -1,40 +1,38 @@
-<ng-container *ngIf="homePageData$ | async as homePageData; else loadingTmpl">
+@if (homePageData$ | async; as homePageData) {
   <div class="whole-page-container">
-    <ng-container *ngIf="homePageData.newComics.length === 0; else tmplContent">
+    @if (homePageData.newComics.length === 0) {
       <app-no-results></app-no-results>
-    </ng-container>
-    <ng-template #tmplContent>
-      <ng-container *ngIf="homePageData.ongoingComics.length > 0">
+    } @else {
+      @if (homePageData.ongoingComics.length > 0) {
         <app-carousel-series-comics
           class="pb-4"
           [comics]="homePageData.ongoingComics"
           header="Ongoing comics"
         ></app-carousel-series-comics>
-      </ng-container>
-      <ng-container *ngIf="homePageData.ongoingSeries.length > 0">
+      }
+      @if (homePageData.ongoingSeries.length > 0) {
         <app-carousel-series-comics
           class="pb-4"
           [series]="homePageData.ongoingSeries"
           header="Ongoing series"
         ></app-carousel-series-comics>
-      </ng-container>
-      <ng-container *ngIf="homePageData.newComics.length > 0">
+      }
+      @if (homePageData.newComics.length > 0) {
         <app-carousel-series-comics
           class="pb-4"
           [comics]="homePageData.newComics"
           header="New comics"
         ></app-carousel-series-comics>
-      </ng-container>
-      <ng-container *ngIf="homePageData.newSeries.length > 0">
+      }
+      @if (homePageData.newSeries.length > 0) {
         <app-carousel-series-comics
           class="pb-4"
           [series]="homePageData.newSeries"
           header="Updated series"
         ></app-carousel-series-comics>
-      </ng-container>
-    </ng-template>
+      }
+    }
   </div>
-</ng-container>
-<ng-template #loadingTmpl>
+} @else {
   <app-loading-spinner-page></app-loading-spinner-page>
-</ng-template>
+}

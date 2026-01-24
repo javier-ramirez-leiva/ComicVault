@@ -1,7 +1,7 @@
 import { Component, inject, Input } from '@angular/core';
 import { ModalComponent } from 'interfaces';
 import { Log, isSeverrity } from 'interfaces';
-import { CommonModule } from '@angular/common';
+
 import { Row, TwoColumnsTableComponent } from '../two-columns-table/two-columns-table.component';
 import { formatDate } from '../../utils/dates';
 import { ModalDetailsTopComponent } from '../modal-details-top/modal-details-top.component';
@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-modal-log',
-  imports: [CommonModule, TwoColumnsTableComponent, ModalDetailsTopComponent],
+  imports: [TwoColumnsTableComponent, ModalDetailsTopComponent],
   templateUrl: './modal-log.component.html',
 })
 export class ModalLogComponent implements ModalComponent<null, { log: Log | undefined }> {

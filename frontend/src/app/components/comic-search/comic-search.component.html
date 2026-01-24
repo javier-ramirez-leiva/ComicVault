@@ -1,4 +1,4 @@
-<ng-container *ngIf="template$ | async as template">
+@if (template$ | async; as template) {
   <app-cover-card
     [id]="comic.idGc"
     [title]="comic.title"
@@ -16,4 +16,4 @@
     [highlight]="comic.highlight"
     [queryParams]="queryParams"
   ></app-cover-card>
-</ng-container>
+}

@@ -10,7 +10,7 @@
         xmlns="http://www.w3.org/2000/svg"
         fill="none"
         viewBox="0 0 20 20"
-      >
+        >
         <path
           stroke="currentColor"
           stroke-linecap="round"
@@ -29,7 +29,9 @@
       required
       [(ngModel)]="query"
       [ngModelOptions]="{ standalone: true }"
-    />
-    <button *ngIf="searchButton" type="submit" class="button-text button-primary">Search</button>
+      />
+    @if (searchButton) {
+      <button type="submit" class="button-text button-primary">Search</button>
+    }
   </div>
 </form>

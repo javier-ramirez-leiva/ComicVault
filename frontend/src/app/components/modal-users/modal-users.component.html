@@ -7,7 +7,7 @@
         [(value)]="user.username"
         [disabled]="!data?.input?.modifyUser"
         id="username"
-      >
+        >
       </app-input-text>
     </div>
     <div>
@@ -20,20 +20,22 @@
         <app-input-color [(value)]="user.color"></app-input-color>
       </div>
     </div>
-    <div class="p-4 md:p-5 text-center" *ngIf="data?.input?.modifyRole === true">
-      <label for="role" class="block mb-2 text-sm font-medium"> Select a role </label>
-      <div
-        class="bg-input-select-background border border-input-select-border text-input-select-text text-sm rounded-lg focus:ring-input-select-focus-ring p-2.5"
-      >
-        <select id="role" [formControl]="roleControl" class="w-full">
-          <option value="ADMIN">ADMIN</option>
-          <option value="OWNER">OWNER</option>
-          <option value="CONTRIBUTOR">CONTRIBUTOR</option>
-          <option value="REQUESTER">REQUESTER</option>
-          <option selected="VIEWER">VIEWER</option>
-        </select>
+    @if (data?.input?.modifyRole === true) {
+      <div class="p-4 md:p-5 text-center">
+        <label for="role" class="block mb-2 text-sm font-medium"> Select a role </label>
+        <div
+          class="bg-input-select-background border border-input-select-border text-input-select-text text-sm rounded-lg focus:ring-input-select-focus-ring p-2.5"
+          >
+          <select id="role" [formControl]="roleControl" class="w-full">
+            <option value="ADMIN">ADMIN</option>
+            <option value="OWNER">OWNER</option>
+            <option value="CONTRIBUTOR">CONTRIBUTOR</option>
+            <option value="REQUESTER">REQUESTER</option>
+            <option selected="VIEWER">VIEWER</option>
+          </select>
+        </div>
       </div>
-    </div>
+    }
     <div class="align-middle w-full flex justify-center py-4">
       <button type="button" (click)="okUser()" class="button-text button-primary">OK</button>
     </div>

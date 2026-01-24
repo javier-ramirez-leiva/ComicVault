@@ -5,7 +5,7 @@ import { FormControl, FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { filter } from 'rxjs';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { NotifierService } from 'services';
-import { CommonModule } from '@angular/common';
+
 import { InputTextComponent } from '../input-text/input-text.component';
 import { CrossModalComponent } from '../cross-modal/cross-modal.component';
 import { InputColorComponent } from '../input-color/input-color.component';
@@ -20,13 +20,12 @@ export type ModalUsersComponentInput = {
 @Component({
   selector: 'app-modal-users',
   imports: [
-    CommonModule,
     ReactiveFormsModule,
     FormsModule,
     InputTextComponent,
     CrossModalComponent,
-    InputColorComponent,
-  ],
+    InputColorComponent
+],
   templateUrl: './modal-users.component.html',
 })
 export class ModalUsersComponent

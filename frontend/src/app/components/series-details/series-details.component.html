@@ -1,24 +1,26 @@
-<ng-container *ngIf="series$ | async as series">
+@if (series$ | async; as series) {
   <div class="flex px-8 pt-20 items-center w-ful justify-center">
     <div class="flex-col-reverse md:flex-col lg:w-1/2 w-full md:w-2/3">
-      <ng-container *ngIf="rows$ | async as rows">
+      @if (rows$ | async; as rows) {
         <app-two-columns-table
           [rows]="rows"
           [formTable]="table"
           [editMode]="editStatus"
         ></app-two-columns-table>
         <div class="flex items-center justify-center py-4 gap-4">
-          <app-seen-button
-            *ngIf="!editStatus"
-            class="relative w-64"
-            [readStatus]="series.readStatus"
-            (onClick)="toggleSeen()"
-          ></app-seen-button>
-          <app-download-series-button
-            *ngIf="!editStatus"
-            class="relative w-64"
-            [series]="series"
-          ></app-download-series-button>
+          @if (!editStatus) {
+            <app-seen-button
+              class="relative w-64"
+              [readStatus]="series.readStatus"
+              (onClick)="toggleSeen()"
+            ></app-seen-button>
+          }
+          @if (!editStatus) {
+            <app-download-series-button
+              class="relative w-64"
+              [series]="series"
+            ></app-download-series-button>
+          }
           <app-edit-metadata-button
             appHideRoles
             [appHideForRoles]="[Role.Requester, Role.Viewer]"
@@ -29,63 +31,67 @@
             (onSave)="onSave()"
             (onCancel)="onCancel()"
           ></app-edit-metadata-button>
-          <app-delete-series-button
-            *ngIf="!editStatus"
-            appHideRoles
-            [appHideForRoles]="[Role.Contributor, Role.Requester, Role.Viewer]"
-            class="relative w-64"
-            [series]="series"
-          ></app-delete-series-button>
+          @if (!editStatus) {
+            <app-delete-series-button
+              appHideRoles
+              [appHideForRoles]="[Role.Contributor, Role.Requester, Role.Viewer]"
+              class="relative w-64"
+              [series]="series"
+            ></app-delete-series-button>
+          }
         </div>
-        <div
-          *ngIf="nextComicID && series?.readStatus === false"
-          class="py-4 flex relative w-full justify-center"
-        >
-          <button
-            [routerLink]="['/comics', nextComicID, 'details']"
-            type="button"
-            class="relative button-text inline-flex items-center button-next-issue me-2 mb-2"
-          >
-            Go to next issue
-            <svg
-              class="rtl:rotate-180 w-3.5 h-3.5 ms-2"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 14 10"
+        @if (nextComicID && series?.readStatus === false) {
+          <div
+            class="py-4 flex relative w-full justify-center"
             >
-              <path
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M1 5h12m0 0L9 1m4 4L9 9"
-              ></path>
-            </svg>
-          </button>
-        </div>
-      </ng-container>
+            <button
+              [routerLink]="['/comics', nextComicID, 'details']"
+              type="button"
+              class="relative button-text inline-flex items-center button-next-issue me-2 mb-2"
+              >
+              Go to next issue
+              <svg
+                class="rtl:rotate-180 w-3.5 h-3.5 ms-2"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 14 10"
+                >
+                <path
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M1 5h12m0 0L9 1m4 4L9 9"
+                ></path>
+              </svg>
+            </button>
+          </div>
+        }
+      }
     </div>
   </div>
-  <div *ngIf="comics$ | async as comics" class="px-4 pb-20 md:pb-4">
-    <app-comics-database-grid
-      *ngIf="gridService.gridOptionActivePage$ | async; else tmplTable"
-      [comics]="comics"
-      [editStatus]="editStatus"
-      (onComicsChange)="onComicsChange($event)"
-    ></app-comics-database-grid>
-    <ng-template #tmplTable>
-      <app-comic-database-table
-        [comics]="comics"
-        [editStatus]="editStatus"
-        (onComicsChange)="onComicsChange($event)"
-      ></app-comic-database-table>
-    </ng-template>
-  </div>
-</ng-container>
-<ng-container *ngIf="notFoundID$ | async as notFoundID">
+  @if (comics$ | async; as comics) {
+    <div class="px-4 pb-20 md:pb-4">
+      @if (gridService.gridOptionActivePage$ | async) {
+        <app-comics-database-grid
+          [comics]="comics"
+          [editStatus]="editStatus"
+          (onComicsChange)="onComicsChange($event)"
+        ></app-comics-database-grid>
+      } @else {
+        <app-comic-database-table
+          [comics]="comics"
+          [editStatus]="editStatus"
+          (onComicsChange)="onComicsChange($event)"
+        ></app-comic-database-table>
+      }
+    </div>
+  }
+}
+@if (notFoundID$ | async; as notFoundID) {
   <app-series-not-found [id]="notFoundID"></app-series-not-found>
-</ng-container>
-<ng-container *ngIf="!(series$ | async) && !(notFoundID$ | async)">
+}
+@if (!(series$ | async) && !(notFoundID$ | async)) {
   <app-loading-spinner-page></app-loading-spinner-page>
-</ng-container>
+}
