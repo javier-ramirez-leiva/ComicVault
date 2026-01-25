@@ -1,10 +1,18 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-
+import {
+  AfterViewInit,
+  Component,
+  ElementRef,
+  EventEmitter,
+  Input,
+  OnInit,
+  Output,
+  ViewChild,
+} from '@angular/core';
 
 @Component({
   selector: 'app-radio-button-input',
   imports: [],
-  templateUrl: './radio-button-input.component.html'
+  templateUrl: './radio-button-input.component.html',
 })
 export class RadioButtonInputComponent implements AfterViewInit {
   @Input({ required: true }) label: string = '';
@@ -12,7 +20,6 @@ export class RadioButtonInputComponent implements AfterViewInit {
   @Input({ required: false }) initValue!: any;
   @Output() valueChange = new EventEmitter<any>();
   @ViewChild('radioBtn') radioBtn!: ElementRef<HTMLInputElement>;
-
 
   onValueChange() {
     this.valueChange.emit(this.value);

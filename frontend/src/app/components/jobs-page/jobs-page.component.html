@@ -1,14 +1,10 @@
 <div class="whole-page-container">
-    <div
-        *ngIf="jobs$ | async as jobs"
-        class="px-4 pb-4 overflow-x-auto"
-    >
-        <app-jobs-table [jobs]="jobs"></app-jobs-table>
+  @if (jobs$ | async; as jobs) {
+    <div class="px-4 pb-4 overflow-x-auto">
+      <app-jobs-table [jobs]="jobs"></app-jobs-table>
     </div>
-    <div class="mt-auto mb-2">
-        <app-page-navigator
-            [page]="page"
-            (pageChange)="onPageChange($event)"
-        ></app-page-navigator>
-    </div>
+  }
+  <div class="mt-auto mb-2">
+    <app-page-navigator [page]="page" (pageChange)="onPageChange($event)"></app-page-navigator>
+  </div>
 </div>

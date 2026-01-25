@@ -110,7 +110,7 @@ export * from './modal-message-list/modal-message-list.component';
 export * from './boolean-checkbox/boolean-checkbox.component';
 export * from './modal-server-info/modal-server-info.component';
 export * from './modal-read/modal-read.component';
-export * from './blur-mask/blur-mask.component'
+export * from './blur-mask/blur-mask.component';
 export * from './jobs-page/jobs-page.component';
 export * from './jobs-table/jobs-table.component';
 export * from './job-page/job-page.component';

@@ -1,13 +1,16 @@
 import { Component, Input } from '@angular/core';
 import { ModalComponent } from 'interfaces';
-import { CrossModalComponent } from "../cross-modal/cross-modal.component";
+import { CrossModalComponent } from '../cross-modal/cross-modal.component';
 
 @Component({
   selector: 'app-modal-message',
   imports: [CrossModalComponent],
-  templateUrl: './modal-message.component.html'
+  templateUrl: './modal-message.component.html',
 })
-export class ModalMessageComponent implements ModalComponent<boolean, { message: string | undefined }> {
+export class ModalMessageComponent implements ModalComponent<
+  boolean,
+  { message: string | undefined }
+> {
   @Input({ required: true }) data?: { message: string | undefined };
 
   close!: (response?: boolean) => void;
@@ -20,4 +23,3 @@ export class ModalMessageComponent implements ModalComponent<boolean, { message:
     this.close(undefined);
   }
 }
-

@@ -1,89 +1,76 @@
 <div class="relative overflow-x-auto shadow-md rounded-lg">
-    <table class="table-container-full">
-        <thead class="table-head">
-            <tr>
-                <th class="px-6 py-3">Cover</th>
-                <th class="px-6 py-3">Comic</th>
-                <th class="px-6 py-3">Publisher</th>
-                <th class="px-6 py-3">Downloaded</th>
-                <th class="px-6 py-3">Year</th>
-                <th class="px-6 py-3">Size</th>
-                <th
-                    *ngIf="displayAddButton"
-                    class="px-6 py-3"
-                >
-                    Add
-                </th>
-            </tr>
-        </thead>
-        <tbody>
-            <ng-container *ngFor="let comic$ of comicObservables">
-                <tr
-                    *ngIf="comic$ | async as comic"
-                    class="bg-table-row-not-selected-background border-b border-table-border"
-                >
-
-                    <td class="py-4 px-6">
-                        <img
-                            [src]="comic.image"
-                            [routerLink]="comic.url"
-                            class=" w-24 md:w-24 max-w-full max-h-full rounded-md border-1 border-cover-card-border"
-                        >
-                    </td>
-                    <td class="px-6 py-2">
-                        <span
-                            class="font-semibold text-table-link hover:underline"
-                            [routerLink]="comic.url"
-                        >
-                            {{comic.title}}
-                        </span>
-                    </td>
-                    <td class="px-6 py-2 font-semibold text-generic-text">
-                        <app-publisher-cell [category]="comic.category"></app-publisher-cell>
-                    </td>
-                    <td class="px-6 py-2 font-semibold text-generic-text">
-                        <div *ngIf="comic.downloadingStatus==='downloading'; else chipTmpl">
-                            <div class="relative w-full mt-1 bg-cover-card-progress-background rounded-full h-2.5 mb-0 ">
-                                <div
-                                    class="bg-cover-card-download h-2.5 rounded-full "
-                                    [style]="comic.progress"
-                                ></div>
-                            </div>
-                        </div>
-                        <ng-template #chipTmpl>
-                            <div class="w-full flex align-center justify-center">
-                                <span
-                                    *ngIf="comic.downloadingStatus==='downloaded'"
-                                    class="chip chip-yes"
-                                >
-                                    YES
-                                </span>
-                                <span
-                                    *ngIf="comic.downloadingStatus==='not-downloaded'"
-                                    class="chip chip-no"
-                                >
-                                    NO
-                                </span>
-
-                            </div>
-                        </ng-template>
-                    </td>
-                    <td class="px-6 py-2 font-semibold text-generic-text">{{comic.year}}</td>
-                    <td class="px-6 py-2 font-semibold text-generic-text">{{comic.size}}</td>
-                    <td
-                        *ngIf="displayAddButton"
-                        class="px-6 py-2 font-semibold w-6"
-                    >
-                        <app-download-button
-                            *ngIf="comic.downloadingStatus==='not-downloaded'"
-                            class="w-6"
-                            [mini]="true"
-                            [comic]="comic.original"
-                        ></app-download-button>
-                    </td>
-                </tr>
-            </ng-container>
-
-        </tbody>
-    </table>
+  <table class="table-container-full">
+    <thead class="table-head">
+      <tr>
+        <th class="px-6 py-3">Cover</th>
+        <th class="px-6 py-3">Comic</th>
+        <th class="px-6 py-3">Publisher</th>
+        <th class="px-6 py-3">Downloaded</th>
+        <th class="px-6 py-3">Year</th>
+        <th class="px-6 py-3">Size</th>
+        @if (displayAddButton) {
+          <th class="px-6 py-3">Add</th>
+        }
+      </tr>
+    </thead>
+    <tbody>
+      @for (comic$ of comicObservables; track comic$) {
+        @if (comic$ | async; as comic) {
+          <tr class="bg-table-row-not-selected-background border-b border-table-border">
+            <td class="py-4 px-6">
+              <img
+                [src]="comic.image"
+                [routerLink]="comic.url"
+                class="w-24 md:w-24 max-w-full max-h-full rounded-md border-1 border-cover-card-border"
+              />
+            </td>
+            <td class="px-6 py-2">
+              <span class="font-semibold text-table-link hover:underline" [routerLink]="comic.url">
+                {{ comic.title }}
+              </span>
+            </td>
+            <td class="px-6 py-2 font-semibold text-generic-text">
+              <app-publisher-cell [category]="comic.category"></app-publisher-cell>
+            </td>
+            <td class="px-6 py-2 font-semibold text-generic-text">
+              @if (comic.downloadingStatus === 'downloading') {
+                <div>
+                  <div
+                    class="relative w-full mt-1 bg-cover-card-progress-background rounded-full h-2.5 mb-0"
+                  >
+                    <div
+                      class="bg-cover-card-download h-2.5 rounded-full"
+                      [style]="comic.progress"
+                    ></div>
+                  </div>
+                </div>
+              } @else {
+                <div class="w-full flex align-center justify-center">
+                  @if (comic.downloadingStatus === 'downloaded') {
+                    <span class="chip chip-yes"> YES </span>
+                  }
+                  @if (comic.downloadingStatus === 'not-downloaded') {
+                    <span class="chip chip-no"> NO </span>
+                  }
+                </div>
+              }
+            </td>
+            <td class="px-6 py-2 font-semibold text-generic-text">{{ comic.year }}</td>
+            <td class="px-6 py-2 font-semibold text-generic-text">{{ comic.size }}</td>
+            @if (displayAddButton) {
+              <td class="px-6 py-2 font-semibold w-6">
+                @if (comic.downloadingStatus === 'not-downloaded') {
+                  <app-download-button
+                    class="w-6"
+                    [mini]="true"
+                    [comic]="comic.original"
+                  ></app-download-button>
+                }
+              </td>
+            }
+          </tr>
+        }
+      }
+    </tbody>
+  </table>
 </div>

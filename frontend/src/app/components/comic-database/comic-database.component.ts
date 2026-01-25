@@ -6,7 +6,7 @@ import { ConfigURLService } from 'services';
 @Component({
   selector: 'app-comic-database',
   imports: [CoverCardComponent],
-  templateUrl: './comic-database.component.html'
+  templateUrl: './comic-database.component.html',
 })
 export class ComicDatabaseComponent {
   @Input({ required: false }) public highlight: boolean = false;
@@ -28,19 +28,21 @@ export class ComicDatabaseComponent {
     this.imageURL = `${this.configURLService.baseURL}/${this.configURLService.apiVersion}/comics/${this._comic.id}/cover/small`;
     this.url = ['/comics', this._comic.id, 'details'];
     this.new = this._comic.pageStatus === 0 && !this._comic.readStatus;
-    this.progress = (!this.new && !this._comic.readStatus) ? 100 * (this._comic.pageStatus / this._comic.pages) : undefined;
-    this.firstLine = 'Pages: ' + (this.comic.pages);
+    this.progress =
+      !this.new && !this._comic.readStatus
+        ? 100 * (this._comic.pageStatus / this._comic.pages)
+        : undefined;
+    this.firstLine = 'Pages: ' + this.comic.pages;
     if (this._comic.readStatus) {
       this.secondLine = 'Status: READ';
     } else if (this._comic.pageStatus === 0) {
       this.secondLine = 'Status: NEW';
     } else {
-      this.secondLine = `Status: ${this._comic.pageStatus} / ${this._comic.pages}`
+      this.secondLine = `Status: ${this._comic.pageStatus} / ${this._comic.pages}`;
     }
   }
 
   get comic(): ComicsDatabase {
     return this._comic;
   }
-
 }

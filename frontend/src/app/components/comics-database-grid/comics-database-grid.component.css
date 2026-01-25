@@ -1,12 +1,12 @@
 .cdk-drag-preview img {
   height: 18rem;
-  width: auto;    
-  display: block;  
+  width: auto;
+  display: block;
   border-radius: 1rem;
 }
 
-.cdk-drag-preview{
-  height: fit-content;  
-  width: fit-content;   
+.cdk-drag-preview {
+  height: fit-content;
+  width: fit-content;
   border-radius: 1rem;
 }

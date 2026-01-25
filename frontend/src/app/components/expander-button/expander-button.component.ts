@@ -4,7 +4,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 @Component({
   selector: 'app-expander-button',
   imports: [CommonModule],
-  templateUrl: './expander-button.component.html'
+  templateUrl: './expander-button.component.html',
 })
 export class ExpanderButtonComponent {
   @Input({ required: true }) title!: string;

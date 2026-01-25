@@ -1,4 +1,4 @@
-import { Injectable, inject, } from '@angular/core';
+import { Injectable, inject } from '@angular/core';
 import { ReplaySubject, Subject } from 'rxjs';
 import { Category } from 'interfaces';
 import { FilterFunnel } from 'components';
@@ -9,11 +9,9 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 @UntilDestroy()
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-
 export class TopBarService {
-
   searchTextChangeLibEvent$: ReplaySubject<string> = new ReplaySubject<string>();
   filterHistoryFormEvent$: ReplaySubject<FilterHistory> = new ReplaySubject<FilterHistory>();
   resetFilterFunnelFormEvent$: Subject<void> = new Subject<void>();
@@ -58,5 +56,4 @@ export class TopBarService {
   setFilterHistoryFormValue(filter: FilterHistory) {
     this.filterHistoryFormEvent$.next(filter);
   }
-
 }

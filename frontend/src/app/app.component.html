@@ -1,13 +1,9 @@
-<div
-    class="min-h-screen h-full w-full bg-background"
-    [ngClass]="darkModeService.darkModeSignal()"
->
-    <ng-container *ngIf="initDone$ | async; else loadingMask">
-        <app-side-nav-menu></app-side-nav-menu>
-    </ng-container>
-    <ng-template #loadingMask>
-        <div class="fixed inset-0 flex items-center justify-center bg-background bg-opacity-70 z-50">
-            <app-loading-spinner-page></app-loading-spinner-page>
-        </div>
-    </ng-template>
+<div class="min-h-screen h-full w-full bg-background" [ngClass]="darkModeService.darkModeSignal()">
+  @if (initDone$ | async) {
+    <app-side-nav-menu></app-side-nav-menu>
+  } @else {
+    <div class="fixed inset-0 flex items-center justify-center bg-background bg-opacity-70 z-50">
+      <app-loading-spinner-page></app-loading-spinner-page>
+    </div>
+  }
 </div>

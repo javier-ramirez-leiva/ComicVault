@@ -1,18 +1,17 @@
-<div
-    class="flex items-center w-full gap-2"
-    *ngIf="catergoryAndSearch$ | async as catergoryAndSearch"
->
+@if (catergoryAndSearch$ | async; as catergoryAndSearch) {
+  <div class="flex items-center w-full gap-2">
     <div class="flex-1">
-        <app-search-input
-            [searchButton]="false"
-            (queryChange)="onQueryChange($event)"
-            [textModifier$]="textModifier$"
-            placeholder="Search comics"
-        ></app-search-input>
+      <app-search-input
+        [searchButton]="false"
+        (queryChange)="onQueryChange($event)"
+        [textModifier$]="textModifier$"
+        placeholder="Search comics"
+      ></app-search-input>
     </div>
     <app-trending-button
-        class="ml-auto"
-        [category]="catergoryAndSearch.category"
-        (categoryChange)="onCategoryChange($event)"
+      class="ml-auto"
+      [category]="catergoryAndSearch.category"
+      (categoryChange)="onCategoryChange($event)"
     ></app-trending-button>
-</div>
+  </div>
+}

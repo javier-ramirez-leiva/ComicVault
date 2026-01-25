@@ -2,7 +2,7 @@ import { Component, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { Category } from 'interfaces';
 import { Observable, filter, map, shareReplay, tap } from 'rxjs';
-import { TrendingButtonComponent } from "../trending-button/trending-button.component";
+import { TrendingButtonComponent } from '../trending-button/trending-button.component';
 import { CommonModule } from '@angular/common';
 import { SearchInputComponent } from '../search-input/search-input.component';
 
@@ -25,24 +25,23 @@ export class SearchAndCategoryComponent {
 
   constructor() {
     this.catergoryAndSearch$ = this.route.queryParams.pipe(
-      filter(() => !this.urlsToNotUpdate.some(url => this.router.url.startsWith(url))),
-      map(params => {
+      filter(() => !this.urlsToNotUpdate.some((url) => this.router.url.startsWith(url))),
+      map((params) => {
         if (this.router.url.startsWith('/search') && Object.keys(params).length > 0) {
           return {
             query: params['query'] ?? null,
             tag: params['tag'] ?? null,
-            category: params['category'] ?? null
-          }
-        }
-        else {
+            category: params['category'] ?? null,
+          };
+        } else {
           return {
             query: null,
             tag: null,
-            category: null
-          }
+            category: null,
+          };
         }
       }),
-      shareReplay({ refCount: true, bufferSize: 1 })
+      shareReplay({ refCount: true, bufferSize: 1 }),
     );
 
     this.textModifier$ = this.catergoryAndSearch$.pipe(
@@ -54,8 +53,8 @@ export class SearchAndCategoryComponent {
         } else {
           return '';
         }
-      })
-    )
+      }),
+    );
   }
 
   onCategoryChange(category: Category) {
@@ -75,19 +74,18 @@ export class SearchAndCategoryComponent {
   private navigate() {
     let params = {};
     if (this.query) {
-      params = { query: this.query }
+      params = { query: this.query };
     } else if (this.category) {
-      params = { category: this.category }
+      params = { category: this.category };
     } else {
-      params = { category: 'all' }
+      params = { category: 'all' };
     }
     this.router.navigate(['/search'], { queryParams: params });
   }
-
 }
 
 type CatergoryAndSearch = {
   category: Category | null;
   query: string | null;
   tag: string | null;
-}
+};

@@ -11,7 +11,7 @@ import { RouterModule } from '@angular/router';
 @Component({
   selector: 'app-log-history-table',
   imports: [CommonModule, RouterModule],
-  templateUrl: './log-history-table.component.html'
+  templateUrl: './log-history-table.component.html',
 })
 export class LogHistoryTableComponent {
   @Input({ required: true }) logs!: Log[];
@@ -24,11 +24,12 @@ export class LogHistoryTableComponent {
   }
 
   displayDetails(log: Log) {
-    this.modalService.open<null, { log: Log | undefined }>(ModalLogComponent, { log: log }).pipe(
-      filter(response => response === true),
-      untilDestroyed(this)
-    ).subscribe(response => {
-    });
+    this.modalService
+      .open<null, { log: Log | undefined }>(ModalLogComponent, { log: log })
+      .pipe(
+        filter((response) => response === true),
+        untilDestroyed(this),
+      )
+      .subscribe((response) => {});
   }
-
 }

@@ -4,33 +4,21 @@ import { Observable } from 'rxjs';
 import { ComicsConfiguration, JDownloaderConfiguration, SlackConfiguration } from 'interfaces';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ConfigService {
-
   private readonly httpService = inject(HttpService);
 
   getConfig(): Observable<ComicsConfiguration> {
-    return this.httpService.request<ComicsConfiguration>(
-      'GET',
-      `/configuration`,
-    );
+    return this.httpService.request<ComicsConfiguration>('GET', `/configuration`);
   }
 
   setStoragePath(path: string): Observable<any> {
-    return this.httpService.request<any>(
-      'POST',
-      `/configuration/downloadRoot`,
-      path,
-    );
+    return this.httpService.request<any>('POST', `/configuration/downloadRoot`, path);
   }
 
   setSlackConfiguration(slackConfiguration: SlackConfiguration): Observable<any> {
-    return this.httpService.request<any>(
-      'POST',
-      `/configuration/slack`,
-      slackConfiguration,
-    );
+    return this.httpService.request<any>('POST', `/configuration/slack`, slackConfiguration);
   }
 
   setgetcomicsBaseUrl(getComicsBaseUrl: string): Observable<any> {
@@ -42,19 +30,11 @@ export class ConfigService {
   }
 
   setScanArchives(value: boolean): Observable<any> {
-    return this.httpService.request<any>(
-      'POST',
-      `/configuration/scanArchives`,
-      value,
-    );
+    return this.httpService.request<any>('POST', `/configuration/scanArchives`, value);
   }
 
   setDeleteArchives(value: boolean): Observable<any> {
-    return this.httpService.request<any>(
-      'POST',
-      `/configuration/deleteArchives`,
-      value,
-    );
+    return this.httpService.request<any>('POST', `/configuration/deleteArchives`, value);
   }
 
   setGenerateNavigationThumbnails(value: boolean): Observable<any> {
@@ -66,34 +46,18 @@ export class ConfigService {
   }
 
   setEnableSlackNotifications(value: boolean): Observable<any> {
-    return this.httpService.request<any>(
-      'POST',
-      `/configuration/slackNotify`,
-      value,
-    );
+    return this.httpService.request<any>('POST', `/configuration/slackNotify`, value);
   }
 
   setComicVineAPIKey(key: string): Observable<any> {
-    return this.httpService.request<any>(
-      'POST',
-      `/configuration/comicVine_apiKey`,
-      key,
-    );
+    return this.httpService.request<any>('POST', `/configuration/comicVine_apiKey`, key);
   }
 
   setDBExpression(expression: string): Observable<any> {
-    return this.httpService.request<any>(
-      'POST',
-      `/configuration/dbExpression`,
-      expression,
-    );
+    return this.httpService.request<any>('POST', `/configuration/dbExpression`, expression);
   }
 
   setJDownloaderConfiguration(configuration: JDownloaderConfiguration): Observable<any> {
-    return this.httpService.request<any>(
-      'POST',
-      `/configuration/jDownloader`,
-      configuration,
-    );
+    return this.httpService.request<any>('POST', `/configuration/jDownloader`, configuration);
   }
 }

@@ -13,6 +13,4 @@ export class GridButtonComponent {
   toggleGrid() {
     this.gridService.toggleGrid();
   }
-
-
 }

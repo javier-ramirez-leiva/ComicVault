@@ -22,7 +22,7 @@ export const authGuard: CanActivateFn = (route, state) => {
       } else {
         // If not authenticated, check if admin exists
         return authService.adminUserExists().pipe(
-          catchError(error => of(false)),
+          catchError((error) => of(false)),
           map((exists) => {
             if (exists) {
               activePageService.activePage$.next('login');
@@ -32,9 +32,9 @@ export const authGuard: CanActivateFn = (route, state) => {
               activePageService.activePage$.next('register');
               return router.createUrlTree(['/register']);
             }
-          })
+          }),
         );
       }
-    })
+    }),
   );
 };

@@ -1,15 +1,9 @@
 <div class="modal-container md:w-fit">
-    <app-modal-details-top
-        title="Server Info Details"
-        (closeModal)="close()"
-    ></app-modal-details-top>
+  <app-modal-details-top title="Server Info Details" (closeModal)="close()"></app-modal-details-top>
 
-    <div class="overflow-x-auto w-full">
-        <app-two-columns-table
-            [modalMode]="true"
-            [rows]="rows"
-        ></app-two-columns-table>
-    </div>
+  <div class="overflow-x-auto w-full">
+    <app-two-columns-table [modalMode]="true" [rows]="rows"></app-two-columns-table>
+  </div>
 
-    <app-modal-details-bottom (closeModal)="close()"></app-modal-details-bottom>
+  <app-modal-details-bottom (closeModal)="close()"></app-modal-details-bottom>
 </div>

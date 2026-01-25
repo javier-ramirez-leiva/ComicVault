@@ -1,61 +1,54 @@
 <div class="max-w-full w-full rounded-lg overflow-auto">
-    <table class="table-container-full">
-        <thead class="table-head">
-            <tr>
-                <th class="px-6 py-3">Comic</th>
-                <th class="px-6 py-3">Date</th>
-                <th class="px-6 py-3">Status</th>
-                <th class="px-6 py-3">In library</th>
-            </tr>
-        </thead>
-        <tbody *ngIf="histories.length > 0">
-            <tr
-                *ngFor="let history of histories"
-                class="table-row"
-            >
-                <td class="px-6 py-4">
-                    <ng-container *ngIf="history.alive; else tmplTitle">
-                        <a
-                            class="font-medium text-table-link hover:underline"
-                            [routerLink]="['/comics', history.comicId, 'details']"
-                        >
-                            {{history.comicTitle}}
-                        </a>
-                    </ng-container>
-                    <ng-template #tmplTitle>{{history.comicTitle}}</ng-template>
-                </td>
-                <td class="px-6 py-4">
-                    {{ history.progress_date | date:'dd/MM/yyyy' }}
-                </td>
-                <td class="px-6 py-4">
-
-                    <div class="flex w-full">
-                        <ng-container *ngIf="history.readStatus; else tmplPage">
-                            <span class="chip chip-yes">READ</span>
-                        </ng-container>
-                        <ng-template #tmplPage>
-                            {{history.pages}} / {{history.pageStatus}}
-                        </ng-template>
-                    </div>
-
-                </td>
-                <td class="px-6 py-4">
-                    <div class="flex w-full justify-between">
-                        <span
-                            *ngIf="history.alive"
-                            class="chip chip-yes"
-                        >
-                            YES
-                        </span>
-                        <span
-                            *ngIf="!history.alive"
-                            class="chip chip-no"
-                        >
-                            NO
-                        </span>
-                    </div>
-                </td>
-            </tr>
-        </tbody>
-    </table>
+  <table class="table-container-full">
+    <thead class="table-head">
+      <tr>
+        <th class="px-6 py-3">Comic</th>
+        <th class="px-6 py-3">Date</th>
+        <th class="px-6 py-3">Status</th>
+        <th class="px-6 py-3">In library</th>
+      </tr>
+    </thead>
+    @if (histories.length > 0) {
+      <tbody>
+        @for (history of histories; track history) {
+          <tr class="table-row">
+            <td class="px-6 py-4">
+              @if (history.alive) {
+                <a
+                  class="font-medium text-table-link hover:underline"
+                  [routerLink]="['/comics', history.comicId, 'details']"
+                >
+                  {{ history.comicTitle }}
+                </a>
+              } @else {
+                {{ history.comicTitle }}
+              }
+            </td>
+            <td class="px-6 py-4">
+              {{ history.progress_date | date: 'dd/MM/yyyy' }}
+            </td>
+            <td class="px-6 py-4">
+              <div class="flex w-full">
+                @if (history.readStatus) {
+                  <span class="chip chip-yes">READ</span>
+                } @else {
+                  {{ history.pages }} / {{ history.pageStatus }}
+                }
+              </div>
+            </td>
+            <td class="px-6 py-4">
+              <div class="flex w-full justify-between">
+                @if (history.alive) {
+                  <span class="chip chip-yes"> YES </span>
+                }
+                @if (!history.alive) {
+                  <span class="chip chip-no"> NO </span>
+                }
+              </div>
+            </td>
+          </tr>
+        }
+      </tbody>
+    }
+  </table>
 </div>

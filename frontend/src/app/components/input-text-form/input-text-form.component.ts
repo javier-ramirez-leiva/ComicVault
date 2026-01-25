@@ -1,19 +1,17 @@
 import { Component, Input, forwardRef } from '@angular/core';
 import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
-import { CommonModule } from '@angular/common';
-
 
 @Component({
   selector: 'app-input-text-form',
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule],
   templateUrl: './input-text-form.component.html',
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => InputTextFormComponent),
       multi: true,
-    }
-  ]
+    },
+  ],
 })
 export class InputTextFormComponent {
   @Input({ required: false }) title: string = '';
@@ -22,8 +20,8 @@ export class InputTextFormComponent {
   value = '';
   isDisabled = false;
 
-  private onChange = (_: any) => { };
-  protected onTouched = () => { };
+  private onChange = (_: any) => {};
+  protected onTouched = () => {};
 
   // Called by Angular when external model changes
   writeValue(value: any): void {

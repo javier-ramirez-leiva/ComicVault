@@ -1,162 +1,144 @@
 <div
-    class="transform scale-105 transition-transform duration-300"
-    (click)="onCardClick($event)"
-    (mouseleave)="onHover(false)"
-    (mouseenter)="onHover(true)"
-    appOutsideClick
-    (outsideClick)="hoverFalse()"
-    [class.scale-105]="isHovered"
+  class="transform scale-105 transition-transform duration-300"
+  (click)="onCardClick($event)"
+  (mouseleave)="onHover(false)"
+  (mouseenter)="onHover(true)"
+  appOutsideClick
+  (outsideClick)="hoverFalse()"
+  [class.scale-105]="isHovered"
 >
-    <div class="flex relative">
+  <div class="flex relative">
+    @if (!imageLoaded) {
+      <div class="relative w-full" style="padding-bottom: 153.8%">
         <div
-            *ngIf="!imageLoaded"
-            class="relative w-full"
-            style="padding-bottom: 153.8%;"
+          class="absolute inset-0 flex items-center justify-center rounded-md animate-pulse bg-cover-card-pulsing"
+        ></div>
+      </div>
+    }
+    <img
+      [ngClass]="{
+        'border-4 border-cover-card-active-border': highlight === true,
+        'border-1 border-cover-card-border': !highlight,
+      }"
+      class="relative inset-0 w-full h-full object-cover object-center rounded-md"
+      [class.hidden]="!imageLoaded"
+      alt="{{ title }}"
+      [src]="imageURL"
+      (load)="imageLoaded = true"
+    />
+    <div
+      id="details"
+      class="inset-0 absolute z-10 w-full h-full rounded-md bg-opacity-0 flex flex-col p-2"
+      [ngClass]="{ 'bg-cover-card-background': isHovered || draggableStatus }"
+    >
+      <!-- Title Section -->
+      <div
+        [class.hidden]="!isHovered && !draggableStatus"
+        class="grow flex flex-col justify-center items-center"
+      >
+        <h1
+          class="text-lg title-font font-medium text-cover-card-title select-none overflow-hidden break-words w-full text-center"
         >
-            <div class="absolute inset-0 flex items-center justify-center rounded-md animate-pulse bg-cover-card-pulsing"></div>
-        </div>
-        <img
-            [ngClass]="{ 'border-4 border-cover-card-active-border': highlight===true,
-                'border-1 border-cover-card-border': !highlight
-            }"
-            class=" relative inset-0 w-full h-full object-cover object-center rounded-md"
-            [class.hidden]="!imageLoaded"
-            alt="{{title}}"
-            [src]="imageURL"
-            (load)="imageLoaded = true"
-        >
-        <div
-            id="details"
-            class="inset-0 absolute z-10 w-full h-full rounded-md  bg-opacity-0 flex flex-col p-2 "
-            [ngClass]="{ 'bg-cover-card-background': isHovered || draggableStatus }"
-        >
-
-            <!-- Title Section -->
-            <div
-                [class.hidden]="!isHovered && !draggableStatus"
-                class="grow flex flex-col justify-center items-center"
-            >
-                <h1 class=" text-lg title-font font-medium text-cover-card-title select-none 
-             overflow-hidden break-words w-full text-center">{{ title }}</h1>
-            </div>
-            <!-- Middle Content (Flexible Space) -->
-            <div
-                [class.hidden]="!isHovered"
-                class="flex flex-col justify-center items-center overflow-hidden text-center mb-2 "
-            >
-                <p class="leading-relaxed text-cover-card-text select-none">{{ firstLine }}</p>
-                <p class="leading-relaxed text-cover-card-text select-none">{{ secondLine }}</p>
-            </div>
-            <div
-                [class.hidden]="!draggableStatus"
-                class="flex flex-col justify-center items-center overflow-hidden text-center mb-2 "
-            >
-                <p class="leading-relaxed text-cover-card-text select-none text-xl">{{issueLine}}</p>
-            </div>
-            <!-- Bottom Section (Button or Last Line) -->
-            <div
-                class="w-full"
-                [class.hidden]="!isHovered"
-            >
-                <app-download-button
-                    appHideRoles
-                    [appHideForRoles]="[Role.Requester, Role.Viewer]"
-                    *ngIf="displayButton && comicsSearch"
-                    class="w-full"
-                    [comic]="comicsSearch"
-                    [mini]="true"
-                ></app-download-button>
-            </div>
-        </div>
-        <ng-container *ngIf="imageLoaded">
-            <!-- div
-                *ngIf="!searchOrDatabase && checked"
-                class="cover-card-badge-triangle cover-card-badge-triangle-read"
-            >
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="size-4"
-                    fill="currentColor"
-                    viewBox="0 0 24 24"
-                >
-                    <path
-                        fill-rule="evenodd"
-                        d="M4.998 7.78C6.729 6.345 9.198 5 12 5c2.802 0 5.27 1.345 7.002 2.78a12.713 12.713 0 0 1 2.096 2.183c.253.344.465.682.618.997.14.286.284.658.284 1.04s-.145.754-.284 1.04a6.6 6.6 0 0 1-.618.997 12.712 12.712 0 0 1-2.096 2.183C17.271 17.655 14.802 19 12 19c-2.802 0-5.27-1.345-7.002-2.78a12.712 12.712 0 0 1-2.096-2.183 6.6 6.6 0 0 1-.618-.997C2.144 12.754 2 12.382 2 12s.145-.754.284-1.04c.153-.315.365-.653.618-.997A12.714 12.714 0 0 1 4.998 7.78ZM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"
-                        clip-rule="evenodd"
-                    ></path>
-                </svg>
-
-            </div -->
-            <div
-                *ngIf="searchOrDatabase && checked"
-                class="cover-card-badge-circle bg-cover-card-download text-cover-card-badge-text"
-            >
-                <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke-width="2.5"
-                    stroke="currentColor"
-                    class="size-4"
-                >
-                    <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"
-                    ></path>
-                </svg>
-            </div>
-            <div
-                *ngIf="!searchOrDatabase && new"
-                class="cover-card-badge-triangle cover-card-badge-triangle-new"
-            >
-            </div>
-            <div
-                *ngIf="numberBadge"
-                class="cover-card-badge bg-cover-card-number-read text-cover-card-badge-text"
-            >
-                {{numberBadge}}
-            </div>
-            <div
-                *ngIf="numberBadge$ | async as numberBadgeProgress"
-                class="cover-card-badge bg-cover-card-number-download text-cover-card-badge-text"
-            >
-                {{numberBadgeProgress}}
-            </div>
-        </ng-container>
+          {{ title }}
+        </h1>
+      </div>
+      <!-- Middle Content (Flexible Space) -->
+      <div
+        [class.hidden]="!isHovered"
+        class="flex flex-col justify-center items-center overflow-hidden text-center mb-2"
+      >
+        <p class="leading-relaxed text-cover-card-text select-none">{{ firstLine }}</p>
+        <p class="leading-relaxed text-cover-card-text select-none">{{ secondLine }}</p>
+      </div>
+      <div
+        [class.hidden]="!draggableStatus"
+        class="flex flex-col justify-center items-center overflow-hidden text-center mb-2"
+      >
+        <p class="leading-relaxed text-cover-card-text select-none text-xl">{{ issueLine }}</p>
+      </div>
+      <!-- Bottom Section (Button or Last Line) -->
+      <div class="w-full" [class.hidden]="!isHovered">
+        @if (displayButton && comicsSearch) {
+          <app-download-button
+            appHideRoles
+            [appHideForRoles]="[Role.Requester, Role.Viewer]"
+            class="w-full"
+            [comic]="comicsSearch"
+            [mini]="true"
+          ></app-download-button>
+        }
+      </div>
     </div>
+    @if (imageLoaded) {
+      <!-- div
+      *ngIf="!searchOrDatabase && checked"
+      class="cover-card-badge-triangle cover-card-badge-triangle-read"
+      >
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        class="size-4"
+        fill="currentColor"
+        viewBox="0 0 24 24"
+        >
+        <path
+          fill-rule="evenodd"
+          d="M4.998 7.78C6.729 6.345 9.198 5 12 5c2.802 0 5.27 1.345 7.002 2.78a12.713 12.713 0 0 1 2.096 2.183c.253.344.465.682.618.997.14.286.284.658.284 1.04s-.145.754-.284 1.04a6.6 6.6 0 0 1-.618.997 12.712 12.712 0 0 1-2.096 2.183C17.271 17.655 14.802 19 12 19c-2.802 0-5.27-1.345-7.002-2.78a12.712 12.712 0 0 1-2.096-2.183 6.6 6.6 0 0 1-.618-.997C2.144 12.754 2 12.382 2 12s.145-.754.284-1.04c.153-.315.365-.653.618-.997A12.714 12.714 0 0 1 4.998 7.78ZM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6Z"
+          clip-rule="evenodd"
+        ></path>
+      </svg>
+      </div -->
+      @if (searchOrDatabase && checked) {
+        <div class="cover-card-badge-circle bg-cover-card-download text-cover-card-badge-text">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="2.5"
+            stroke="currentColor"
+            class="size-4"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M3 16.5v2.25A2.25 2.25 0 0 0 5.25 21h13.5A2.25 2.25 0 0 0 21 18.75V16.5M16.5 12 12 16.5m0 0L7.5 12m4.5 4.5V3"
+            ></path>
+          </svg>
+        </div>
+      }
+      @if (!searchOrDatabase && new) {
+        <div class="cover-card-badge-triangle cover-card-badge-triangle-new"></div>
+      }
+      @if (numberBadge) {
+        <div class="cover-card-badge bg-cover-card-number-read text-cover-card-badge-text">
+          {{ numberBadge }}
+        </div>
+      }
+      @if (numberBadge$ | async; as numberBadgeProgress) {
+        <div class="cover-card-badge bg-cover-card-number-download text-cover-card-badge-text">
+          {{ numberBadgeProgress }}
+        </div>
+      }
+    }
+  </div>
 
-    <ng-container *ngIf="imageLoaded">
-        <div
-            *ngIf="!checked && !searchOrDatabase && progress && !progress$ && widthStyle"
-            class="relative w-full mt-1 bg-cover-card-progress-background rounded-full h-2.5 mb-0 "
-        >
-            <div
-                class="bg-cover-card-read h-2.5 rounded-full "
-                [style]="widthStyle"
-            ></div>
-        </div>
-        <div
-            *ngIf="!searchOrDatabase && progress$ && widthStyle"
-            class="relative w-full mt-1 bg-cover-card-progress-background rounded-full h-2.5 mb-0 "
-        >
-            <div
-                class="bg-cover-card-download h-2.5 rounded-full "
-                [style]="widthStyle"
-            ></div>
-        </div>
-        <div
-            *ngIf="searchOrDatabase && (progress$ || progress) && widthStyle"
-            class="relative w-full mt-1 bg-cover-card-progress-background rounded-full h-2.5 mb-0"
-        >
-            <div
-                class="bg-cover-card-download h-2.5 rounded-full"
-                [style]="widthStyle"
-            ></div>
-        </div>
-    </ng-container>
+  @if (imageLoaded) {
+    @if (!checked && !searchOrDatabase && progress && !progress$ && widthStyle) {
+      <div class="relative w-full mt-1 bg-cover-card-progress-background rounded-full h-2.5 mb-0">
+        <div class="bg-cover-card-read h-2.5 rounded-full" [style]="widthStyle"></div>
+      </div>
+    }
+    @if (!searchOrDatabase && progress$ && widthStyle) {
+      <div class="relative w-full mt-1 bg-cover-card-progress-background rounded-full h-2.5 mb-0">
+        <div class="bg-cover-card-download h-2.5 rounded-full" [style]="widthStyle"></div>
+      </div>
+    }
+    @if (searchOrDatabase && (progress$ || progress) && widthStyle) {
+      <div class="relative w-full mt-1 bg-cover-card-progress-background rounded-full h-2.5 mb-0">
+        <div class="bg-cover-card-download h-2.5 rounded-full" [style]="widthStyle"></div>
+      </div>
+    }
+  }
 </div>
-<div
-    *ngIf="!progress"
-    class="relative w-full mt-1 h-2.5 mb-0"
-></div>
+@if (!progress) {
+  <div class="relative w-full mt-1 h-2.5 mb-0"></div>
+}

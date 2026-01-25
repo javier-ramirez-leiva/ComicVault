@@ -1,42 +1,47 @@
-<div class="fixed z-40 top-0 h-16 lg:hidden md:block pr-2 ">
-   <button
-      (click)="setLeftMenuOpen(true)"
-      aria-controls="separator-sidebar" type="button"
-      class="hidden md:inline-flex z-40  items-center p-2 mt-3 mb-2 ms-3 text-sm"
-      >
-      <span class="sr-only ">Open sidebar</span>
-      <svg class="w-6 h-6 text-topBar-left-corner">
-         <use href="/assets/icons.svg#sidenav-collapser" />
-      </svg>
-   </button>
+<div class="fixed z-40 top-0 h-16 lg:hidden md:block pr-2">
+  <button
+    (click)="setLeftMenuOpen(true)"
+    aria-controls="separator-sidebar"
+    type="button"
+    class="hidden md:inline-flex z-40 items-center p-2 mt-3 mb-2 ms-3 text-sm"
+  >
+    <span class="sr-only">Open sidebar</span>
+    <svg class="w-6 h-6 text-topBar-left-corner">
+      <use href="/assets/icons.svg#sidenav-collapser" />
+    </svg>
+  </button>
 </div>
 
-<ng-container *ngIf="leftMenuOpen$ | async as leftMenu">
-<aside
-   class="fixed top-0 left-0 z-40 w-52 h-screen transition-transform -translate-x-full lg:translate-x-0 md:block"
-   [class.translate-x-0]="leftMenu === 'open'"
-   appOutsideMenuClick
-   (outsideClick)="setLeftMenuOpen(false)">
-   <app-left-nav-menu [open]="leftMenu === 'open'"></app-left-nav-menu>
-</aside>
-
-</ng-container>
+@if (leftMenuOpen$ | async; as leftMenu) {
+  <aside
+    class="fixed top-0 left-0 z-40 w-52 h-screen transition-transform -translate-x-full lg:translate-x-0 md:block"
+    [class.translate-x-0]="leftMenu === 'open'"
+    appOutsideMenuClick
+    (outsideClick)="setLeftMenuOpen(false)"
+  >
+    <app-left-nav-menu [open]="leftMenu === 'open'"></app-left-nav-menu>
+  </aside>
+}
 
 <app-bottom-nav-menu></app-bottom-nav-menu>
 
-
 <app-top-bar></app-top-bar>
 <div class="fixed bottom-20 md:bottom-8 right-2 z-40">
-<app-multi-select></app-multi-select>
+  <app-multi-select></app-multi-select>
 </div>
 
-
-<div class="lg:ml-52 bg-background min-h-screen h-full relative items-center ">
-   <app-modal-container></app-modal-container>
-   <app-blur-mask *ngIf="blurMaskService.active"></app-blur-mask>
-   <router-outlet></router-outlet>
-   <app-processing-notification-grid [processingNotifications$]="notifierService.getProcessingNotifications$()"
-      class="pt-2 z-50 pr-10 top-0 right-0 fixed transform  "></app-processing-notification-grid>
-   <app-notification-grid [notifications$]="notifierService.getNotifications$()"
-      class="pt-2 z-50 top-0 left-1/2 fixed transform -translate-x-1/2 flex flex-col gap-8" />
+<div class="lg:ml-52 bg-background min-h-screen h-full relative items-center">
+  <app-modal-container></app-modal-container>
+  @if (blurMaskService.active) {
+    <app-blur-mask></app-blur-mask>
+  }
+  <router-outlet></router-outlet>
+  <app-processing-notification-grid
+    [processingNotifications$]="notifierService.getProcessingNotifications$()"
+    class="pt-2 z-50 pr-10 top-0 right-0 fixed transform"
+  ></app-processing-notification-grid>
+  <app-notification-grid
+    [notifications$]="notifierService.getNotifications$()"
+    class="pt-2 z-50 top-0 left-1/2 fixed transform -translate-x-1/2 flex flex-col gap-8"
+  />
 </div>

@@ -1,11 +1,10 @@
-import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-boolean-slider',
-  imports: [CommonModule, FormsModule],
-  templateUrl: './boolean-slider.component.html'
+  imports: [FormsModule],
+  templateUrl: './boolean-slider.component.html',
 })
 export class BooleanSliderComponent {
   @Input({ required: true }) value!: boolean;

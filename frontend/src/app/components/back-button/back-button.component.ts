@@ -5,10 +5,9 @@ import { Location } from '@angular/common';
 @Component({
   selector: 'app-back-button',
   imports: [],
-  templateUrl: './back-button.component.html'
+  templateUrl: './back-button.component.html',
 })
 export class BackButtonComponent {
-
   private readonly router = inject(Router);
   private readonly location = inject(Location);
 

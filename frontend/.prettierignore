@@ -1,0 +1,15 @@
+# dependencies
+node_modules
+dist
+coverage
+
+# Angular build output
+.angular
+
+# Lock files
+package-lock.json
+yarn.lock
+pnpm-lock.yaml
+
+# Generated files
+*.min.js

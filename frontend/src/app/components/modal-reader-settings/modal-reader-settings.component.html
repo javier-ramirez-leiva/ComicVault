@@ -1,53 +1,50 @@
 <div class="relative pt-10 bg-modal-background rounded-lg shadow-sm">
-    <app-cross-modal (onCloseClick)="cancel()"></app-cross-modal>
-    <div class="align-middle w-full flex flex-col items-center py-4">
-        <form [formGroup]="form">
-            <div
-                class="flex flex-col justify-start flex-1 w-full p-8 gap-4 pb-4"
-                formGroupName="readerSettingsService"
-            >
-                <app-boolean-slider-form
-                    formControlName="thumbnailNavigation"
-                    label="Use thumbnail navigation"
-                ></app-boolean-slider-form>
-                <app-boolean-slider-form
-                    formControlName="gestures"
-                    label="Use gestures"
-                ></app-boolean-slider-form>
-                <app-boolean-slider-form
-                    formControlName="resetZoom"
-                    label="Reset zoom when changing orientation (reloads the reader)"
-                ></app-boolean-slider-form>
-                <app-boolean-slider-form
-                    formControlName="noMenuZoom"
-                    label="Menu is not displayed when zoom"
-                ></app-boolean-slider-form>
-            </div>
-            <div class="p-8 pt-4">
-                <label
-                    for="role"
-                    class="block mb-2 text-sm font-medium text-generic-text"
-                >
-                    Double page configuration
-                </label>
-                <select
-                    id="doublePageConfiguration"
-                    formControlName="doublePageConfiguration"
-                    class="bg-input-select-background border border-input-select-border text-input-select-text text-sm rounded-lg focus:ring-input-select-focus-ring block w-full p-2.5"
-                >
-                    <option value="single">Single</option>
-                    <option value="double">Double</option>
-                    <option value="auto">Auto</option>
-                </select>
-            </div>
-        </form>
-        <button
-            appHideRoles
-            [appHideForRoles]="[Role.Requester, Role.Viewer]"
-            (click)="setCover()"
-            class="button-text button-set-cover"
+  <app-cross-modal (onCloseClick)="cancel()"></app-cross-modal>
+  <div class="align-middle w-full flex flex-col items-center py-4">
+    <form [formGroup]="form">
+      <div
+        class="flex flex-col justify-start flex-1 w-full p-8 gap-4 pb-4"
+        formGroupName="readerSettingsService"
+      >
+        <app-boolean-slider-form
+          formControlName="thumbnailNavigation"
+          label="Use thumbnail navigation"
+        ></app-boolean-slider-form>
+        <app-boolean-slider-form
+          formControlName="gestures"
+          label="Use gestures"
+        ></app-boolean-slider-form>
+        <app-boolean-slider-form
+          formControlName="resetZoom"
+          label="Reset zoom when changing orientation (reloads the reader)"
+        ></app-boolean-slider-form>
+        <app-boolean-slider-form
+          formControlName="noMenuZoom"
+          label="Menu is not displayed when zoom"
+        ></app-boolean-slider-form>
+      </div>
+      <div class="p-8 pt-4">
+        <label for="role" class="block mb-2 text-sm font-medium text-generic-text">
+          Double page configuration
+        </label>
+        <select
+          id="doublePageConfiguration"
+          formControlName="doublePageConfiguration"
+          class="bg-input-select-background border border-input-select-border text-input-select-text text-sm rounded-lg focus:ring-input-select-focus-ring block w-full p-2.5"
         >
-            Set actual page as comic cover
-        </button>
-    </div>
+          <option value="single">Single</option>
+          <option value="double">Double</option>
+          <option value="auto">Auto</option>
+        </select>
+      </div>
+    </form>
+    <button
+      appHideRoles
+      [appHideForRoles]="[Role.Requester, Role.Viewer]"
+      (click)="setCover()"
+      class="button-text button-set-cover"
+    >
+      Set actual page as comic cover
+    </button>
+  </div>
 </div>

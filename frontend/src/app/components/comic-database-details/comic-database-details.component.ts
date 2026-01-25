@@ -7,30 +7,58 @@ import { ConfigURLService } from 'services';
 import { DeleteButtonComponent } from '../delete-button/delete-button.component';
 import { SeenButtonComponent } from '../seen-button/seen-button.component';
 import { Router } from '@angular/router';
-import { catchError, combineLatest, EMPTY, filter, map, Observable, of, shareReplay, startWith, Subject, switchMap, tap } from 'rxjs';
+import {
+  catchError,
+  combineLatest,
+  EMPTY,
+  filter,
+  map,
+  Observable,
+  of,
+  shareReplay,
+  startWith,
+  Subject,
+  switchMap,
+  tap,
+} from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { DownloadFileButtonComponent } from '../download-file-button/download-file-button.component';
 import { HideRolesDirective } from 'directives';
 import { Role } from 'interfaces';
-import { LoadingSpinnerPageComponent } from "../loading-spinner-page/loading-spinner-page.component";
+import { LoadingSpinnerPageComponent } from '../loading-spinner-page/loading-spinner-page.component';
 import { notNullOrUndefined } from 'src/app/utils/rsjx-operators';
-import { ComicNotFoundComponent } from "../comic-not-found/comic-not-found.component";
+import { ComicNotFoundComponent } from '../comic-not-found/comic-not-found.component';
 import { CarouselSeriesComicsComponent } from '../carousel-series-comics/carousel-series-comics.component';
-import { Row, TwoColumnsTableComponent } from "../two-columns-table/two-columns-table.component";
+import { Row, TwoColumnsTableComponent } from '../two-columns-table/two-columns-table.component';
 import { WindowService } from 'services';
-import { TagChipComponent } from "../tag-chip/tag-chip.component";
+import { TagChipComponent } from '../tag-chip/tag-chip.component';
 import { EditMetadataButtonComponent } from '../edit-metadata-button/edit-metadata-button.component';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
-import { InputTextFormComponent } from "../input-text-form/input-text-form.component";
+import { InputTextFormComponent } from '../input-text-form/input-text-form.component';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { resetRouteCache } from 'src/app/strategy_providers/custom-reuse-strategy';
 import { ModalMiniPagesComponent } from '../modal-mini-pages/modal-mini-pages.component';
 import { CanComponentDeactivate } from 'src/app/guard/unsaved-changes-guard.guard';
 
-
 @Component({
   selector: 'app-comic-database-details',
-  imports: [ReadButtonComponent, DeleteButtonComponent, SeenButtonComponent, DownloadFileButtonComponent, CommonModule, RouterModule, HideRolesDirective, CarouselSeriesComicsComponent, LoadingSpinnerPageComponent, ComicNotFoundComponent, TwoColumnsTableComponent, TagChipComponent, EditMetadataButtonComponent, ReactiveFormsModule, InputTextFormComponent],
+  imports: [
+    ReadButtonComponent,
+    DeleteButtonComponent,
+    SeenButtonComponent,
+    DownloadFileButtonComponent,
+    CommonModule,
+    RouterModule,
+    HideRolesDirective,
+    CarouselSeriesComicsComponent,
+    LoadingSpinnerPageComponent,
+    ComicNotFoundComponent,
+    TwoColumnsTableComponent,
+    TagChipComponent,
+    EditMetadataButtonComponent,
+    ReactiveFormsModule,
+    InputTextFormComponent,
+  ],
   templateUrl: './comic-database-details.component.html',
 })
 @UntilDestroy()
@@ -46,10 +74,10 @@ export class ComicDatabaseDetailsComponent implements OnInit, CanComponentDeacti
   private id: string | undefined;
   private comic: ComicsDatabase | undefined;
   private readonly id$: Observable<string>;
-  private readonly triggerFetch$ = new Subject<void>;
-  private readonly tempPageCover$ = new Subject<string>;
+  private readonly triggerFetch$ = new Subject<void>();
+  private readonly tempPageCover$ = new Subject<string>();
   private tempPageNumber = 0;
-  protected readonly notFoundID$ = new Subject<string>;
+  protected readonly notFoundID$ = new Subject<string>();
   protected readonly comic$: Observable<ComicsDatabase | undefined>;
   protected readonly series$: Observable<Series>;
   protected readonly comicsSeries$: Observable<ComicsDatabase[]>;
@@ -70,44 +98,42 @@ export class ComicDatabaseDetailsComponent implements OnInit, CanComponentDeacti
         title: new FormControl(''),
         year: new FormControl(''),
         issue: new FormControl(0),
-        link: new FormControl('')
+        link: new FormControl(''),
       }),
-      description: new FormControl('')
+      description: new FormControl(''),
     });
 
-
     this.id$ = this.route.params.pipe(
-      map(params => params['id']),
-      tap(id => {
+      map((params) => params['id']),
+      tap((id) => {
         this.id = id;
         this.editStatus = false;
       }),
     );
-    this.comic$ = combineLatest([
-      this.id$,
-      this.triggerFetch$.pipe(startWith(null))
-    ]).pipe(
+    this.comic$ = combineLatest([this.id$, this.triggerFetch$.pipe(startWith(null))]).pipe(
       switchMap(([id, _]) => this.comicsService.getComic(id)),
-      catchError(error => {
+      catchError((error) => {
         this.notFoundID$.next(this.id ?? '');
         return of(undefined);
       }),
-      tap(comic => this.comic = comic),
-      tap(comic => this.form.patchValue({
-        table: { title: comic?.title, year: comic?.year, issue: comic?.issue, link: comic?.link },
-        description: comic?.description
-      })),
+      tap((comic) => (this.comic = comic)),
+      tap((comic) =>
+        this.form.patchValue({
+          table: { title: comic?.title, year: comic?.year, issue: comic?.issue, link: comic?.link },
+          description: comic?.description,
+        }),
+      ),
       tap(() => this.tempPageCover$.next('')),
-      shareReplay({ bufferSize: 1, refCount: true })
+      shareReplay({ bufferSize: 1, refCount: true }),
     );
     this.series$ = this.comic$.pipe(
       filter(notNullOrUndefined()),
-      switchMap(comic => this.comicsService.getSeriesByID(comic.seriesID)),
-      shareReplay({ bufferSize: 1, refCount: true })
+      switchMap((comic) => this.comicsService.getSeriesByID(comic.seriesID)),
+      shareReplay({ bufferSize: 1, refCount: true }),
     );
     this.comicsSeries$ = this.series$.pipe(
-      map(series => series.comics),
-      tap(comics => {
+      map((series) => series.comics),
+      tap((comics) => {
         for (let i = 0; i < comics.length; i++) {
           if (comics[i].id === this.id) {
             comics[i] = this.comic ?? comics[i];
@@ -118,32 +144,29 @@ export class ComicDatabaseDetailsComponent implements OnInit, CanComponentDeacti
             }, 500);
           }
         }
-      })
+      }),
     );
-    this.imageURL$ = combineLatest([
-      this.comic$,
-      this.tempPageCover$.pipe(startWith(''))
-    ]).pipe(
+    this.imageURL$ = combineLatest([this.comic$, this.tempPageCover$.pipe(startWith(''))]).pipe(
       map(([comic, tempPage]) => {
         if (tempPage.trim().length > 0) {
           return tempPage;
         } else if (comic) {
-          return `${this.configURLService.baseURL}/${this.configURLService.apiVersion}/comics/${comic.id}/cover/medium`
+          return `${this.configURLService.baseURL}/${this.configURLService.apiVersion}/comics/${comic.id}/cover/medium`;
         }
         //SHOULD NEVER HAPPEN
         return '';
-      })
+      }),
     );
     this.widthStyle$ = this.comic$.pipe(
       filter(notNullOrUndefined()),
-      map(comic => {
+      map((comic) => {
         const progress = 100 * (comic.pageStatus / comic.pages);
         return `width: ${progress}%`;
-      })
+      }),
     );
     this.rows$ = this.comic$.pipe(
       filter(notNullOrUndefined()),
-      map(comic => [
+      map((comic) => [
         {
           title: 'Title',
           type: 'editable-text',
@@ -161,7 +184,7 @@ export class ComicDatabaseDetailsComponent implements OnInit, CanComponentDeacti
           title: 'Issue',
           type: 'editable-number',
           formControlName: 'issue',
-          number: comic.issue
+          number: comic.issue,
         },
         {
           title: 'Year',
@@ -190,8 +213,8 @@ export class ComicDatabaseDetailsComponent implements OnInit, CanComponentDeacti
           type: 'editable-link',
           formControlName: 'link',
           link: comic.link,
-        }
-      ])
+        },
+      ]),
     );
   }
 
@@ -208,7 +231,6 @@ export class ComicDatabaseDetailsComponent implements OnInit, CanComponentDeacti
       const routerLink = ['/comics', this.comic.id, 'read'];
       this.router.navigate(routerLink);
     }
-
   }
 
   onEdit() {
@@ -224,31 +246,33 @@ export class ComicDatabaseDetailsComponent implements OnInit, CanComponentDeacti
         year: value.table.year,
         title: value.table.title,
         issue: value.table.issue,
-        link: value.table.link
+        link: value.table.link,
       };
-      this.comicsService.setComicProperties(this.comic.id, properties).pipe(
-        catchError(errorResponse => {
-          const error: HttpResponseError = errorResponse.error;
-          this.notifierService.appendNotification({
-            id: 0,
-            title: 'Error setting metadata: ',
-            message: error.message,
-            type: 'error'
-          });
-          return EMPTY;
-        }),
-        switchMap(() => this.comicsService.setCover(this.comic?.id ?? '', this.tempPageNumber)),
-        untilDestroyed(this)
-      )
+      this.comicsService
+        .setComicProperties(this.comic.id, properties)
+        .pipe(
+          catchError((errorResponse) => {
+            const error: HttpResponseError = errorResponse.error;
+            this.notifierService.appendNotification({
+              id: 0,
+              title: 'Error setting metadata: ',
+              message: error.message,
+              type: 'error',
+            });
+            return EMPTY;
+          }),
+          switchMap(() => this.comicsService.setCover(this.comic?.id ?? '', this.tempPageNumber)),
+          untilDestroyed(this),
+        )
         .subscribe(() => {
           this.triggerFetch$.next();
           this.notifierService.appendNotification({
             id: 0,
             title: 'Updated metadata: ',
             message: this.comic?.title ?? '',
-            type: 'success'
+            type: 'success',
           });
-        })
+        });
     }
   }
 
@@ -260,26 +284,29 @@ export class ComicDatabaseDetailsComponent implements OnInit, CanComponentDeacti
 
   toggleSeen(): void {
     if (this.comic) {
-      this.comicsService.setComicListReadStatus([this.comic.id], !this.comic.readStatus).pipe(untilDestroyed(this)).subscribe(() => {
-        if (this.comic) {
-          this.comic.readStatus = !this.comic.readStatus;
-        }
-        resetRouteCache();
-        this.triggerFetch$.next();
-      });
-    };
+      this.comicsService
+        .setComicListReadStatus([this.comic.id], !this.comic.readStatus)
+        .pipe(untilDestroyed(this))
+        .subscribe(() => {
+          if (this.comic) {
+            this.comic.readStatus = !this.comic.readStatus;
+          }
+          resetRouteCache();
+          this.triggerFetch$.next();
+        });
+    }
   }
 
   displayMiniCardModal() {
     if (this.comic) {
-      this.modalService.open<number, { comic: ComicsDatabase }>(ModalMiniPagesComponent, { comic: this.comic }).pipe(
-        filter(notNullOrUndefined()),
-        untilDestroyed(this)
-      ).subscribe(page => {
-        this.tempPageNumber = page;
-        const url = `${this.configURLService.baseURL}/${this.configURLService.apiVersion}/comics/${this.comic?.id}/pages/${page}`
-        this.tempPageCover$.next(url);
-      });
+      this.modalService
+        .open<number, { comic: ComicsDatabase }>(ModalMiniPagesComponent, { comic: this.comic })
+        .pipe(filter(notNullOrUndefined()), untilDestroyed(this))
+        .subscribe((page) => {
+          this.tempPageNumber = page;
+          const url = `${this.configURLService.baseURL}/${this.configURLService.apiVersion}/comics/${this.comic?.id}/pages/${page}`;
+          this.tempPageCover$.next(url);
+        });
     }
   }
 
@@ -298,22 +325,22 @@ export function getPagesStatus(comic: ComicsDatabase): Row {
       title: title,
       type: 'chip',
       text: 'READ',
-      severity: 'Success'
-    }
+      severity: 'Success',
+    };
   }
   if (comic.pageStatus === 0) {
     return {
       title: title,
       type: 'chip',
       text: 'NEW',
-      severity: 'Warning'
-    }
+      severity: 'Warning',
+    };
   }
   return {
     title: title,
     type: 'text',
     text: `${comic.pageStatus} / ${comic.pages}`,
-  }
+  };
 }
 
 export function fromCategoryToRow(category: Category): Row {
@@ -321,21 +348,21 @@ export function fromCategoryToRow(category: Category): Row {
     return {
       title: 'Publisher',
       type: 'image',
-      src: "assets/marvel-240.png",
-      alt: "Marvel Comics"
-    }
+      src: 'assets/marvel-240.png',
+      alt: 'Marvel Comics',
+    };
   }
   if (category === 'dc') {
     return {
       title: 'Publisher',
       type: 'image',
-      src: "assets/dc-240.png",
-      alt: "DC Comics"
-    }
+      src: 'assets/dc-240.png',
+      alt: 'DC Comics',
+    };
   }
   return {
     title: 'Publisher',
     type: 'text',
-    text: "Other",
-  }
+    text: 'Other',
+  };
 }

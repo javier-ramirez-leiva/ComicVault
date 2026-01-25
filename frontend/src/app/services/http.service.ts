@@ -5,22 +5,19 @@ import { AuthService } from './auth.service';
 import { ConfigURLService } from './configURL.service';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-
 export class HttpService {
-
   private readonly httpClient = inject(HttpClient);
   private readonly configURLService = inject(ConfigURLService);
   private readonly authService = inject(AuthService);
 
-  constructor() { }
-
+  constructor() {}
 
   request<T>(verb: HTTPVerb, endpoint: string, data?: any): Observable<T> {
     return this.authService.handleApiCallError(() => {
       if (!this.configURLService.baseURL) {
-        return throwError(() => new Error("Base URL is not defined"));
+        return throwError(() => new Error('Base URL is not defined'));
       }
 
       const url = `${this.configURLService.baseURL}/${this.configURLService.apiVersion}/${endpoint}`;
@@ -35,11 +32,10 @@ export class HttpService {
         case 'DELETE':
           return this.httpClient.delete<T>(url);
         default:
-          return throwError(() => new Error("Invalid HTTP verb"));
+          return throwError(() => new Error('Invalid HTTP verb'));
       }
     });
   }
-
 }
 
 export type HTTPVerb = 'GET' | 'POST' | 'PUT' | 'DELETE';

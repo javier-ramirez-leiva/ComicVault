@@ -1,194 +1,144 @@
 <div
-    *ngIf="rows.length > 0"
-    [class.rounded-lg]="!modalMode"
-    class="relative overflow-x-auto shadow-md w-full h-fit rounded-lg"
+  *ngIf="rows.length > 0"
+  [class.rounded-lg]="!modalMode"
+  class="relative overflow-x-auto shadow-md w-full h-fit rounded-lg"
 >
-    <ng-container *ngIf="formTable; else noFormTmpl">
-        <table
-            [formGroup]="formTable"
-            class="w-full text-sm text-left rtl:text-right text-table-text"
+  <ng-container *ngIf="formTable; else noFormTmpl">
+    <table [formGroup]="formTable" class="w-full text-sm text-left rtl:text-right text-table-text">
+      <tbody>
+        <tr
+          *ngFor="let row of rows"
+          class="odd:bg-table-odd-background even:bg-table-even-background border-b border-table-border"
         >
-            <tbody>
-                <tr
-                    *ngFor="let row of rows"
-                    class="odd:bg-table-odd-background even:bg-table-even-background border-b border-table-border"
-                >
-                    <th
-                        scope="row"
-                        class="px-6 py-4 font-medium text-table-title whitespace-nowrap"
-                    >
-                        {{row.title}}
-                    </th>
-                    <td
-                        *ngIf="row.type==='text'"
-                        class="px-6 py-4"
-                    >
-                        {{row.text | emptyToNA}}
-                    </td>
-                    <td
-                        *ngIf="row.type==='editable-text'"
-                        class="px-6 py-4"
-                    >
-                        <ng-container *ngIf="!editMode; else inputTextTmpl">{{row.text | emptyToNA}}</ng-container>
-                        <ng-template #inputTextTmpl>
-                            <app-input-text-form [formControlName]="row.formControlName"></app-input-text-form>
-                        </ng-template>
-
-                    </td>
-                    <td
-                        *ngIf="row.type==='editable-number'"
-                        class="px-6 py-4"
-                    >
-                        <ng-container *ngIf="!editMode; else inputNumberTmpl">{{row.number}}</ng-container>
-                        <ng-template #inputNumberTmpl>
-                            <app-digit-input-form [formControlName]="row.formControlName"></app-digit-input-form>
-                        </ng-template>
-
-                    </td>
-                    <td
-                        *ngIf="row.type==='routerLink'"
-                        class="px-6 py-4"
-                    >
-                        <a
-                            *ngIf="row.text.length > 0; else NAtmpl"
-                            [routerLink]="row.routerLink"
-                            class="font-medium text-table-link hover:underline"
-                        >
-                            {{row.text}}
-                        </a>
-                    </td>
-                    <td
-                        *ngIf="row.type==='link'"
-                        class="px-6 py-4"
-                    >
-                        <a
-                            *ngIf="row.link.length > 0; else NAtmpl"
-                            [href]="row.link"
-                            class="font-medium text-table-link hover:underline"
-                        >
-                            {{row.link}}
-                        </a>
-                    </td>
-                    <td
-                        *ngIf="row.type==='editable-link'"
-                        class="px-6 py-4"
-                    >
-                        <ng-container *ngIf="!editMode; else inputLinkTmpl">
-                            <a
-                                *ngIf="row.link.length > 0; else NAtmpl"
-                                [href]="row.link"
-                                class="font-medium text-table-link hover:underline"
-                            >
-                                {{row.link}}
-                            </a>
-                        </ng-container>
-                        <ng-template #inputLinkTmpl>
-                            <app-input-text-form [formControlName]="row.formControlName"></app-input-text-form>
-                        </ng-template>
-                    </td>
-                    <td
-                        *ngIf="row.type==='image'"
-                        class="px-6 py-4"
-                    >
-                        <img
-                            [src]="row.src"
-                            [alt]="row.alt"
-                            class=" relative w-12 h-12"
-                        >
-                    </td>
-                    <td
-                        *ngIf="row.type==='chip'"
-                        scope="row"
-                        class="px-6 py-4 font-medium whitespace-nowrap flex items-center gap-2"
-                    >
-                        <span
-                            class="chip"
-                            [class.chip-success]="row.severity==='Success'"
-                            [class.chip-error]="row.severity==='Error'"
-                            [class.chip-warning]="row.severity==='Warning'"
-                            [class.chip-info]="row.severity==='Info'"
-                            [class.chip-desactivated]="row.severity==='Desactivated'"
-                        >
-                            {{row.text}}
-                        </span>
-                    </td>
-                    <ng-template #NAtmpl>N/A</ng-template>
-                </tr>
-            </tbody>
-        </table>
-    </ng-container>
-    <ng-template #noFormTmpl>
-        <table class="w-full text-sm text-left rtl:text-right text-table-text">
-            <tbody>
-                <tr
-                    *ngFor="let row of rows"
-                    class="odd:bg-table-odd-background even:bg-table-even-background border-b border-table-border"
-                >
-                    <th
-                        scope="row"
-                        class="px-6 py-4 font-medium text-table-title whitespace-nowrap"
-                    >
-                        {{row.title}}
-                    </th>
-                    <td
-                        *ngIf="row.type==='text'"
-                        class="px-6 py-4"
-                    >
-                        {{row.text | emptyToNA}}
-                    </td>
-                    <td
-                        *ngIf="row.type==='routerLink'"
-                        class="px-6 py-4"
-                    >
-                        <a
-                            *ngIf="row.text.length > 0; else NAtmpl"
-                            [routerLink]="row.routerLink"
-                            class="font-medium text-table-link hover:underline"
-                        >
-                            {{row.text}}
-                        </a>
-                    </td>
-                    <td
-                        *ngIf="row.type==='link'"
-                        class="px-6 py-4"
-                    >
-                        <a
-                            *ngIf="row.link.length > 0; else NAtmpl"
-                            [href]="row.link"
-                            class="font-medium text-table-link hover:underline"
-                        >
-                            {{row.link}}
-                        </a>
-                    </td>
-                    <td
-                        *ngIf="row.type==='image'"
-                        class="px-6 py-4"
-                    >
-                        <img
-                            [src]="row.src"
-                            [alt]="row.alt"
-                            class=" relative w-12 h-12"
-                        >
-                    </td>
-                    <td
-                        *ngIf="row.type==='chip'"
-                        scope="row"
-                        class="px-6 py-4 font-medium whitespace-nowrap flex items-center gap-2"
-                    >
-                        <span
-                            class="chip"
-                            [class.chip-success]="row.severity==='Success'"
-                            [class.chip-error]="row.severity==='Error'"
-                            [class.chip-warning]="row.severity==='Warning'"
-                            [class.chip-info]="row.severity==='Info'"
-                            [class.chip-desactivated]="row.severity==='Desactivated'"
-                        >
-                            {{row.text}}
-                        </span>
-                    </td>
-                    <ng-template #NAtmpl>N/A</ng-template>
-                </tr>
-            </tbody>
-        </table>
-    </ng-template>
+          <th scope="row" class="px-6 py-4 font-medium text-table-title whitespace-nowrap">
+            {{ row.title }}
+          </th>
+          <td *ngIf="row.type === 'text'" class="px-6 py-4">
+            {{ row.text | emptyToNA }}
+          </td>
+          <td *ngIf="row.type === 'editable-text'" class="px-6 py-4">
+            <ng-container *ngIf="!editMode; else inputTextTmpl">{{
+              row.text | emptyToNA
+            }}</ng-container>
+            <ng-template #inputTextTmpl>
+              <app-input-text-form [formControlName]="row.formControlName"></app-input-text-form>
+            </ng-template>
+          </td>
+          <td *ngIf="row.type === 'editable-number'" class="px-6 py-4">
+            <ng-container *ngIf="!editMode; else inputNumberTmpl">{{ row.number }}</ng-container>
+            <ng-template #inputNumberTmpl>
+              <app-digit-input-form [formControlName]="row.formControlName"></app-digit-input-form>
+            </ng-template>
+          </td>
+          <td *ngIf="row.type === 'routerLink'" class="px-6 py-4">
+            <a
+              *ngIf="row.text.length > 0; else NAtmpl"
+              [routerLink]="row.routerLink"
+              class="font-medium text-table-link hover:underline"
+            >
+              {{ row.text }}
+            </a>
+          </td>
+          <td *ngIf="row.type === 'link'" class="px-6 py-4">
+            <a
+              *ngIf="row.link.length > 0; else NAtmpl"
+              [href]="row.link"
+              class="font-medium text-table-link hover:underline"
+            >
+              {{ row.link }}
+            </a>
+          </td>
+          <td *ngIf="row.type === 'editable-link'" class="px-6 py-4">
+            <ng-container *ngIf="!editMode; else inputLinkTmpl">
+              <a
+                *ngIf="row.link.length > 0; else NAtmpl"
+                [href]="row.link"
+                class="font-medium text-table-link hover:underline"
+              >
+                {{ row.link }}
+              </a>
+            </ng-container>
+            <ng-template #inputLinkTmpl>
+              <app-input-text-form [formControlName]="row.formControlName"></app-input-text-form>
+            </ng-template>
+          </td>
+          <td *ngIf="row.type === 'image'" class="px-6 py-4">
+            <img [src]="row.src" [alt]="row.alt" class="relative w-12 h-12" />
+          </td>
+          <td
+            *ngIf="row.type === 'chip'"
+            scope="row"
+            class="px-6 py-4 font-medium whitespace-nowrap flex items-center gap-2"
+          >
+            <span
+              class="chip"
+              [class.chip-success]="row.severity === 'Success'"
+              [class.chip-error]="row.severity === 'Error'"
+              [class.chip-warning]="row.severity === 'Warning'"
+              [class.chip-info]="row.severity === 'Info'"
+              [class.chip-desactivated]="row.severity === 'Desactivated'"
+            >
+              {{ row.text }}
+            </span>
+          </td>
+          <ng-template #NAtmpl>N/A</ng-template>
+        </tr>
+      </tbody>
+    </table>
+  </ng-container>
+  <ng-template #noFormTmpl>
+    <table class="w-full text-sm text-left rtl:text-right text-table-text">
+      <tbody>
+        <tr
+          *ngFor="let row of rows"
+          class="odd:bg-table-odd-background even:bg-table-even-background border-b border-table-border"
+        >
+          <th scope="row" class="px-6 py-4 font-medium text-table-title whitespace-nowrap">
+            {{ row.title }}
+          </th>
+          <td *ngIf="row.type === 'text'" class="px-6 py-4">
+            {{ row.text | emptyToNA }}
+          </td>
+          <td *ngIf="row.type === 'routerLink'" class="px-6 py-4">
+            <a
+              *ngIf="row.text.length > 0; else NAtmpl"
+              [routerLink]="row.routerLink"
+              class="font-medium text-table-link hover:underline"
+            >
+              {{ row.text }}
+            </a>
+          </td>
+          <td *ngIf="row.type === 'link'" class="px-6 py-4">
+            <a
+              *ngIf="row.link.length > 0; else NAtmpl"
+              [href]="row.link"
+              class="font-medium text-table-link hover:underline"
+            >
+              {{ row.link }}
+            </a>
+          </td>
+          <td *ngIf="row.type === 'image'" class="px-6 py-4">
+            <img [src]="row.src" [alt]="row.alt" class="relative w-12 h-12" />
+          </td>
+          <td
+            *ngIf="row.type === 'chip'"
+            scope="row"
+            class="px-6 py-4 font-medium whitespace-nowrap flex items-center gap-2"
+          >
+            <span
+              class="chip"
+              [class.chip-success]="row.severity === 'Success'"
+              [class.chip-error]="row.severity === 'Error'"
+              [class.chip-warning]="row.severity === 'Warning'"
+              [class.chip-info]="row.severity === 'Info'"
+              [class.chip-desactivated]="row.severity === 'Desactivated'"
+            >
+              {{ row.text }}
+            </span>
+          </td>
+          <ng-template #NAtmpl>N/A</ng-template>
+        </tr>
+      </tbody>
+    </table>
+  </ng-template>
 </div>

@@ -8,7 +8,6 @@ import { ComicCard, ComicsDatabase, ComicsSearch, Role } from 'interfaces';
 import { Observable, filter } from 'rxjs';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
-
 @UntilDestroy()
 @Component({
   selector: 'app-cover-card',
@@ -16,7 +15,6 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
   templateUrl: './cover-card.component.html',
 })
 export class CoverCardComponent implements ComicCard {
-
   @Input() public highlight: boolean = false;
   @Input({ required: true }) public id!: string;
   @Input({ required: true }) public imageURL!: string;
@@ -45,7 +43,9 @@ export class CoverCardComponent implements ComicCard {
   isTouchDevice: boolean = false;
   Role = Role;
 
-  coverCardClickCollectorService: CoverCardClickCollectorService = inject(CoverCardClickCollectorService);
+  coverCardClickCollectorService: CoverCardClickCollectorService = inject(
+    CoverCardClickCollectorService,
+  );
 
   getComic(): ComicsDatabase {
     if (!this.comicsDatabase) {
@@ -64,9 +64,7 @@ export class CoverCardComponent implements ComicCard {
 
   ngOnInit(): void {
     if (this.progress$) {
-      this.progress$.pipe(
-        untilDestroyed(this)
-      ).subscribe(progress => {
+      this.progress$.pipe(untilDestroyed(this)).subscribe((progress) => {
         this.widthStyle = progress > 0 ? `width: ${progress}%` : null;
       });
     } else {
@@ -84,7 +82,10 @@ export class CoverCardComponent implements ComicCard {
           this.coverCardClickCollectorService.removeActiveHover(this.id);
         } else {
           if (this.queryParams) {
-            this.router.navigate(this.navigationURL, { queryParams: this.queryParams, queryParamsHandling: 'merge' });
+            this.router.navigate(this.navigationURL, {
+              queryParams: this.queryParams,
+              queryParamsHandling: 'merge',
+            });
           } else {
             this.router.navigate(this.navigationURL);
           }
@@ -106,7 +107,10 @@ export class CoverCardComponent implements ComicCard {
         }
       } else {
         if (this.queryParams) {
-          this.router.navigate(this.navigationURL, { queryParams: this.queryParams, queryParamsHandling: 'merge' });
+          this.router.navigate(this.navigationURL, {
+            queryParams: this.queryParams,
+            queryParamsHandling: 'merge',
+          });
         } else {
           this.router.navigate(this.navigationURL);
         }

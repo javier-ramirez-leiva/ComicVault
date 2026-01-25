@@ -1,10 +1,19 @@
-import { Component, ElementRef, Input, OnInit, QueryList, ViewChild, ViewChildren, inject } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  Input,
+  OnInit,
+  QueryList,
+  ViewChild,
+  ViewChildren,
+  inject,
+} from '@angular/core';
 import { ComicsDatabase, ComicsSearch, Series, Tag } from 'interfaces';
 import { WindowService } from 'services';
 import { Observable, fromEvent, map, merge, shareReplay, startWith } from 'rxjs';
-import { SeriesComponent } from "../series/series.component";
+import { SeriesComponent } from '../series/series.component';
 import { CommonModule } from '@angular/common';
-import { ComicDatabaseComponent } from "../comic-database/comic-database.component";
+import { ComicDatabaseComponent } from '../comic-database/comic-database.component';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ComicSearchComponent } from '../comic-search/comic-search.component';
 
@@ -12,10 +21,10 @@ import { ComicSearchComponent } from '../comic-search/comic-search.component';
 @Component({
   selector: 'app-carousel-series-comics',
   imports: [SeriesComponent, CommonModule, ComicDatabaseComponent, ComicSearchComponent],
-  templateUrl: './carousel-series-comics.component.html'
+  templateUrl: './carousel-series-comics.component.html',
 })
 export class CarouselSeriesComicsComponent implements OnInit {
-  @Input({ required: false }) public series: Series[] = [];;
+  @Input({ required: false }) public series: Series[] = [];
   @Input({ required: false }) public comics: ComicsDatabase[] = [];
   @Input({ required: false }) public comicSearchs: ComicsSearch[] = [];
   @Input({ required: false }) public header: string | undefined = undefined;
@@ -46,9 +55,7 @@ export class CarouselSeriesComicsComponent implements OnInit {
 
   ngOnInit() {
     if (this.scrollToIndex$) {
-      this.scrollToIndex$.pipe(
-        untilDestroyed(this)
-      ).subscribe(index => {
+      this.scrollToIndex$.pipe(untilDestroyed(this)).subscribe((index) => {
         this.scrollToComic(index);
       });
     }
@@ -67,17 +74,17 @@ export class CarouselSeriesComicsComponent implements OnInit {
       startWith(null),
       map(() => ({
         left: scrollEl.scrollLeft > 0,
-        right: scrollEl.scrollLeft + scrollEl.clientWidth < scrollEl.scrollWidth
-      }))
+        right: scrollEl.scrollLeft + scrollEl.clientWidth < scrollEl.scrollWidth,
+      })),
     );
 
     this.canScrollLeft$ = update$.pipe(
-      map(state => state.left),
-      shareReplay({ bufferSize: 1, refCount: true })
+      map((state) => state.left),
+      shareReplay({ bufferSize: 1, refCount: true }),
     );
     this.canScrollRight$ = update$.pipe(
-      map(state => state.right),
-      shareReplay({ bufferSize: 1, refCount: true })
+      map((state) => state.right),
+      shareReplay({ bufferSize: 1, refCount: true }),
     );
   }
 
@@ -93,11 +100,11 @@ export class CarouselSeriesComicsComponent implements OnInit {
 
     const containerWidth = container.offsetWidth;
     const comicWidth = comicElement.offsetWidth;
-    const scrollLeft = comicElement.offsetLeft - (containerWidth / 2) + (comicWidth / 2);
+    const scrollLeft = comicElement.offsetLeft - containerWidth / 2 + comicWidth / 2;
 
     container.scrollTo({
       left: scrollLeft,
-      behavior: 'smooth'
+      behavior: 'smooth',
     });
   }
 
@@ -113,7 +120,7 @@ export class CarouselSeriesComicsComponent implements OnInit {
 
     container.scrollTo({
       left: scrollPosition,
-      behavior: 'smooth'
+      behavior: 'smooth',
     });
   }
 }

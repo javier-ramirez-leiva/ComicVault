@@ -6,7 +6,7 @@ import { RouterLink } from '@angular/router';
 import { EMPTY, filter, map, Observable, of, switchMap, tap } from 'rxjs';
 import { ComicsService, ConfigURLService } from 'services';
 import { distinctUntilValueChanged, notNullOrUndefined } from 'src/app/utils/rsjx-operators';
-import { DownloadButtonComponent } from "../download-button/download-button.component";
+import { DownloadButtonComponent } from '../download-button/download-button.component';
 
 @Component({
   selector: 'app-comic-search-table',
@@ -19,7 +19,7 @@ export class ComicSearchTableComponent {
   @Input({ required: true })
   set comics(value: ComicsSearch[]) {
     this._comics = value;
-    this.comicObservables = this._comics.map(comic => this.buildComicUpdated(comic));
+    this.comicObservables = this._comics.map((comic) => this.buildComicUpdated(comic));
   }
 
   get comics(): ComicsSearch[] {
@@ -38,8 +38,10 @@ export class ComicSearchTableComponent {
 
   buildComicUpdated(comic: ComicsSearch): Observable<ComicSearchRow> {
     return this.comicsService.downloadingList$.pipe(
-      switchMap(downloadingList => {
-        const downloadingComic = downloadingList.find(downloadingComic => downloadingComic.idGc === comic.idGc);
+      switchMap((downloadingList) => {
+        const downloadingComic = downloadingList.find(
+          (downloadingComic) => downloadingComic.idGc === comic.idGc,
+        );
         if (downloadingComic) {
           const progress = 100 * (downloadingComic.currentBytes / downloadingComic.totalBytes);
           this.lastDownloadComics.push(...downloadingList);
@@ -52,29 +54,38 @@ export class ComicSearchTableComponent {
             year: comic.year,
             size: comic.size,
             progress: `width: ${progress}%`,
-            original: comic
+            original: comic,
           });
         }
-        if (comic.downloadingStatus === 'downloaded' || this.lastDownloadComics.find(downloadingComic => downloadingComic.idGc === comic.idGc)) {
+        if (
+          comic.downloadingStatus === 'downloaded' ||
+          this.lastDownloadComics.find((downloadingComic) => downloadingComic.idGc === comic.idGc)
+        ) {
           const cachedComic = this.cachedComicsDB.get(comic.idGc);
           if (cachedComic) {
-            return of(cachedComic)
+            return of(cachedComic);
           }
           return this.comicsService.getComicByidGc(comic.idGc).pipe(
             filter(notNullOrUndefined()),
-            map(comicDB => ({
+            map((comicDB) => ({
               title: comicDB.title,
               url: `/comics/${comicDB.id}/details`,
-              image: this.configURLService.baseURL + '/' + this.configURLService.apiVersion + '/comics/' + comicDB.id + '/cover/small',
+              image:
+                this.configURLService.baseURL +
+                '/' +
+                this.configURLService.apiVersion +
+                '/comics/' +
+                comicDB.id +
+                '/cover/small',
               category: comicDB.category,
               downloadingStatus: 'downloaded' as DownloadStatus,
               year: comicDB.year,
               size: comicDB.size,
               progress: undefined,
-              original: comic
+              original: comic,
             })),
-            tap(comicRow => this.cachedComicsDB.set(comic.idGc, comicRow)),
-          )
+            tap((comicRow) => this.cachedComicsDB.set(comic.idGc, comicRow)),
+          );
         }
         if (comic.downloadingStatus === 'not-downloaded' && !downloadingComic) {
           return of({
@@ -86,7 +97,7 @@ export class ComicSearchTableComponent {
             year: comic.year,
             size: comic.size,
             progress: undefined,
-            original: comic
+            original: comic,
           });
         }
         //SHOULD NEVER HAPPEN
@@ -106,5 +117,5 @@ export type ComicSearchRow = {
   year: string;
   size: string;
   progress: string | undefined;
-  original: ComicsSearch
-}
+  original: ComicsSearch;
+};

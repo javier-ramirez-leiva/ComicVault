@@ -6,20 +6,27 @@ import { LocalStorageService } from 'services';
 import { TopBarService } from 'services';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { BooleanSliderFormComponent } from '../boolean-slider-form/boolean-slider-form.component';
-import { DigitInputFormComponent } from "../digit-input-form/digit-input-form.component";
-import { TwoChoicesChipComponent } from "../two-choices-chip/two-choices-chip.component";
-import { RightPanelTitleComponent } from "../right-panel-title/right-panel-title.component";
-import { RightPanelFunnelButtonComponent } from "../right-panel-funnel-button/right-panel-funnel-button.component";
+import { DigitInputFormComponent } from '../digit-input-form/digit-input-form.component';
+import { TwoChoicesChipComponent } from '../two-choices-chip/two-choices-chip.component';
+import { RightPanelTitleComponent } from '../right-panel-title/right-panel-title.component';
+import { RightPanelFunnelButtonComponent } from '../right-panel-funnel-button/right-panel-funnel-button.component';
 import { NavigationEnd, Router } from '@angular/router';
 
 @UntilDestroy()
 @Component({
   selector: 'app-funnel-button',
-  imports: [CommonModule, ReactiveFormsModule, BooleanSliderFormComponent, DigitInputFormComponent, TwoChoicesChipComponent, RightPanelTitleComponent, RightPanelFunnelButtonComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    BooleanSliderFormComponent,
+    DigitInputFormComponent,
+    TwoChoicesChipComponent,
+    RightPanelTitleComponent,
+    RightPanelFunnelButtonComponent,
+  ],
   templateUrl: './funnel-button.component.html',
 })
 export class FunnelButtonComponent {
-
   isDrawerOpen$ = new BehaviorSubject<boolean>(false);
   form: FormGroup;
 
@@ -56,7 +63,7 @@ export class FunnelButtonComponent {
       from: '',
       to: '',
     },
-  }
+  };
 
   constructor() {
     this.form = this.formBuilder.group({
@@ -84,16 +91,18 @@ export class FunnelButtonComponent {
       }),
     });
 
-    this.form.valueChanges.subscribe(value => {
+    this.form.valueChanges.subscribe((value) => {
       this.filterChange.emit(value);
     });
   }
 
   ngOnInit(): void {
     this.form.patchValue(this.initForm, { emitEvent: true });
-    this.topBarService.resetFilterFunnelFormEvent$.pipe(untilDestroyed(this)).subscribe(filter => {
-      this.form.patchValue(this.initForm, { emitEvent: true });
-    });
+    this.topBarService.resetFilterFunnelFormEvent$
+      .pipe(untilDestroyed(this))
+      .subscribe((filter) => {
+        this.form.patchValue(this.initForm, { emitEvent: true });
+      });
 
     this.router.events.pipe(untilDestroyed(this)).subscribe((event) => {
       if (event instanceof NavigationEnd) {
@@ -103,7 +112,6 @@ export class FunnelButtonComponent {
       }
     });
   }
-
 
   onOpenDrawer() {
     this.isDrawerOpen$.next(true);
@@ -127,23 +135,23 @@ export type FilterFunnel = {
   categories: {
     marvel: boolean;
     dc: boolean;
-    other: boolean
+    other: boolean;
   };
   readStatus: {
     notStarted: boolean;
     ongoing: boolean;
-    read: boolean
+    read: boolean;
   };
   year: {
-    "from": number | '';
-    "to": number | '';
+    from: number | '';
+    to: number | '';
   };
   size: {
-    "from": number | '';
-    "to": number | '';
+    from: number | '';
+    to: number | '';
   };
   issues: {
-    "from": number | '';
-    "to": number | '';
+    from: number | '';
+    to: number | '';
   };
-}
+};

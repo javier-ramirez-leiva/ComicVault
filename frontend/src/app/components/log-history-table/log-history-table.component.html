@@ -1,125 +1,107 @@
 <div class="max-w-full w-full">
-    <div class="table-container-full overflow-x-auto rounded-lg">
-        <table class="table-large">
-            <thead class="table-head">
-                <tr>
-                    <th class="px-6 py-3">Severity</th>
-                    <th class="px-6 py-3">Message</th>
-                    <th class="px-6 py-3">Timestamp</th>
-                    <th class="px-6 py-3">Username</th>
-                    <th
-                        *ngIf="displayJobId"
-                        class="px-6 py-3"
-                    >
-                        Job Id
-                    </th>
-                    <th class="px-6 py-3 w-24">Details</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr
-                    *ngFor="let log of logs; trackBy: trackLogs"
-                    class="table-row"
+  <div class="table-container-full overflow-x-auto rounded-lg">
+    <table class="table-large">
+      <thead class="table-head">
+        <tr>
+          <th class="px-6 py-3">Severity</th>
+          <th class="px-6 py-3">Message</th>
+          <th class="px-6 py-3">Timestamp</th>
+          <th class="px-6 py-3">Username</th>
+          @if (displayJobId) {
+            <th class="px-6 py-3">Job Id</th>
+          }
+          <th class="px-6 py-3 w-24">Details</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (log of logs; track trackLogs($index, log)) {
+          <tr class="table-row">
+            <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
+              <span
+                class="chip"
+                [class.chip-success]="log.severity == 'Success'"
+                [class.chip-error]="log.severity == 'Error'"
+                [class.chip-info]="log.severity == 'Info'"
+                [class.chip-warning]="log.severity == 'Warning'"
+                [class.chip-desactivated]="log.severity == 'Desactivated'"
+              >
+                {{ log.severityMessage }}
+              </span>
+            </th>
+            <td scope="row" class="px-6 py-4">
+              @if (!log.comicId && !log.seriesId) {
+                @if (log.messageHref) {
+                  <a [href]="log.message" class="font-medium text-table-link hover:underline">
+                    {{ log.message }}
+                  </a>
+                }
+                @if (!log.messageHref) {
+                  <span>{{ log.message }}</span>
+                }
+              }
+              @if (log.comicId) {
+                <a
+                  [routerLink]="`/comics/${log.comicId}/details`"
+                  class="font-medium text-table-link hover:underline"
                 >
-                    <th
-                        scope="row"
-                        class="px-6 py-4 font-medium whitespace-nowrap"
-                    >
-                        <span
-                            class="chip"
-                            [class.chip-success]="log.severity=='Success'"
-                            [class.chip-error]="log.severity=='Error'"
-                            [class.chip-info]="log.severity=='Info'"
-                            [class.chip-warning]="log.severity=='Warning'"
-                            [class.chip-desactivated]="log.severity=='Desactivated'"
-                        >
-                            {{log.severityMessage}}
-                        </span>
-                    </th>
-                    <td
-                        scope="row"
-                        class="px-6 py-4"
-                    >
-                        <ng-container *ngIf="!log.comicId && !log.seriesId">
-                            <a
-                                *ngIf="log.messageHref"
-                                [href]="log.message"
-                                class="font-medium text-table-link hover:underline"
-                            >
-                                {{log.message}}
-                            </a>
-                            <span *ngIf="!log.messageHref">{{log.message}}</span>
-                        </ng-container>
-                        <a
-                            *ngIf="log.comicId"
-                            [routerLink]="`/comics/${log.comicId}/details`"
-                            class="font-medium text-table-link hover:underline"
-                        >
-                            {{log.message}}
-                        </a>
-                        <a
-                            *ngIf="log.seriesId"
-                            [routerLink]="`/series/${log.seriesId}/details`"
-                            class="font-medium text-table-link hover:underline"
-                        >
-                            {{log.message}}
-                        </a>
-                    </td>
-                    <td
-                        scope="row"
-                        class="px-6 py-4"
-                    >
-                        <div class="flex w-full justify-between items-center text-center">
-                            <span class="font-medium">
-                                {{log.timeStamp |  date: 'MMM d, y, h:mm a'}}
-                            </span>
-                        </div>
-                    </td>
-                    <td
-                        scope="row"
-                        class="px-6 py-4"
-                    >
-                        <div class="flex w-full justify-between items-center text-center">
-                            <span class="font-medium">{{log.username}}</span>
-                        </div>
-                    </td>
-                    <td
-                        *ngIf="displayJobId"
-                        scope="row"
-                        class="px-6 py-4"
-                    >
-                        <div class="flex w-full justify-between items-center text-center">
-                            <span class="font-medium">{{log.jobId}}</span>
-                        </div>
-                    </td>
-                    <td
-                        scope="row"
-                        class="px-6 py-4"
-                    >
-                        <button
-                            *ngIf="log.details"
-                            type="button"
-                            (click)=" displayDetails(log)"
-                            class="button-icon button-details p-2.5"
-                        >
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                fill="none"
-                                viewBox="0 0 24 24"
-                                stroke-width="1.5"
-                                stroke="currentColor"
-                                class="size-6"
-                            >
-                                <path
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m5.231 13.481L15 17.25m-4.5-15H5.625c-.621 0-1.125.504-1.125 1.125v16.5c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Zm3.75 11.625a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z"
-                                ></path>
-                            </svg>
-                        </button>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+                  {{ log.message }}
+                </a>
+              }
+              @if (log.seriesId) {
+                <a
+                  [routerLink]="`/series/${log.seriesId}/details`"
+                  class="font-medium text-table-link hover:underline"
+                >
+                  {{ log.message }}
+                </a>
+              }
+            </td>
+            <td scope="row" class="px-6 py-4">
+              <div class="flex w-full justify-between items-center text-center">
+                <span class="font-medium">
+                  {{ log.timeStamp | date: 'MMM d, y, h:mm a' }}
+                </span>
+              </div>
+            </td>
+            <td scope="row" class="px-6 py-4">
+              <div class="flex w-full justify-between items-center text-center">
+                <span class="font-medium">{{ log.username }}</span>
+              </div>
+            </td>
+            @if (displayJobId) {
+              <td scope="row" class="px-6 py-4">
+                <div class="flex w-full justify-between items-center text-center">
+                  <span class="font-medium">{{ log.jobId }}</span>
+                </div>
+              </td>
+            }
+            <td scope="row" class="px-6 py-4">
+              @if (log.details) {
+                <button
+                  type="button"
+                  (click)="displayDetails(log)"
+                  class="button-icon button-details p-2.5"
+                >
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="size-6"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M19.5 14.25v-2.625a3.375 3.375 0 0 0-3.375-3.375h-1.5A1.125 1.125 0 0 1 13.5 7.125v-1.5a3.375 3.375 0 0 0-3.375-3.375H8.25m5.231 13.481L15 17.25m-4.5-15H5.625c-.621 0-1.125.504-1.125 1.125v16.5c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 0 0-9-9Zm3.75 11.625a2.625 2.625 0 1 1-5.25 0 2.625 2.625 0 0 1 5.25 0Z"
+                    ></path>
+                  </svg>
+                </button>
+              }
+            </td>
+          </tr>
+        }
+      </tbody>
+    </table>
+  </div>
 </div>

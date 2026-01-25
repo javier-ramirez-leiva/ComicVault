@@ -1,21 +1,42 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { ActivatedRoute } from '@angular/router';
-import { ComicsService, MultiSelectService, ConfigURLService, WindowService, GridService, NotifierService, ModalService } from 'services';
+import {
+  ComicsService,
+  MultiSelectService,
+  ConfigURLService,
+  WindowService,
+  GridService,
+  NotifierService,
+  ModalService,
+} from 'services';
 import { ComicsDatabase, Series } from 'interfaces';
-import { catchError, combineLatest, EMPTY, filter, map, Observable, of, shareReplay, startWith, Subject, switchMap, tap } from 'rxjs';
-import { ComicsDatabaseGridComponent } from "../comics-database-grid/comics-database-grid.component";
+import {
+  catchError,
+  combineLatest,
+  EMPTY,
+  filter,
+  map,
+  Observable,
+  of,
+  shareReplay,
+  startWith,
+  Subject,
+  switchMap,
+  tap,
+} from 'rxjs';
+import { ComicsDatabaseGridComponent } from '../comics-database-grid/comics-database-grid.component';
 import { CommonModule } from '@angular/common';
-import { DeleteSeriesButtonComponent } from "../delete-series-button/delete-series-button.component";
-import { DownloadSeriesButtonComponent } from "../download-series-button/download-series-button.component";
+import { DeleteSeriesButtonComponent } from '../delete-series-button/delete-series-button.component';
+import { DownloadSeriesButtonComponent } from '../download-series-button/download-series-button.component';
 import { HideRolesDirective } from 'directives';
 import { Role } from 'interfaces';
 import { notNullOrUndefined } from 'src/app/utils/rsjx-operators';
-import { SeriesNotFoundComponent } from "../series-not-found/series-not-found.component";
-import { LoadingSpinnerPageComponent } from "../loading-spinner-page/loading-spinner-page.component";
-import { Row, TwoColumnsTableComponent } from "../two-columns-table/two-columns-table.component";
+import { SeriesNotFoundComponent } from '../series-not-found/series-not-found.component';
+import { LoadingSpinnerPageComponent } from '../loading-spinner-page/loading-spinner-page.component';
+import { Row, TwoColumnsTableComponent } from '../two-columns-table/two-columns-table.component';
 import { fromCategoryToRow } from '../comic-database-details/comic-database-details.component';
-import { ComicDatabaseTableComponent } from "../comic-database-table/comic-database-table.component";
+import { ComicDatabaseTableComponent } from '../comic-database-table/comic-database-table.component';
 import { EditMetadataButtonComponent } from '../edit-metadata-button/edit-metadata-button.component';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
@@ -26,8 +47,21 @@ import { CanComponentDeactivate } from 'src/app/guard/unsaved-changes-guard.guar
 
 @Component({
   selector: 'app-series-details',
-  imports: [ComicsDatabaseGridComponent, RouterModule, CommonModule, DeleteSeriesButtonComponent, SeenButtonComponent, DownloadSeriesButtonComponent, HideRolesDirective, SeriesNotFoundComponent, LoadingSpinnerPageComponent, TwoColumnsTableComponent, ComicDatabaseTableComponent, EditMetadataButtonComponent],
-  templateUrl: './series-details.component.html'
+  imports: [
+    ComicsDatabaseGridComponent,
+    RouterModule,
+    CommonModule,
+    DeleteSeriesButtonComponent,
+    SeenButtonComponent,
+    DownloadSeriesButtonComponent,
+    HideRolesDirective,
+    SeriesNotFoundComponent,
+    LoadingSpinnerPageComponent,
+    TwoColumnsTableComponent,
+    ComicDatabaseTableComponent,
+    EditMetadataButtonComponent,
+  ],
+  templateUrl: './series-details.component.html',
 })
 @UntilDestroy()
 export class SeriesDetailsComponent implements OnInit, CanComponentDeactivate {
@@ -44,8 +78,8 @@ export class SeriesDetailsComponent implements OnInit, CanComponentDeactivate {
   protected readonly comics$!: Observable<ComicsDatabase[]>;
   private series: Series | undefined = undefined;
   private comicsUpdate: ComicsDatabase[] = [];
-  protected readonly notFoundID$ = new Subject<string>;
-  private readonly reloadTrigger$ = new Subject<void>;
+  protected readonly notFoundID$ = new Subject<string>();
+  private readonly reloadTrigger$ = new Subject<void>();
   protected readonly rows$: Observable<Row[]>;
   protected editStatus = false;
   protected validEdition = false;
@@ -68,25 +102,27 @@ export class SeriesDetailsComponent implements OnInit, CanComponentDeactivate {
 
     this.series$ = combineLatest([
       this.multiSelectService.refresh$.pipe(startWith(null)),
-      this.reloadTrigger$.pipe(startWith(null))
-    ]).pipe(
-      switchMap(() => this.comicsService.getSeriesByID(id))
-    ).pipe(
-      catchError(() => {
-        this.notFoundID$.next(id ?? '');
-        return of(undefined);
-      }),
-      filter(notNullOrUndefined()),
-      shareReplay({ bufferSize: 1, refCount: true }),
-    );
+      this.reloadTrigger$.pipe(startWith(null)),
+    ])
+      .pipe(switchMap(() => this.comicsService.getSeriesByID(id)))
+      .pipe(
+        catchError(() => {
+          this.notFoundID$.next(id ?? '');
+          return of(undefined);
+        }),
+        filter(notNullOrUndefined()),
+        shareReplay({ bufferSize: 1, refCount: true }),
+      );
 
     this.comics$ = this.series$.pipe(
       filter(notNullOrUndefined()),
-      tap(series => this.series = series),
-      tap(series => this.form.patchValue({
-        table: { title: series.title, year: series.year },
-      })),
-      map(series => {
+      tap((series) => (this.series = series)),
+      tap((series) =>
+        this.form.patchValue({
+          table: { title: series.title, year: series.year },
+        }),
+      ),
+      map((series) => {
         this.imageURL = `${this.configURLService.baseURL}/${this.configURLService.apiVersion}/series/${series.id}/cover/medium`;
         for (let comic of series.comics) {
           if (!comic.readStatus) {
@@ -99,13 +135,13 @@ export class SeriesDetailsComponent implements OnInit, CanComponentDeactivate {
         this.widthStyle = `width: ${progress}%`;
         return series.comics;
       }),
-      tap(comics => this.comicsUpdate = comics),
+      tap((comics) => (this.comicsUpdate = comics)),
       shareReplay({ bufferSize: 1, refCount: true }),
     );
 
     this.rows$ = this.series$.pipe(
       filter(notNullOrUndefined()),
-      map(series => [
+      map((series) => [
         {
           title: 'Title',
           type: 'editable-text',
@@ -123,10 +159,9 @@ export class SeriesDetailsComponent implements OnInit, CanComponentDeactivate {
           title: 'Issues',
           type: 'text',
           text: series.readIssues + ' / ' + series.totalIssues,
-        }
-      ])
+        },
+      ]),
     );
-
   }
 
   get table(): FormGroup {
@@ -158,50 +193,55 @@ export class SeriesDetailsComponent implements OnInit, CanComponentDeactivate {
 
     if (this.series) {
       const comicIdsIssues: Map<string, number> = new Map(
-        this.comicsUpdate.map(comic => [comic.id, comic.issue])
+        this.comicsUpdate.map((comic) => [comic.id, comic.issue]),
       );
 
       const value = this.form.getRawValue();
       const properties = {
         year: value.table.year,
-        title: value.table.title
+        title: value.table.title,
       };
-      this.comicsService.setSeriesProperties(this.series.id, properties).pipe(
-        catchError(error => {
-          this.notifierService.appendNotification({
-            id: 0,
-            title: 'Error setting metadata: ',
-            message: this.series?.title ?? '',
-            type: 'error'
-          });
-          return EMPTY;
-        }),
-        switchMap(() => this.comicsService.setIssues(comicIdsIssues)),
-        untilDestroyed(this)
-      )
+      this.comicsService
+        .setSeriesProperties(this.series.id, properties)
+        .pipe(
+          catchError((error) => {
+            this.notifierService.appendNotification({
+              id: 0,
+              title: 'Error setting metadata: ',
+              message: this.series?.title ?? '',
+              type: 'error',
+            });
+            return EMPTY;
+          }),
+          switchMap(() => this.comicsService.setIssues(comicIdsIssues)),
+          untilDestroyed(this),
+        )
         .subscribe(() => {
           this.reloadTrigger$.next();
           this.notifierService.appendNotification({
             id: 0,
             title: 'Updated metadata: ',
             message: this.series?.title ?? '',
-            type: 'success'
+            type: 'success',
           });
           resetRouteCache();
-        })
+        });
     }
   }
 
   toggleSeen(): void {
     if (this.series) {
       const message = `Are you sure you want to mark as ${this.series.readStatus ? 'not read' : 'read'} ${this.series?.title} with ${this.series?.comics.length} comics?`;
-      const ids = this.series.comics.map(comic => comic.id);
-      this.modalService.open<boolean, { message: string | undefined }>(ModalMessageComponent, { message: message }).pipe(
-        filter(response => response === true),
-        switchMap(() => this.comicsService.setComicListReadStatus(ids, !this.series?.readStatus)),
-        untilDestroyed(this)
-      )
-        .pipe(untilDestroyed(this)).subscribe(() => {
+      const ids = this.series.comics.map((comic) => comic.id);
+      this.modalService
+        .open<boolean, { message: string | undefined }>(ModalMessageComponent, { message: message })
+        .pipe(
+          filter((response) => response === true),
+          switchMap(() => this.comicsService.setComicListReadStatus(ids, !this.series?.readStatus)),
+          untilDestroyed(this),
+        )
+        .pipe(untilDestroyed(this))
+        .subscribe(() => {
           if (this.series) {
             this.series.readStatus = !this.series.readStatus;
           }
@@ -209,12 +249,12 @@ export class SeriesDetailsComponent implements OnInit, CanComponentDeactivate {
             id: 0,
             title: `Series marked as ${this.series?.readStatus ? 'read' : 'not read'} `,
             message: this.series!.title,
-            type: 'success'
+            type: 'success',
           });
           resetRouteCache();
           this.reloadTrigger$.next();
         });
-    };
+    }
   }
 
   onCancel() {

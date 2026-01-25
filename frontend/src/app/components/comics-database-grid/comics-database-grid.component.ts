@@ -1,16 +1,23 @@
 import { Component, EventEmitter, inject, Input, OnInit, Output } from '@angular/core';
 import { ComicsDatabase } from 'interfaces';
 import { ComicDatabaseComponent } from '../comic-database/comic-database.component';
-import { CommonModule } from '@angular/common';
+
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { CdkDrag, CdkDragDrop, CdkDragHandle, CdkDragPreview, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
+import {
+  CdkDrag,
+  CdkDragDrop,
+  CdkDragHandle,
+  CdkDragPreview,
+  CdkDropList,
+  moveItemInArray,
+} from '@angular/cdk/drag-drop';
 import { ConfigURLService, CoverCardClickCollectorService } from 'services';
 
 @Component({
   selector: 'app-comics-database-grid',
-  imports: [CommonModule, ComicDatabaseComponent, CdkDropList, CdkDrag, CdkDragHandle, CdkDragPreview],
+  imports: [ComicDatabaseComponent, CdkDropList, CdkDrag, CdkDragHandle, CdkDragPreview],
   styleUrls: ['./comics-database-grid.component.css'],
-  templateUrl: './comics-database-grid.component.html'
+  templateUrl: './comics-database-grid.component.html',
 })
 @UntilDestroy()
 export class ComicsDatabaseGridComponent implements OnInit {
@@ -30,17 +37,18 @@ export class ComicsDatabaseGridComponent implements OnInit {
   @Input({ required: true })
   set comics(comics: ComicsDatabase[]) {
     this._comics = comics;
-    this.listIssues = this._comics.map(comic => comic.issue);
-    this.comicsAndHovers = this._comics.map(comic => ({ comic, isHovered: this.coverCardClickCollector.isCardActiveHover(comic.id) }));
+    this.listIssues = this._comics.map((comic) => comic.issue);
+    this.comicsAndHovers = this._comics.map((comic) => ({
+      comic,
+      isHovered: this.coverCardClickCollector.isCardActiveHover(comic.id),
+    }));
   }
 
   get comics(): ComicsDatabase[] {
     return this._comics;
   }
 
-  ngOnInit(): void {
-
-  }
+  ngOnInit(): void {}
 
   trackByComic(index: number, comicAndHover: ComicAndHover): string {
     return comicAndHover.comic.id;
@@ -65,11 +73,9 @@ export class ComicsDatabaseGridComponent implements OnInit {
   getComicImageUrl(comicId: string): string {
     return `${this.configURLService.baseURL}/${this.configURLService.apiVersion}/comics/${comicId}/cover/small`;
   }
-
 }
 
 type ComicAndHover = {
-  comic: ComicsDatabase,
-  isHovered: boolean
-}
-
+  comic: ComicsDatabase;
+  isHovered: boolean;
+};

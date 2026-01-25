@@ -1,17 +1,17 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { ModalComponent, ServerInfo } from 'interfaces';
 import { Row, TwoColumnsTableComponent } from '../two-columns-table/two-columns-table.component';
-import { ModalDetailsTopComponent } from "../modal-details-top/modal-details-top.component";
-import { ModalDetailsBottomComponent } from "../modal-details-bottom/modal-details-bottom.component";
+import { ModalDetailsTopComponent } from '../modal-details-top/modal-details-top.component';
+import { ModalDetailsBottomComponent } from '../modal-details-bottom/modal-details-bottom.component';
 
 @Component({
   selector: 'app-modal-server-info',
   imports: [ModalDetailsTopComponent, TwoColumnsTableComponent, ModalDetailsBottomComponent],
   templateUrl: './modal-server-info.component.html',
 })
-export class ModalServerInfoComponent implements ModalComponent<null, { serverInfo: ServerInfo | undefined }>, OnInit {
-
-
+export class ModalServerInfoComponent
+  implements ModalComponent<null, { serverInfo: ServerInfo | undefined }>, OnInit
+{
   @Input({ required: true }) data?: { serverInfo: ServerInfo | undefined };
   close!: (response?: null) => void;
 
@@ -49,9 +49,8 @@ export class ModalServerInfoComponent implements ModalComponent<null, { serverIn
           title: 'Commit time',
           type: 'text',
           text: this.data.serverInfo?.commitTime ?? '',
-        }
-      ]
+        },
+      ];
     }
-
   }
 }

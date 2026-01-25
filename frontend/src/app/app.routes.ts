@@ -25,19 +25,19 @@ export const routes: Routes = [
   {
     path: '',
     redirectTo: '/home',
-    pathMatch: 'full'
+    pathMatch: 'full',
   },
   {
     path: 'login',
     component: LoginPageComponent,
     title: 'Login',
-    canActivate: [loginGuard]
+    canActivate: [loginGuard],
   },
   {
     path: 'home',
     component: HomePageComponent,
     title: 'Home',
-    canActivate: [authGuard]
+    canActivate: [authGuard],
   },
   {
     path: 'library',
@@ -47,80 +47,80 @@ export const routes: Routes = [
         path: '', // when hitting /library
         pathMatch: 'full',
         canActivate: [libraryRedirectGuard], // guard decides series/issues
-        component: LibraryPageComponent // 👈 REQUIRED parent outlet host
+        component: LibraryPageComponent, // 👈 REQUIRED parent outlet host
       },
       {
         path: 'series',
         component: LibraryPageComponent,
-        title: 'Library'
+        title: 'Library',
       },
       {
         path: 'issues',
         component: LibraryPageComponent,
-        title: 'Library'
-      }
-    ]
+        title: 'Library',
+      },
+    ],
   },
   {
     path: 'search',
     component: SearchPageComponent,
     title: 'Search',
-    canActivate: [authGuard]
+    canActivate: [authGuard],
   },
   {
     path: 'downloads',
     component: DownloadsPageComponent,
     title: 'Downloads',
-    canActivate: [authGuard]
+    canActivate: [authGuard],
   },
   {
     path: 'settings',
     component: SettingsPageComponent,
     title: 'Settings',
-    canActivate: [authGuard]
+    canActivate: [authGuard],
   },
   {
     path: 'users',
     component: UsersPageComponent,
     title: 'Users',
-    canActivate: [authGuard]
+    canActivate: [authGuard],
   },
   {
     path: 'devices',
     component: DevicesPageComponent,
     title: 'Devices',
-    canActivate: [authGuard]
+    canActivate: [authGuard],
   },
   {
     path: 'settings/logs',
     component: LogHistoryPageComponent,
     title: 'Logs',
-    canActivate: [authGuard]
+    canActivate: [authGuard],
   },
   {
     path: 'settings/jobs',
     component: JobsPageComponent,
     title: 'Jobs',
-    canActivate: [authGuard]
+    canActivate: [authGuard],
   },
   {
     path: 'settings/job/:id/details',
     component: JobPageComponent,
     title: 'Jobs Details',
-    canActivate: [authGuard]
+    canActivate: [authGuard],
   },
   {
     path: 'comics/:id/details',
     component: ComicDatabaseDetailsComponent,
     title: 'Comic Details',
     canActivate: [authGuard],
-    canDeactivate: [UnsavedChangesGuard]
+    canDeactivate: [UnsavedChangesGuard],
   },
   {
     path: 'comics-search/:idGc/details',
     component: ComicSearchDetailsComponent,
     title: 'Comic Search Details',
-    canActivate: [authGuard]
+    canActivate: [authGuard],
   },
   {
     path: 'comics/:id/read',
@@ -129,43 +129,43 @@ export const routes: Routes = [
       {
         path: '',
         redirectTo: 'standard',
-        pathMatch: 'full'
+        pathMatch: 'full',
       },
       {
         path: 'standard',
         component: ReaderPageComponent,
-        title: 'Reader'
+        title: 'Reader',
       },
       {
         path: 'incognito',
         component: ReaderPageComponent,
-        title: 'Reader incognito'
-      }
-    ]
+        title: 'Reader incognito',
+      },
+    ],
   },
   {
     path: 'series/:id/details',
     component: SeriesDetailsComponent,
     title: 'Details',
     canActivate: [authGuard],
-    canDeactivate: [UnsavedChangesGuard]
+    canDeactivate: [UnsavedChangesGuard],
   },
   {
     path: 'user',
     component: UserPageComponent,
     title: 'User',
-    canActivate: [authGuard]
+    canActivate: [authGuard],
   },
   {
     path: 'user/:username',
     component: UserPageComponent,
     title: 'User',
-    canActivate: [authGuard]
+    canActivate: [authGuard],
   },
   {
     path: 'register',
     component: RegisterPageComponent,
     title: 'Register',
-    canActivate: [registerGuard]
-  }
+    canActivate: [registerGuard],
+  },
 ];

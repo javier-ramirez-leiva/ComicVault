@@ -4,9 +4,8 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Role } from 'interfaces';
 
 @Directive({
-  selector: '[appHideRoles]'
+  selector: '[appHideRoles]',
 })
-
 @UntilDestroy()
 export class HideRolesDirective implements OnInit {
   @Input() appHideForRoles: Role[] = [];
@@ -14,10 +13,10 @@ export class HideRolesDirective implements OnInit {
   elementRef = inject(ElementRef);
   authService = inject(AuthService);
 
-  constructor() { }
+  constructor() {}
 
   ngOnInit() {
-    this.authService.role$.pipe(untilDestroyed(this)).subscribe(role => {
+    this.authService.role$.pipe(untilDestroyed(this)).subscribe((role) => {
       if (this.appHideForRoles.includes(role)) {
         this.renderer.setStyle(this.elementRef.nativeElement, 'display', 'none');
       } else {
@@ -25,5 +24,4 @@ export class HideRolesDirective implements OnInit {
       }
     });
   }
-
 }

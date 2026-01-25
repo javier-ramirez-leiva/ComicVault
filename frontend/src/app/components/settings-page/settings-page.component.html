@@ -1,313 +1,318 @@
 <div class="whole-page-container">
-    <div class="mb-4">
-        <app-expander-button
-            appHideRoles
-            [appHideForRoles]="[Role.Requester, Role.Viewer]"
-            title="Library"
-            [upperBorder]="true"
-            (buttonClicked)="toggleShowServer()"
-        ></app-expander-button>
-        <div [ngClass]="{ 'hidden': !showServer}">
-            <div class="flex flex-col p-5 border  border-settings-menu-border">
-                <div
-                    appHideRoles
-                    [appHideForRoles]="[Role.Owner,Role.Contributor,Role.Requester, Role.Viewer]"
-                    class="mb-5 "
-                >
-                    <app-input-text
-                        [(value)]="storagePath"
-                        (valueChange)="resetStorageStatus$.next()"
-                        title="Storage Path"
-                        id="storagePath"
-                    ></app-input-text>
-                </div>
-                <div
-                    appHideRoles
-                    [appHideForRoles]="[Role.Owner,Role.Contributor,Role.Requester, Role.Viewer]"
-                    class="flex justify-end mb-5"
-                >
-                    <app-test-button
-                        test="storage"
-                        [payload]="storagePath"
-                        [resetStatus$]="resetStorageStatus$"
-                    ></app-test-button>
-                </div>
-                <div
-                    appHideRoles
-                    [appHideForRoles]="[Role.Owner,Role.Contributor,Role.Requester, Role.Viewer]"
-                    class="flex gap-4"
-                >
-                    <app-boolean-slider
-                        class="mb-5"
-                        type="ngModel"
-                        [(value)]="scanArchives"
-                        (valueChange)="sendScanArchives()"
-                        label="Scan and extract archive files"
-                    ></app-boolean-slider>
-                    <app-help-button message="Extract comics from archive files (.zip, .rar) during scan"></app-help-button>
-                </div>
-                <div
-                    appHideRoles
-                    [appHideForRoles]="[Role.Owner,Role.Contributor,Role.Requester, Role.Viewer]"
-                    class="flex gap-4"
-                >
-                    <app-boolean-slider
-                        class="mb-5"
-                        type="ngModel"
-                        [(value)]="deleteArchives"
-                        (valueChange)="sendDeleteArchives()"
-                        label="Delete archive files after extraction"
-                    ></app-boolean-slider>
-                    <app-help-button message="After extracting comics from archives during scan, delete the original .zip or .rar file"></app-help-button>
-                </div>
-                <div
-                    appHideRoles
-                    [appHideForRoles]="[Role.Owner,Role.Contributor,Role.Requester, Role.Viewer]"
-                    class="flex gap-4"
-                >
-                    <app-boolean-slider
-                        class="mb-5"
-                        type="ngModel"
-                        [(value)]="generateNavigationThumbnails"
-                        (valueChange)="sendGenerateNavigationThumbnails()"
-                        label="Generate navigation thumbnails for comics"
-                    ></app-boolean-slider>
-                    <app-help-button message="When adding or scanning a comic, create page thumbnails for thumbnail navigation"></app-help-button>
-                </div>
-                <div class="mb-5 mt-5">
-                    <label class="block mb-4 text-sm font-medium text-generic-text">Manage library content</label>
-                    <div class="flex flex-col md:flex-row gap-2 w-fit">
-                        <app-scan-lib-button [mini]="false"></app-scan-lib-button>
-                        <app-clean-lib-button
-                            appHideRoles
-                            [appHideForRoles]="[Role.Contributor,Role.Requester, Role.Viewer]"
-                            [mini]="false"
-                        ></app-clean-lib-button>
-                        <app-delete-lib-button
-                            appHideRoles
-                            [appHideForRoles]="[Role.Owner,Role.Contributor,Role.Requester, Role.Viewer]"
-                            [mini]="false"
-                        ></app-delete-lib-button>
-                    </div>
-                </div>
-            </div>
+  <div class="mb-4">
+    <app-expander-button
+      appHideRoles
+      [appHideForRoles]="[Role.Requester, Role.Viewer]"
+      title="Library"
+      [upperBorder]="true"
+      (buttonClicked)="toggleShowServer()"
+    ></app-expander-button>
+    <div [ngClass]="{ hidden: !showServer }">
+      <div class="flex flex-col p-5 border border-settings-menu-border">
+        <div
+          appHideRoles
+          [appHideForRoles]="[Role.Owner, Role.Contributor, Role.Requester, Role.Viewer]"
+          class="mb-5"
+        >
+          <app-input-text
+            [(value)]="storagePath"
+            (valueChange)="resetStorageStatus$.next()"
+            title="Storage Path"
+            id="storagePath"
+          ></app-input-text>
         </div>
-        <app-expander-button
-            title="UI"
-            (buttonClicked)="toggleShowTheme()"
-        ></app-expander-button>
-        <div [ngClass]="{ 'hidden': !showTheme}">
-            <div class="flex flex-col p-5 border  border-settings-menu-border">
-                <app-boolean-slider
-                    class="mb-5"
-                    type="ngModel"
-                    [(value)]="darkMode"
-                    (valueChange)="toggleDarkMode()"
-                    label="Dark Mode"
-                ></app-boolean-slider>
-                <div class="flex gap-4">
-                    <label class="block mb-2 text-sm font-medium text-generic-text">
-                        How many provider pages fit into one app page
-                    </label>
-                    <app-help-button message="Adjust the ratio of provider pages per app page.This value should be high enough to fill your device with comics in one search"></app-help-button>
-                </div>
-                <app-digit-input
-                    [(value)]="paginationRatio"
-                    (valueChange)="updatePaginationRatio()"
-                ></app-digit-input>
-            </div>
+        <div
+          appHideRoles
+          [appHideForRoles]="[Role.Owner, Role.Contributor, Role.Requester, Role.Viewer]"
+          class="flex justify-end mb-5"
+        >
+          <app-test-button
+            test="storage"
+            [payload]="storagePath"
+            [resetStatus$]="resetStorageStatus$"
+          ></app-test-button>
         </div>
-        <app-expander-button
-            appHideRoles
-            [appHideForRoles]="[Role.Owner,Role.Contributor,Role.Requester, Role.Viewer]"
-            title="Slack"
-            (buttonClicked)="toggleShowSlack()"
-        ></app-expander-button>
-        <div [ngClass]="{ 'hidden': !showSlack}">
-            <div class="flex flex-col p-5 border  border-settings-menu-border">
-                <div class="mb-5">
-                    <app-boolean-slider
-                        class="mb-5"
-                        type="ngModel"
-                        [(value)]="slackConfiguration.enableNotifications"
-                        (valueChange)="sendEnableNotifications()"
-                        label="Enable slack notification"
-                    ></app-boolean-slider>
-                </div>
-                <div class="mb-5">
-                    <app-input-text
-                        [(value)]="slackConfiguration.comicVaultBaseUrl"
-                        (valueChange)="resetSlackStatus$.next()"
-                        title="ComicVault base url for notifications"
-                        id="comicVaultBaseUrl"
-                        helpMessage="Fill in your ComicVault app’s domain or local IP to generate direct Slack notification links"
-                    ></app-input-text>
-                </div>
-                <div class="mb-5">
-                    <app-input-text
-                        [(value)]="slackConfiguration.slackWebHook"
-                        (valueChange)="resetSlackStatus$.next()"
-                        title="Slack webhook"
-                        id="slackWebHook"
-                    ></app-input-text>
-                </div>
-                <div class="flex justify-end">
-                    <app-test-button
-                        test="slack"
-                        [payload]="slackConfiguration"
-                        [resetStatus$]="resetSlackStatus$"
-                    ></app-test-button>
-                </div>
-            </div>
+        <div
+          appHideRoles
+          [appHideForRoles]="[Role.Owner, Role.Contributor, Role.Requester, Role.Viewer]"
+          class="flex gap-4"
+        >
+          <app-boolean-slider
+            class="mb-5"
+            type="ngModel"
+            [(value)]="scanArchives"
+            (valueChange)="sendScanArchives()"
+            label="Scan and extract archive files"
+          ></app-boolean-slider>
+          <app-help-button
+            message="Extract comics from archive files (.zip, .rar) during scan"
+          ></app-help-button>
         </div>
-        <app-expander-button
-            appHideRoles
-            [appHideForRoles]="[Role.Owner,Role.Contributor,Role.Requester, Role.Viewer]"
-            title="Comic Providers"
-            (buttonClicked)="toggleComicProviders()"
-        ></app-expander-button>
-        <div [ngClass]="{ 'hidden': !showComicProviders}">
-            <div class="flex flex-col p-5 border  border-settings-menu-border">
-                <div class="mb-5">
-                    <app-input-text
-                        [(value)]="getcomicsBaseUrl"
-                        title="GetComics"
-                        id="'getcomicsBaseUrl"
-                    ></app-input-text>
-                </div>
-                <div class="flex justify-end">
-                    <app-test-button
-                        test="getcomicsBaseUrl"
-                        [payload]="getcomicsBaseUrl"
-                    ></app-test-button>
-                </div>
-            </div>
+        <div
+          appHideRoles
+          [appHideForRoles]="[Role.Owner, Role.Contributor, Role.Requester, Role.Viewer]"
+          class="flex gap-4"
+        >
+          <app-boolean-slider
+            class="mb-5"
+            type="ngModel"
+            [(value)]="deleteArchives"
+            (valueChange)="sendDeleteArchives()"
+            label="Delete archive files after extraction"
+          ></app-boolean-slider>
+          <app-help-button
+            message="After extracting comics from archives during scan, delete the original .zip or .rar file"
+          ></app-help-button>
         </div>
-        <app-expander-button
-            appHideRoles
-            [appHideForRoles]="[Role.Owner, Role.Contributor, Role.Requester, Role.Viewer]"
-            title="JDownloader"
-            (buttonClicked)="toggleJDownloader()"
-        ></app-expander-button>
-        <div [ngClass]="{ 'hidden': !showJDownloader}">
-            <div class="flex flex-col p-5 border  border-settings-menu-border">
-                <div class="my-5">
-                    <app-input-text
-                        [(value)]="jdownloaderConfiguration.jdownloaderCrawljobPath"
-                        (valueChange)="resetJdownloaderStatus$.next()"
-                        title="JDownloader crawljob path"
-                        id="crawljobPath"
-                        helpMessage="Folder path where crawl jobs are added for JDownloader (as seen inside the ComicVault Docker container if applicable)"
-                    ></app-input-text>
-                </div>
-                <div class="my-5">
-                    <app-input-text
-                        [(value)]="jdownloaderConfiguration.jdownloaderOutputPath"
-                        (valueChange)="resetJdownloaderStatus$.next()"
-                        title=" JDownloader output path"
-                        id="outputPath"
-                        helpMessage="Folder path where JDownloader outputs downloads. Set this to match ComicVault’s main Comics path (considering Docker specifics)"
-                    ></app-input-text>
-                </div>
-                <div class="flex gap-4">
-                    <app-boolean-slider
-                        class="mb-5"
-                        type="ngModel"
-                        [(value)]="jdownloaderConfiguration.deleteFolderOutputFolder"
-                        label="Delete output folder when finish"
-                    ></app-boolean-slider>
-                    <app-help-button message="ComicVault will delete JDownloader’s output download folder contents (does not remove jobs from JDownloader)"></app-help-button>
-                </div>
-                <div class="flex justify-end">
-                    <app-test-button
-                        test="jdownloader"
-                        [payload]="jdownloaderConfiguration"
-                        [resetStatus$]="resetJdownloaderStatus$"
-                    ></app-test-button>
-                </div>
-            </div>
+        <div
+          appHideRoles
+          [appHideForRoles]="[Role.Owner, Role.Contributor, Role.Requester, Role.Viewer]"
+          class="flex gap-4"
+        >
+          <app-boolean-slider
+            class="mb-5"
+            type="ngModel"
+            [(value)]="generateNavigationThumbnails"
+            (valueChange)="sendGenerateNavigationThumbnails()"
+            label="Generate navigation thumbnails for comics"
+          ></app-boolean-slider>
+          <app-help-button
+            message="When adding or scanning a comic, create page thumbnails for thumbnail navigation"
+          ></app-help-button>
         </div>
-        <app-expander-button
-            appHideRoles
-            [appHideForRoles]="[Role.Owner, Role.Contributor, Role.Requester, Role.Viewer]"
-            title="Advanced"
-            [bottomBorder]="true"
-            (buttonClicked)="toggleAdvanced()"
-        ></app-expander-button>
-        <div [ngClass]="{ 'hidden': !showAdvanced}">
-
-            <div class="p-5 border border-t-0 border-settings-menu-border rounded-b-lg">
-                <div class="mb-5 mt-5">
-                    <div class="flex flex-col md:flex-row gap-2 w-fit">
-                        <button
-                            type="button"
-                            class="button-text inline-flex items-center button-primary me-2 mb-2 "
-                            (click)="displayServerInfo()"
-                        >
-                            <svg
-                                class="w-5 h-5 me-2 -ms-1"
-                                aria-hidden="true"
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="24"
-                                height="24"
-                                fill="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    fill-rule="evenodd"
-                                    d="M5 5a2 2 0 0 0-2 2v3a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V7a2 2 0 0 0-2-2H5Zm9 2a1 1 0 1 0 0 2h.01a1 1 0 1 0 0-2H14Zm3 0a1 1 0 1 0 0 2h.01a1 1 0 1 0 0-2H17ZM3 17v-3a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Zm11-2a1 1 0 1 0 0 2h.01a1 1 0 1 0 0-2H14Zm3 0a1 1 0 1 0 0 2h.01a1 1 0 1 0 0-2H17Z"
-                                    clip-rule="evenodd"
-                                ></path>
-                            </svg>
-                            Display server info
-                        </button>
-                        <button
-                            type="button"
-                            class="button-text inline-flex items-center button-primary me-2 mb-2 "
-                            routerLink="jobs"
-                        >
-                            <svg
-                                class="w-5 h-5 me-2 -ms-1"
-                                aria-hidden="true"
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="24"
-                                height="24"
-                                fill="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    fill-rule="evenodd"
-                                    d="M10 2a3 3 0 0 0-3 3v1H5a3 3 0 0 0-3 3v2.382l1.447.723.005.003.027.013.12.056c.108.05.272.123.486.212.429.177 1.056.416 1.834.655C7.481 13.524 9.63 14 12 14c2.372 0 4.52-.475 6.08-.956.78-.24 1.406-.478 1.835-.655a14.028 14.028 0 0 0 .606-.268l.027-.013.005-.002L22 11.381V9a3 3 0 0 0-3-3h-2V5a3 3 0 0 0-3-3h-4Zm5 4V5a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v1h6Zm6.447 7.894.553-.276V19a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3v-5.382l.553.276.002.002.004.002.013.006.041.02.151.07c.13.06.318.144.557.242.478.198 1.163.46 2.01.72C7.019 15.476 9.37 16 12 16c2.628 0 4.98-.525 6.67-1.044a22.95 22.95 0 0 0 2.01-.72 15.994 15.994 0 0 0 .707-.312l.041-.02.013-.006.004-.002.001-.001-.431-.866.432.865ZM12 10a1 1 0 1 0 0 2h.01a1 1 0 1 0 0-2H12Z"
-                                    clip-rule="evenodd"
-                                ></path>
-                            </svg>
-                            Display jobs
-                        </button>
-                        <button
-                            type="button"
-                            class="button-text inline-flex items-center button-primary me-2 mb-2 "
-                            routerLink="logs"
-                        >
-                            <svg
-                                class="w-5 h-5 me-2 -ms-1"
-                                aria-hidden="true"
-                                xmlns="http://www.w3.org/2000/svg"
-                                width="24"
-                                height="24"
-                                fill="currentColor"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    fill-rule="evenodd"
-                                    d="M2 6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6Zm4.996 2a1 1 0 0 0 0 2h.01a1 1 0 1 0 0-2h-.01ZM11 8a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2h-6Zm-4.004 3a1 1 0 1 0 0 2h.01a1 1 0 1 0 0-2h-.01ZM11 11a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2h-6Zm-4.004 3a1 1 0 1 0 0 2h.01a1 1 0 1 0 0-2h-.01ZM11 14a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2h-6Z"
-                                    clip-rule="evenodd"
-                                ></path>
-                            </svg>
-                            Display log
-                        </button>
-                    </div>
-                </div>
-            </div>
+        <div class="mb-5 mt-5">
+          <label class="block mb-4 text-sm font-medium text-generic-text"
+            >Manage library content</label
+          >
+          <div class="flex flex-col md:flex-row gap-2 w-fit">
+            <app-scan-lib-button [mini]="false"></app-scan-lib-button>
+            <app-clean-lib-button
+              appHideRoles
+              [appHideForRoles]="[Role.Contributor, Role.Requester, Role.Viewer]"
+              [mini]="false"
+            ></app-clean-lib-button>
+            <app-delete-lib-button
+              appHideRoles
+              [appHideForRoles]="[Role.Owner, Role.Contributor, Role.Requester, Role.Viewer]"
+              [mini]="false"
+            ></app-delete-lib-button>
+          </div>
         </div>
+      </div>
     </div>
+    <app-expander-button title="UI" (buttonClicked)="toggleShowTheme()"></app-expander-button>
+    <div [ngClass]="{ hidden: !showTheme }">
+      <div class="flex flex-col p-5 border border-settings-menu-border">
+        <app-boolean-slider
+          class="mb-5"
+          type="ngModel"
+          [(value)]="darkMode"
+          (valueChange)="toggleDarkMode()"
+          label="Dark Mode"
+        ></app-boolean-slider>
+        <div class="flex gap-4">
+          <label class="block mb-2 text-sm font-medium text-generic-text">
+            How many provider pages fit into one app page
+          </label>
+          <app-help-button
+            message="Adjust the ratio of provider pages per app page.This value should be high enough to fill your device with comics in one search"
+          ></app-help-button>
+        </div>
+        <app-digit-input
+          [(value)]="paginationRatio"
+          (valueChange)="updatePaginationRatio()"
+        ></app-digit-input>
+      </div>
+    </div>
+    <app-expander-button
+      appHideRoles
+      [appHideForRoles]="[Role.Owner, Role.Contributor, Role.Requester, Role.Viewer]"
+      title="Slack"
+      (buttonClicked)="toggleShowSlack()"
+    ></app-expander-button>
+    <div [ngClass]="{ hidden: !showSlack }">
+      <div class="flex flex-col p-5 border border-settings-menu-border">
+        <div class="mb-5">
+          <app-boolean-slider
+            class="mb-5"
+            type="ngModel"
+            [(value)]="slackConfiguration.enableNotifications"
+            (valueChange)="sendEnableNotifications()"
+            label="Enable slack notification"
+          ></app-boolean-slider>
+        </div>
+        <div class="mb-5">
+          <app-input-text
+            [(value)]="slackConfiguration.comicVaultBaseUrl"
+            (valueChange)="resetSlackStatus$.next()"
+            title="ComicVault base url for notifications"
+            id="comicVaultBaseUrl"
+            helpMessage="Fill in your ComicVault app’s domain or local IP to generate direct Slack notification links"
+          ></app-input-text>
+        </div>
+        <div class="mb-5">
+          <app-input-text
+            [(value)]="slackConfiguration.slackWebHook"
+            (valueChange)="resetSlackStatus$.next()"
+            title="Slack webhook"
+            id="slackWebHook"
+          ></app-input-text>
+        </div>
+        <div class="flex justify-end">
+          <app-test-button
+            test="slack"
+            [payload]="slackConfiguration"
+            [resetStatus$]="resetSlackStatus$"
+          ></app-test-button>
+        </div>
+      </div>
+    </div>
+    <app-expander-button
+      appHideRoles
+      [appHideForRoles]="[Role.Owner, Role.Contributor, Role.Requester, Role.Viewer]"
+      title="Comic Providers"
+      (buttonClicked)="toggleComicProviders()"
+    ></app-expander-button>
+    <div [ngClass]="{ hidden: !showComicProviders }">
+      <div class="flex flex-col p-5 border border-settings-menu-border">
+        <div class="mb-5">
+          <app-input-text
+            [(value)]="getcomicsBaseUrl"
+            title="GetComics"
+            id="'getcomicsBaseUrl"
+          ></app-input-text>
+        </div>
+        <div class="flex justify-end">
+          <app-test-button test="getcomicsBaseUrl" [payload]="getcomicsBaseUrl"></app-test-button>
+        </div>
+      </div>
+    </div>
+    <app-expander-button
+      appHideRoles
+      [appHideForRoles]="[Role.Owner, Role.Contributor, Role.Requester, Role.Viewer]"
+      title="JDownloader"
+      (buttonClicked)="toggleJDownloader()"
+    ></app-expander-button>
+    <div [ngClass]="{ hidden: !showJDownloader }">
+      <div class="flex flex-col p-5 border border-settings-menu-border">
+        <div class="my-5">
+          <app-input-text
+            [(value)]="jdownloaderConfiguration.jdownloaderCrawljobPath"
+            (valueChange)="resetJdownloaderStatus$.next()"
+            title="JDownloader crawljob path"
+            id="crawljobPath"
+            helpMessage="Folder path where crawl jobs are added for JDownloader (as seen inside the ComicVault Docker container if applicable)"
+          ></app-input-text>
+        </div>
+        <div class="my-5">
+          <app-input-text
+            [(value)]="jdownloaderConfiguration.jdownloaderOutputPath"
+            (valueChange)="resetJdownloaderStatus$.next()"
+            title=" JDownloader output path"
+            id="outputPath"
+            helpMessage="Folder path where JDownloader outputs downloads. Set this to match ComicVault’s main Comics path (considering Docker specifics)"
+          ></app-input-text>
+        </div>
+        <div class="flex gap-4">
+          <app-boolean-slider
+            class="mb-5"
+            type="ngModel"
+            [(value)]="jdownloaderConfiguration.deleteFolderOutputFolder"
+            label="Delete output folder when finish"
+          ></app-boolean-slider>
+          <app-help-button
+            message="ComicVault will delete JDownloader’s output download folder contents (does not remove jobs from JDownloader)"
+          ></app-help-button>
+        </div>
+        <div class="flex justify-end">
+          <app-test-button
+            test="jdownloader"
+            [payload]="jdownloaderConfiguration"
+            [resetStatus$]="resetJdownloaderStatus$"
+          ></app-test-button>
+        </div>
+      </div>
+    </div>
+    <app-expander-button
+      appHideRoles
+      [appHideForRoles]="[Role.Owner, Role.Contributor, Role.Requester, Role.Viewer]"
+      title="Advanced"
+      [bottomBorder]="true"
+      (buttonClicked)="toggleAdvanced()"
+    ></app-expander-button>
+    <div [ngClass]="{ hidden: !showAdvanced }">
+      <div class="p-5 border border-t-0 border-settings-menu-border rounded-b-lg">
+        <div class="mb-5 mt-5">
+          <div class="flex flex-col md:flex-row gap-2 w-fit">
+            <button
+              type="button"
+              class="button-text inline-flex items-center button-primary me-2 mb-2"
+              (click)="displayServerInfo()"
+            >
+              <svg
+                class="w-5 h-5 me-2 -ms-1"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M5 5a2 2 0 0 0-2 2v3a1 1 0 0 0 1 1h16a1 1 0 0 0 1-1V7a2 2 0 0 0-2-2H5Zm9 2a1 1 0 1 0 0 2h.01a1 1 0 1 0 0-2H14Zm3 0a1 1 0 1 0 0 2h.01a1 1 0 1 0 0-2H17ZM3 17v-3a1 1 0 0 1 1-1h16a1 1 0 0 1 1 1v3a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2Zm11-2a1 1 0 1 0 0 2h.01a1 1 0 1 0 0-2H14Zm3 0a1 1 0 1 0 0 2h.01a1 1 0 1 0 0-2H17Z"
+                  clip-rule="evenodd"
+                ></path>
+              </svg>
+              Display server info
+            </button>
+            <button
+              type="button"
+              class="button-text inline-flex items-center button-primary me-2 mb-2"
+              routerLink="jobs"
+            >
+              <svg
+                class="w-5 h-5 me-2 -ms-1"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M10 2a3 3 0 0 0-3 3v1H5a3 3 0 0 0-3 3v2.382l1.447.723.005.003.027.013.12.056c.108.05.272.123.486.212.429.177 1.056.416 1.834.655C7.481 13.524 9.63 14 12 14c2.372 0 4.52-.475 6.08-.956.78-.24 1.406-.478 1.835-.655a14.028 14.028 0 0 0 .606-.268l.027-.013.005-.002L22 11.381V9a3 3 0 0 0-3-3h-2V5a3 3 0 0 0-3-3h-4Zm5 4V5a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v1h6Zm6.447 7.894.553-.276V19a3 3 0 0 1-3 3H5a3 3 0 0 1-3-3v-5.382l.553.276.002.002.004.002.013.006.041.02.151.07c.13.06.318.144.557.242.478.198 1.163.46 2.01.72C7.019 15.476 9.37 16 12 16c2.628 0 4.98-.525 6.67-1.044a22.95 22.95 0 0 0 2.01-.72 15.994 15.994 0 0 0 .707-.312l.041-.02.013-.006.004-.002.001-.001-.431-.866.432.865ZM12 10a1 1 0 1 0 0 2h.01a1 1 0 1 0 0-2H12Z"
+                  clip-rule="evenodd"
+                ></path>
+              </svg>
+              Display jobs
+            </button>
+            <button
+              type="button"
+              class="button-text inline-flex items-center button-primary me-2 mb-2"
+              routerLink="logs"
+            >
+              <svg
+                class="w-5 h-5 me-2 -ms-1"
+                aria-hidden="true"
+                xmlns="http://www.w3.org/2000/svg"
+                width="24"
+                height="24"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  fill-rule="evenodd"
+                  d="M2 6a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6Zm4.996 2a1 1 0 0 0 0 2h.01a1 1 0 1 0 0-2h-.01ZM11 8a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2h-6Zm-4.004 3a1 1 0 1 0 0 2h.01a1 1 0 1 0 0-2h-.01ZM11 11a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2h-6Zm-4.004 3a1 1 0 1 0 0 2h.01a1 1 0 1 0 0-2h-.01ZM11 14a1 1 0 1 0 0 2h6a1 1 0 1 0 0-2h-6Z"
+                  clip-rule="evenodd"
+                ></path>
+              </svg>
+              Display log
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>

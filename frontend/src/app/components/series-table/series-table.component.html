@@ -1,45 +1,43 @@
 <div class="relative overflow-x-auto shadow-md rounded-lg">
-    <table class="table-container-full">
-        <thead class="table-head">
-            <tr>
-                <th class="px-6 py-3">Cover</th>
-                <th class="px-6 py-3">Series</th>
-                <th class="px-6 py-3">Issues</th>
-                <th class="px-6 py-3">Publisher</th>
-                <th class="px-6 py-3">Year</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr
-                *ngFor="let serie of series"
-                class="bg-table-row-not-selected-background border-b border-table-border"
+  <table class="table-container-full">
+    <thead class="table-head">
+      <tr>
+        <th class="px-6 py-3">Cover</th>
+        <th class="px-6 py-3">Series</th>
+        <th class="px-6 py-3">Issues</th>
+        <th class="px-6 py-3">Publisher</th>
+        <th class="px-6 py-3">Year</th>
+      </tr>
+    </thead>
+    <tbody>
+      @for (serie of series; track serie) {
+        <tr class="bg-table-row-not-selected-background border-b border-table-border">
+          <td class="py-4 px-6">
+            <img
+              [routerLink]="'/series/' + serie.id + '/details'"
+              [src]="getSeriesImgUrl(serie)"
+              class="m-4 w-24 md:w-24 max-w-full max-h-full rounded-md border-1 border-cover-card-border"
+            />
+          </td>
+          <td class="px-6 py-4">
+            <span
+              class="font-semibold text-table-link hover:underline"
+              [routerLink]="'/series/' + serie.id + '/details'"
             >
-
-                <td class="py-4 px-6 ">
-                    <img
-                        [routerLink]="'/series/'+serie.id+'/details'"
-                        [src]="getSeriesImgUrl(serie)"
-                        class="m-4 w-24 md:w-24 max-w-full max-h-full rounded-md border-1 border-cover-card-border"
-                    >
-                </td>
-                <td class="px-6 py-4">
-                    <span
-                        class="font-semibold text-table-link hover:underline"
-                        [routerLink]="'/series/'+serie.id+'/details'"
-                    >
-                        {{serie.title}}
-                    </span>
-                </td>
-                <td class="px-6 py-4 font-semibold text-generic-text">
-                    {{serie.readIssues}} / {{serie.totalIssues}}
-                </td>
-                <td class="px-6 py-4 font-semibold text-generic-text">
-                    <app-publisher-cell [category]="serie.category"></app-publisher-cell>
-                </td>
-                <td class="px-6 py-4 font-semibold text-generic-text">
-                    {{ serie.year.trim().length > 0 ? serie.year : 'N/A' }}
-                </td>
-            </tr>
-        </tbody>
-    </table>
+              {{ serie.title }}
+            </span>
+          </td>
+          <td class="px-6 py-4 font-semibold text-generic-text">
+            {{ serie.readIssues }} / {{ serie.totalIssues }}
+          </td>
+          <td class="px-6 py-4 font-semibold text-generic-text">
+            <app-publisher-cell [category]="serie.category"></app-publisher-cell>
+          </td>
+          <td class="px-6 py-4 font-semibold text-generic-text">
+            {{ serie.year.trim().length > 0 ? serie.year : 'N/A' }}
+          </td>
+        </tr>
+      }
+    </tbody>
+  </table>
 </div>

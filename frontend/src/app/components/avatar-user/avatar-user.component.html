@@ -1,25 +1,24 @@
-<ng-container *ngIf="size==='small'">
-    <div
-        class="relative inline-flex items-center justify-center size-8 overflow-hidden rounded-full mr-2"
-        [ngStyle]="{ 'background-color': color}"
-    >
-        <span class="font-normal text-lg text-slate-200">{{username[0].toUpperCase()}}</span>
-    </div>
-    {{username}}
-</ng-container>
-<ng-container *ngIf="size==='large'">
-    <button
-        id="avatarButton"
-        type="button"
-        class="relative inline-flex items-center justify-center w-10 h-10 overflow-hidden rounded-full"
-        [ngStyle]="{ 'background-color': color}"
-        (click)="onClickHandler()"
-    >
-        <span
-            *ngIf="username"
-            class="font-medium text-slate-200"
-        >
-            {{username[0].toUpperCase()}}
-        </span>
-    </button>
-</ng-container>
+@if (size === 'small') {
+  <div
+    class="relative inline-flex items-center justify-center size-8 overflow-hidden rounded-full mr-2"
+    [ngStyle]="{ 'background-color': color }"
+  >
+    <span class="font-normal text-lg text-slate-200">{{ username[0].toUpperCase() }}</span>
+  </div>
+  {{ username }}
+}
+@if (size === 'large') {
+  <button
+    id="avatarButton"
+    type="button"
+    class="relative inline-flex items-center justify-center w-10 h-10 overflow-hidden rounded-full"
+    [ngStyle]="{ 'background-color': color }"
+    (click)="onClickHandler()"
+  >
+    @if (username) {
+      <span class="font-medium text-slate-200">
+        {{ username[0].toUpperCase() }}
+      </span>
+    }
+  </button>
+}

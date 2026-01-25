@@ -7,7 +7,7 @@ import { Observable } from 'rxjs';
 @Component({
   selector: 'app-processing-notification-grid',
   imports: [ProcessingNotificationComponent, CommonModule],
-  templateUrl: './processing-notification-grid.component.html'
+  templateUrl: './processing-notification-grid.component.html',
 })
 export class ProcessingNotificationGridComponent {
   @Input() public processingNotifications$!: Observable<ProcessingNotifications[]>;

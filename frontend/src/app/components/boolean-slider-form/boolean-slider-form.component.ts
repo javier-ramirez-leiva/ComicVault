@@ -1,19 +1,17 @@
-import { CommonModule } from '@angular/common';
 import { Component, Input, forwardRef } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 
-
 @Component({
   selector: 'app-boolean-slider-form',
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './boolean-slider-form.component.html',
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
       useExisting: forwardRef(() => BooleanSliderFormComponent),
       multi: true,
-    }
-  ]
+    },
+  ],
 })
 export class BooleanSliderFormComponent implements ControlValueAccessor {
   @Input({ required: false }) label!: string;
@@ -21,8 +19,8 @@ export class BooleanSliderFormComponent implements ControlValueAccessor {
   value = false;
   isDisabled = false;
 
-  private onChange = (_: any) => { };
-  protected onTouched = () => { };
+  private onChange = (_: any) => {};
+  protected onTouched = () => {};
 
   // Called by Angular when external model changes
   writeValue(value: any): void {

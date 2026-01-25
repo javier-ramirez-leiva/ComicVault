@@ -2,7 +2,6 @@
 @import 'tailwindcss';
 @plugin '@tailwindcss/aspect-ratio';
 
-
 @custom-variant dark (&:is(.dark *));
 
 @theme {
@@ -49,7 +48,7 @@
 
   /*Cover Card*/
   --color-cover-card-pulsing: var(--color-slate-500);
-  --color-cover-card-background: oklch(27.9% 0.041 260.031 / 0.90);
+  --color-cover-card-background: oklch(27.9% 0.041 260.031 / 0.9);
   --color-cover-card-title: var(--color-slate-100);
   --color-cover-card-text: var(--color-sky-600);
   --color-cover-card-border: var(--color-slate-300);
@@ -92,7 +91,6 @@
   --color-modal-message-warning: var(--color-slate-400);
   --color-modal-message-text: var(--color-slate-500);
   --color-modal-blurry-background: oklch(20.8% 0.042 265.755 / 0.5);
-
 
   /*Right Panel*/
   --color-right-panel-background: var(--color-slate-100);
@@ -230,7 +228,6 @@
   --color-input-color-background: var(--color-slate-50);
   --color-input-color-border: var(--color-slate-200);
 
-
   /**Two choices chip*/
   --color-two-choices-active-text: var(--color-slate-100);
   --color-two-choices-active-background: var(--color-sky-600);
@@ -270,11 +267,9 @@
   /**Two choices chip*/
   --color-tag-text: var(--color-violet-800);
   --color-tag-background: var(--color-violet-200);
-
 }
 
 @layer base {
-
   *,
   ::after,
   ::before,
@@ -327,7 +322,7 @@
 
     /*Cover Card*/
     --color-cover-card-pulsing: var(--color-slate-500);
-    --color-cover-card-background: oklch(27.9% 0.041 260.031 / 0.90);
+    --color-cover-card-background: oklch(27.9% 0.041 260.031 / 0.9);
     --color-cover-card-title: var(--color-sky-600);
     --color-cover-card-text: var(--color-slate-100);
     --color-cover-card-border: var(--color-slate-700);
@@ -347,8 +342,6 @@
     /*emerald-700*/
     --color-cover-card-progress-background: var(--color-slate-700);
     --color-cover-card-dragger-background: var(--color-slate-400);
-
-
 
     /*Tables*/
     --color-table-text: var(--color-slate-400);
@@ -371,7 +364,7 @@
     --color-modal-title-cross-hover-text: var(--color-slate-100);
     --color-modal-message-warning: var(--color-slate-200);
     --color-modal-message-text: var(--color-slate-400);
-    --color-modal-blurry-background: oklch(20.8% 0.042 265.755 / 0.80);
+    --color-modal-blurry-background: oklch(20.8% 0.042 265.755 / 0.8);
 
     /*Right Panel*/
     --color-right-panel-background: var(--color-slate-800);
@@ -386,7 +379,6 @@
     --color-paginator-text: var(--color-slate-100);
     --color-paginator-hover: var(--color-slate-700);
     --color-paginator-focus-ring: var(--color-slate-800);
-
 
     /*Severities*/
     --color-severity-success-text: var(--color-emerald-300);
@@ -429,7 +421,6 @@
     --color-checkbox-text: var(--color-slate-100);
     --color-checkbox-border: var(--color-slate-600);
     --color-checkbox-focus-ring: var(--color-sky-600);
-
 
     /*Settings menu*/
     --color-settings-menu-background: var(--color-slate-800);
@@ -568,27 +559,27 @@ ul.grid-mini-pages {
 }
 
 .right-panel-mask {
-  @apply bg-gray-900/50 dark:bg-gray-900/80 fixed inset-0 z-30
+  @apply bg-gray-900/50 dark:bg-gray-900/80 fixed inset-0 z-30;
 }
 
 .right-panel-container {
-  @apply fixed top-0 right-0 z-40 w-full h-screen max-w-sm p-4 overflow-y-auto transition-transform
+  @apply fixed top-0 right-0 z-40 w-full h-screen max-w-sm p-4 overflow-y-auto transition-transform;
 }
 
 .cover-card-badge {
-  @apply absolute top-0 right-0 z-20 rounded-tr-md size-7 flex items-center align-middle justify-center
+  @apply absolute top-0 right-0 z-20 rounded-tr-md size-7 flex items-center align-middle justify-center;
 }
 
 .cover-card-badge-circle {
-  @apply absolute top-1 right-1 z-20 rounded-md size-7 flex items-center align-middle justify-center
+  @apply absolute top-1 right-1 z-20 rounded-md size-7 flex items-center align-middle justify-center;
 }
 
 .cover-card-badge-large {
-  @apply absolute top-0 right-0 z-20 rounded-tr-sm size-12 flex items-center align-middle justify-center
+  @apply absolute top-0 right-0 z-20 rounded-tr-sm size-12 flex items-center align-middle justify-center;
 }
 
 .cover-card-button-large {
-  @apply absolute top-0 right-0 z-20 size-12 flex items-center align-middle justify-center
+  @apply absolute top-0 right-0 z-20 size-12 flex items-center align-middle justify-center;
 }
 
 .cover-card-badge-triangle {
@@ -827,17 +818,16 @@ ul.grid-mini-pages {
   @apply text-button-edit-cancel-text bg-button-edit-cancel-background hover:bg-button-edit-cancel-hover focus:ring-button-edit-cancel-focus-ring;
 }
 
-
 .active-chip {
-  @apply text-two-choices-active-text bg-two-choices-active-background outline-hidden
+  @apply text-two-choices-active-text bg-two-choices-active-background outline-hidden;
 }
 
 .inactive-chip {
-  @apply text-two-choices-inactive-text border border-two-choices-inactive-text bg-two-choices-inactive-background hover:ring-4 hover:ring-two-choices-inactive-text
+  @apply text-two-choices-inactive-text border border-two-choices-inactive-text bg-two-choices-inactive-background hover:ring-4 hover:ring-two-choices-inactive-text;
 }
 
 .tag-chip {
-  @apply text-tag-text border border-tag-text bg-tag-background hover:ring-4 hover:ring-tag-text rounded-full text-sm font-medium px-3 py-1.5 text-center me-2 mb-2
+  @apply text-tag-text border border-tag-text bg-tag-background hover:ring-4 hover:ring-tag-text rounded-full text-sm font-medium px-3 py-1.5 text-center me-2 mb-2;
 }
 
 .notification {
@@ -887,7 +877,6 @@ ul.grid-mini-pages {
 .logo-typo {
   font-family: 'Inter', sans-serif;
 }
-
 
 /* default (light) */
 .cdk-drag-preview {

@@ -6,7 +6,7 @@ import { RouterModule } from '@angular/router';
 @Component({
   selector: 'app-bottom-drawer-button',
   imports: [CommonModule, RouterModule],
-  templateUrl: './bottom-drawer-button.component.html'
+  templateUrl: './bottom-drawer-button.component.html',
 })
 export class BottomDrawerButtonComponent {
   @Input({ required: true }) route!: string;

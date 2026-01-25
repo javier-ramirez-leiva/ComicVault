@@ -1,22 +1,14 @@
 <div class="whole-page-container">
-    <div
-        *ngIf="job$ | async as job"
-        class="px-4 pb-4 overflow-x-auto"
-    >
-        <h3 class="text-2xl font-bold text-generic-text pb-4">Job</h3>
-        <app-jobs-table
-            [jobs]="[job]"
-            [displayDetails]="false"
-        ></app-jobs-table>
+  @if (job$ | async; as job) {
+    <div class="px-4 pb-4 overflow-x-auto">
+      <h3 class="text-2xl font-bold text-generic-text pb-4">Job</h3>
+      <app-jobs-table [jobs]="[job]" [displayDetails]="false"></app-jobs-table>
     </div>
-    <div
-        *ngIf="logs$ | async as logs"
-        class="px-4 pt-8 pb-4 overflow-x-auto"
-    >
-        <h3 class="text-2xl font-bold  text-generic-text pb-4">Logs</h3>
-        <app-log-history-table
-            [logs]="logs"
-            [displayJobId]="false"
-        ></app-log-history-table>
+  }
+  @if (logs$ | async; as logs) {
+    <div class="px-4 pt-8 pb-4 overflow-x-auto">
+      <h3 class="text-2xl font-bold text-generic-text pb-4">Logs</h3>
+      <app-log-history-table [logs]="logs" [displayJobId]="false"></app-log-history-table>
     </div>
+  }
 </div>

@@ -1,9 +1,8 @@
-import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Output } from '@angular/core';
 
 @Component({
   selector: 'app-edit-metadata-button',
-  imports: [CommonModule],
+  imports: [],
   templateUrl: './edit-metadata-button.component.html',
 })
 export class EditMetadataButtonComponent {

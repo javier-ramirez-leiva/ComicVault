@@ -1,14 +1,17 @@
 <section class="body-font">
-    <ul class="grid-covers">
-        <ng-container *ngIf="trackNames; else noTrackTmpl">
-            <li *ngFor="let comic of comics; trackBy: trackByComic">
-                <app-comic-search [comic]="comic"></app-comic-search>
-            </li>
-        </ng-container>
-        <ng-template #noTrackTmpl>
-            <li *ngFor="let comic of comics">
-                <app-comic-search [comic]="comic"></app-comic-search>
-            </li>
-        </ng-template>
-    </ul>
+  <ul class="grid-covers">
+    @if (trackNames) {
+      @for (comic of comics; track trackByComic($index, comic)) {
+        <li>
+          <app-comic-search [comic]="comic"></app-comic-search>
+        </li>
+      }
+    } @else {
+      @for (comic of comics; track comic) {
+        <li>
+          <app-comic-search [comic]="comic"></app-comic-search>
+        </li>
+      }
+    }
+  </ul>
 </section>

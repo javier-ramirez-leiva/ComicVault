@@ -3,10 +3,9 @@ import { LocalStorageService } from './local-storage.service';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ReaderSettingsService {
-
   private readonly localStorageService: LocalStorageService = inject(LocalStorageService);
 
   private readerSettingsBooleanMap: ReaderSettingsBooleanMap;
@@ -15,8 +14,11 @@ export class ReaderSettingsService {
   private doublePageConfiguration: DoublePageConfiguration = 'auto';
 
   constructor() {
-    this.readerSettingsBooleanMap = Object.fromEntries(READER_SETTINGS_BOOLEANS.map(k => [k, this.localStorageService.getItem(k) ?? true])) as ReaderSettingsBooleanMap;
-    this.doublePageConfiguration = this.localStorageService.getItem('doublePageConfiguration') ?? 'auto';
+    this.readerSettingsBooleanMap = Object.fromEntries(
+      READER_SETTINGS_BOOLEANS.map((k) => [k, this.localStorageService.getItem(k) ?? true]),
+    ) as ReaderSettingsBooleanMap;
+    this.doublePageConfiguration =
+      this.localStorageService.getItem('doublePageConfiguration') ?? 'auto';
     this.doublePageConfiguration$.next(this.doublePageConfiguration);
   }
 
@@ -26,7 +28,9 @@ export class ReaderSettingsService {
 
   set(value: ReaderSettingsBooleanMap) {
     this.readerSettingsBooleanMap = value;
-    READER_SETTINGS_BOOLEANS.forEach(k => this.localStorageService.setItem(k, this.readerSettingsBooleanMap[k]));
+    READER_SETTINGS_BOOLEANS.forEach((k) =>
+      this.localStorageService.setItem(k, this.readerSettingsBooleanMap[k]),
+    );
   }
 
   getValue(valueKey: ReaderSettingsBooleans): boolean {
@@ -56,10 +60,10 @@ export const READER_SETTINGS_BOOLEANS = [
   'noMenuZoom',
 ] as const;
 
-export type ReaderSettingsBooleans = typeof READER_SETTINGS_BOOLEANS[number];
+export type ReaderSettingsBooleans = (typeof READER_SETTINGS_BOOLEANS)[number];
 
 export type ReaderSettingsBooleanMap = {
   [K in ReaderSettingsBooleans]: boolean;
 };
 
-export type DoublePageConfiguration = 'single' | 'double' | 'auto'
+export type DoublePageConfiguration = 'single' | 'double' | 'auto';

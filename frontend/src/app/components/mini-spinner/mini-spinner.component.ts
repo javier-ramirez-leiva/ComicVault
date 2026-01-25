@@ -4,8 +4,6 @@ import { Component } from '@angular/core';
   selector: 'app-mini-spinner',
   imports: [],
   templateUrl: './mini-spinner.component.html',
-  styleUrl: './mini-spinner.component.css'
+  styleUrl: './mini-spinner.component.css',
 })
-export class MiniSpinnerComponent {
-
-}
+export class MiniSpinnerComponent {}

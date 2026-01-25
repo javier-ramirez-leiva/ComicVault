@@ -1,11 +1,10 @@
-<label
-    *ngIf="title"
-    class="block mb-2 text-sm font-medium text-generic-text"
->
-    {{title}}
-</label>
-<input
-    *ngIf="!multiLine"
+@if (title) {
+  <label class="block mb-2 text-sm font-medium text-generic-text">
+    {{ title }}
+  </label>
+}
+@if (!multiLine) {
+  <input
     #input
     type="text"
     class="bg-input-background border border-input-border text-generic-text text-sm rounded-lg focus:ring-input-field-focus-ring focus:border-input-button-focus-ring block w-full p-2.5"
@@ -13,9 +12,10 @@
     (blur)="onTouched()"
     [disabled]="isDisabled"
     [value]="value"
->
-<textarea
-    *ngIf="multiLine"
+  />
+}
+@if (multiLine) {
+  <textarea
     #input
     rows="5"
     class="bg-input-background border border-input-border text-generic-text text-sm rounded-lg focus:ring-input-field-focus-ring focus:border-input-button-focus-ring block w-full p-2.5"
@@ -23,4 +23,5 @@
     (blur)="onTouched()"
     [disabled]="isDisabled"
     [value]="value"
-></textarea>
+  ></textarea>
+}

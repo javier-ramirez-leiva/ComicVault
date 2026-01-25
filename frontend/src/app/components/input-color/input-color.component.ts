@@ -1,10 +1,9 @@
-import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 
 @Component({
   selector: 'app-input-color',
-  imports: [CommonModule, FormsModule],
+  imports: [FormsModule],
   templateUrl: './input-color.component.html',
 })
 export class InputColorComponent {

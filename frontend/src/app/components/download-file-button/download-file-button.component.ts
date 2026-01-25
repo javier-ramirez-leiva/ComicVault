@@ -8,13 +8,12 @@ import { DownloadService } from 'services';
 @Component({
   selector: 'app-download-file-button',
   imports: [],
-  templateUrl: './download-file-button.component.html'
+  templateUrl: './download-file-button.component.html',
 })
 export class DownloadFileButtonComponent {
   @Input() comic!: ComicsDatabase | null;
   private readonly downloadService = inject(DownloadService);
   private readonly notifier = inject(NotifierService);
-
 
   downloadFile(): void {
     if (this.comic) {
@@ -22,7 +21,7 @@ export class DownloadFileButtonComponent {
         id: 0,
         title: 'Download on device launched',
         message: this.comic.title,
-        type: 'info'
+        type: 'info',
       });
       this.downloadService.downloadComic(this.comic);
     }

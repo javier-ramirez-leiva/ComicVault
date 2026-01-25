@@ -5,13 +5,17 @@ import { ComicsService, GridService } from 'services';
 import { CommonModule } from '@angular/common';
 import { ComicsDownloadGridComponent } from '../comics-download-grid/comics-download-grid.component';
 import { ComicsDatabaseWithDownload, DownloadService } from 'services';
-import { NoResultsComponent } from "../no-results/no-results.component";
-import { ComicSearchTableComponent } from "../comic-search-table/comic-search-table.component";
-
+import { NoResultsComponent } from '../no-results/no-results.component';
+import { ComicSearchTableComponent } from '../comic-search-table/comic-search-table.component';
 
 @Component({
   selector: 'app-downloads-page',
-  imports: [ComicsDownloadGridComponent, CommonModule, NoResultsComponent, ComicSearchTableComponent],
+  imports: [
+    ComicsDownloadGridComponent,
+    CommonModule,
+    NoResultsComponent,
+    ComicSearchTableComponent,
+  ],
   templateUrl: './downloads-page.component.html',
 })
 export class DownloadsPageComponent {
@@ -22,19 +26,19 @@ export class DownloadsPageComponent {
   protected emptyResult$: Observable<boolean>;
   protected localDownloads$: Observable<ComicsDatabaseWithDownload[]>;
 
-
   constructor() {
-    this.comics$ = this.comicsService.downloadingList$.pipe( // 
-      shareReplay({ bufferSize: 1, refCount: true })
+    this.comics$ = this.comicsService.downloadingList$.pipe(
+      //
+      shareReplay({ bufferSize: 1, refCount: true }),
     );
-    this.localDownloads$ = interval(500).pipe( // 
+    this.localDownloads$ = interval(500).pipe(
+      //
       switchMap(() => this.downloadsService.getLocalDownload()),
-      shareReplay({ bufferSize: 1, refCount: true })
+      shareReplay({ bufferSize: 1, refCount: true }),
     );
 
     this.emptyResult$ = combineLatest([this.comics$, this.localDownloads$]).pipe(
-      map(([comics, localDownloads]) => comics.length === 0 && localDownloads.length === 0)
+      map(([comics, localDownloads]) => comics.length === 0 && localDownloads.length === 0),
     );
-
   }
 }

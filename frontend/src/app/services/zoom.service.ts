@@ -2,13 +2,12 @@ import { Injectable, Inject } from '@angular/core';
 import { DOCUMENT } from '@angular/common';
 import { consoleLog } from '../utils/traces';
 
-
 //Works on PWA
 @Injectable({ providedIn: 'root' })
 export class ZoomService {
   private gestureHandler = this.preventZoom.bind(this);
 
-  constructor(@Inject(DOCUMENT) private document: Document) { }
+  constructor(@Inject(DOCUMENT) private document: Document) {}
 
   private getViewportMeta(): HTMLMetaElement | null {
     return this.document.querySelector('meta[name=viewport]');
@@ -28,12 +27,16 @@ export class ZoomService {
     const html = this.document.documentElement;
     const orig = html.style.transform;
     html.style.transform = 'translateZ(0)'; // cheap GPU hint, triggers paint
-    setTimeout(() => { html.style.transform = orig; }, 50);
+    setTimeout(() => {
+      html.style.transform = orig;
+    }, 50);
   }
 
   private isStandalone(): boolean {
-    return (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches)
-      || !!(navigator as any).standalone;
+    return (
+      (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) ||
+      !!(navigator as any).standalone
+    );
   }
 
   /* ---------- Public API ---------- */
@@ -85,7 +88,9 @@ export class ZoomService {
     }
 
     // Remove gesture blocker in case we previously added it
-    try { this.document.removeEventListener('gesturestart', this.gestureHandler); } catch { }
+    try {
+      this.document.removeEventListener('gesturestart', this.gestureHandler);
+    } catch {}
 
     // Nudge layout
     this.forceRecalc();
@@ -118,7 +123,14 @@ export class ZoomService {
     // visualViewport info (read-only)
     if ((window as any).visualViewport) {
       const vv = (window as any).visualViewport;
-      consoleLog('[ZoomService] visualViewport scale:', vv.scale, 'width:', vv.width, 'height:', vv.height);
+      consoleLog(
+        '[ZoomService] visualViewport scale:',
+        vv.scale,
+        'width:',
+        vv.width,
+        'height:',
+        vv.height,
+      );
     }
   }
 

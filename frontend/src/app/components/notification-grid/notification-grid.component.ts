@@ -7,9 +7,8 @@ import { Observable } from 'rxjs';
 @Component({
   selector: 'app-notification-grid',
   imports: [CommonModule, NotificationComponent],
-  templateUrl: './notification-grid.component.html'
+  templateUrl: './notification-grid.component.html',
 })
 export class NotificationGridComponent {
   @Input() public notifications$!: Observable<Notifications[]>;
-
 }

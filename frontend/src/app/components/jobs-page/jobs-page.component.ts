@@ -3,9 +3,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { Job } from 'interfaces';
 import { Observable, switchMap, tap } from 'rxjs';
 import { JobsService } from 'services';
-import { PageNavigatorComponent } from "../page-navigator/page-navigator.component";
+import { PageNavigatorComponent } from '../page-navigator/page-navigator.component';
 import { CommonModule } from '@angular/common';
-import { JobsTableComponent } from "../jobs-table/jobs-table.component";
+import { JobsTableComponent } from '../jobs-table/jobs-table.component';
 
 @Component({
   selector: 'app-jobs-page',
@@ -25,7 +25,7 @@ export class JobsPageComponent {
       switchMap((params) => {
         this.page = params['page'] ? params['page'] : 1;
         return this.jobsService.getJobs(this.page);
-      })
+      }),
     );
   }
 
