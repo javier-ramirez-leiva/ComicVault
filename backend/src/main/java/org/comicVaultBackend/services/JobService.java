@@ -21,4 +21,6 @@ public interface JobService {
     boolean areThereJobs(JobEntity.Type type, JobEntity.Status status);
 
     Optional<JobEntity> getJobById(Long jobId);
+
+    void cleanOnGoingJobs();
 }

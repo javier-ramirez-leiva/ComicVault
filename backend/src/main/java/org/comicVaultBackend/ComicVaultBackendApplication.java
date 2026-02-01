@@ -4,6 +4,7 @@ import net.sf.sevenzipjbinding.SevenZip;
 import net.sf.sevenzipjbinding.SevenZipNativeInitializationException;
 import org.comicVaultBackend.domain.entities.SchemaVersionEntity;
 import org.comicVaultBackend.repositories.SchemaVersionRepository;
+import org.comicVaultBackend.services.JobService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,9 @@ public class ComicVaultBackendApplication {
     private static final Logger logger = LoggerFactory.getLogger(ComicVaultBackendApplication.class);
     @Autowired
     SchemaVersionRepository schemaVersionRepository;
+
+    @Autowired
+    JobService jobService;
 
     public static void main(String[] args) {
         try {
@@ -47,6 +51,13 @@ public class ComicVaultBackendApplication {
                 schemaVersion.setSchemaVersionID(defaultVersion);
                 repository.save(schemaVersion);
             }
+        };
+    }
+
+    @Bean
+    CommandLineRunner cleanOnGoingJobs(JobService jobServiceInjected) {
+        return args -> {
+            jobServiceInjected.cleanOnGoingJobs();
         };
     }
 }

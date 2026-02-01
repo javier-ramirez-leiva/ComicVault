@@ -22,6 +22,7 @@
                 [class.chip-success]="job.status == 'COMPLETED'"
                 [class.chip-error]="job.status == 'ERROR'"
                 [class.chip-warning]="job.status == 'ON_GOING'"
+                [class.chip-info]="job.status == 'INTERRUPTED'"
               >
                 {{ statusLabels[job.status] }}
               </span>

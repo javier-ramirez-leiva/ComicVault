@@ -6,7 +6,7 @@ export type JobType =
   | 'CLEAN_LIB'
   | 'DELETE_LIB';
 
-export type JobStatus = 'ON_GOING' | 'COMPLETED' | 'ERROR';
+export type JobStatus = 'ON_GOING' | 'COMPLETED' | 'ERROR' | 'INTERRUPTED';
 
 export interface Job {
   jobId: string;
