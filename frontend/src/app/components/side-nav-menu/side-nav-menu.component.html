@@ -19,7 +19,7 @@
     appOutsideMenuClick
     (outsideClick)="setLeftMenuOpen(false)"
   >
-    <app-left-nav-menu [open]="leftMenu === 'open'"></app-left-nav-menu>
+    <app-left-nav-menu [open]="isDesktop ? true : leftMenu === 'open'"></app-left-nav-menu>
   </aside>
 }
 
