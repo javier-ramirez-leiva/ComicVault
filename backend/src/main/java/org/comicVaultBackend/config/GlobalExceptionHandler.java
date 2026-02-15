@@ -26,15 +26,19 @@ public class GlobalExceptionHandler {
     private void printAndStoreException(Exception ex) {
         System.out.println(ex.getMessage());
         System.out.println(Arrays.toString(ex.getStackTrace()));
-        ExceptionEntity exception = ExceptionEntity.builder()
-                .timeStamp(new Date())
-                .message(ex.getMessage())
-                .type(ex.getClass().getSimpleName())
-                .details(Arrays.stream(ex.getStackTrace())
-                        .map(StackTraceElement::toString)
-                        .toList())
-                .build();
-        exceptionService.save(exception);
+        //FileNotFoundException happens a lot when mini pages are not there. Filter it
+        if (!ex.getMessage().contains("covers/mini")) {
+            ExceptionEntity exception = ExceptionEntity.builder()
+                    .timeStamp(new Date())
+                    .message(ex.getMessage())
+                    .type(ex.getClass().getSimpleName())
+                    .details(Arrays.stream(ex.getStackTrace())
+                            .map(StackTraceElement::toString)
+                            .toList())
+                    .build();
+            exceptionService.save(exception);
+        }
+
     }
 
     //FORBIDDEN
