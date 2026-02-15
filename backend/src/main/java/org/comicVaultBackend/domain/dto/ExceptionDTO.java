@@ -16,6 +16,7 @@ import java.util.List;
 public class ExceptionDTO {
     private Long entityId;
     private Date timeStamp;
-    String message;
-    List<String> details;
+    private String type;
+    private String message;
+    private List<String> details;
 }

@@ -23,6 +23,9 @@ public class ExceptionEntity {
     @Column(nullable = false)
     private Date timeStamp;
 
+    @Column(nullable = false)
+    private String type;
+
     String message;
 
     List<String> details;

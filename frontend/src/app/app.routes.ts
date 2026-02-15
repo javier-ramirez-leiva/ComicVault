@@ -20,6 +20,7 @@ import { DevicesPageComponent } from 'components';
 import { UnsavedChangesGuard } from './guard/unsaved-changes-guard.guard';
 import { libraryRedirectGuard } from './guard/library-redicrect-guard';
 import { JobsPageComponent } from './components/jobs-page/jobs-page.component';
+import { ExceptionsPageComponent } from './components/exceptions-page/exceptions-page.component';
 
 export const routes: Routes = [
   {
@@ -101,6 +102,12 @@ export const routes: Routes = [
     path: 'settings/jobs',
     component: JobsPageComponent,
     title: 'Jobs',
+    canActivate: [authGuard],
+  },
+  {
+    path: 'settings/exceptions',
+    component: ExceptionsPageComponent,
+    title: 'Exceptions',
     canActivate: [authGuard],
   },
   {

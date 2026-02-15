@@ -1,0 +1,10 @@
+<div class="whole-page-container">
+  @if (exceptions$ | async; as exceptions) {
+    <div class="px-4 pb-4 overflow-x-auto">
+      <app-exceptions-table [exceptions]="exceptions"></app-exceptions-table>
+    </div>
+  }
+  <div class="mt-auto mb-2">
+    <app-page-navigator [page]="page" (pageChange)="onPageChange($event)"></app-page-navigator>
+  </div>
+</div>

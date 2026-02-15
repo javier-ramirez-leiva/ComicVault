@@ -29,6 +29,7 @@ public class GlobalExceptionHandler {
         ExceptionEntity exception = ExceptionEntity.builder()
                 .timeStamp(new Date())
                 .message(ex.getMessage())
+                .type(ex.getClass().getSimpleName())
                 .details(Arrays.stream(ex.getStackTrace())
                         .map(StackTraceElement::toString)
                         .toList())
