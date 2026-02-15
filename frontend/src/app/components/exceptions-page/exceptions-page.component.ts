@@ -35,6 +35,6 @@ export class ExceptionsPageComponent {
   }
 
   private navigate() {
-    this.router.navigate(['/settings/jobs'], { queryParams: { page: this.page } });
+    this.router.navigate(['/settings/exceptions'], { queryParams: { page: this.page } });
   }
 }
