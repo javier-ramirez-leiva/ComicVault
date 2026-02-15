@@ -1,12 +1,12 @@
 <div class="relative pt-10 bg-modal-background rounded-lg shadow-sm">
   <app-cross-modal (onCloseClick)="cancel()"></app-cross-modal>
-  <div class="px-4 pt-4">
+  <div class="m-4 text-center">
     <label class="font-semibold text-lg text-generic-text">{{ data?.comicTitle }}</label>
   </div>
-  <div class="p-4 md:p-5 text-center">
+  <div class="p-4 md:p-5 text-center md:max-h-96 overflow-y-auto">
     @for (downloadIssue of data?.options; track downloadIssue) {
-      <div class="relative flex items-center mb-4">
-        <form class="max-w-sm mx-auto">
+      <div class="relative flex items-center mb-4 w-full">
+        <form class="max-w-sm mx-auto w-full">
           <label class="block mb-2 text-sm font-medium text-generic-text">{{
             downloadIssue.description
           }}</label>

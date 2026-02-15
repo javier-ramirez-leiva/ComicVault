@@ -26,9 +26,11 @@ public class JobEntity {
     }
 
     public enum Status {
+        NONE,
         ON_GOING,
         COMPLETED,
-        ERROR
+        ERROR,
+        INTERRUPTED,
     }
 
 

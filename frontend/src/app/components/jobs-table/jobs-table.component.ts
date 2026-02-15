@@ -22,6 +22,7 @@ export class JobsTableComponent {
     COMPLETED: 'COMPLETED',
     ERROR: 'ERROR',
     ON_GOING: 'ON GOING',
+    INTERRUPTED: 'INTERRUPTED',
   };
 
   readonly typeLabels: Record<JobType, String> = {

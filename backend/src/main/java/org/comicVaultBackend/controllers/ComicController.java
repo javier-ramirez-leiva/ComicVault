@@ -466,7 +466,7 @@ public class ComicController {
     @DeleteMapping(path = "/comics/clean")
     //false if there is already a job in progress
     public boolean cleanLibrary() {
-        if (jobService.areThereJobs(JobEntity.Type.SCAN_LIB, JobEntity.Status.ON_GOING)) {
+        if (jobService.areThereJobs(JobEntity.Type.CLEAN_LIB, JobEntity.Status.ON_GOING)) {
             return false;
         }
         String username = SecurityContextHolder.getContext().getAuthentication().getName();

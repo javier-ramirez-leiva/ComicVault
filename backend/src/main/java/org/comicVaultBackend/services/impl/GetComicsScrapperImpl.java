@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.io.IOException;
 import java.net.URL;
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class GetComicsScrapperImpl implements GetComicsScrapperService {
@@ -156,65 +157,126 @@ public class GetComicsScrapperImpl implements GetComicsScrapperService {
                 Elements list_aio_pulse = doc.select(".aio-pulse");
 
                 if (!list_aio_pulse.isEmpty()) {
-                    List<DownloadLinkDTO> downLoadLinkDTOS = new ArrayList<DownloadLinkDTO>();
+                    Elements psWithStrongText = doc.select("p").stream()
+                            .filter(p -> p.children().stream()
+                                    .filter(e -> e.tagName().equals("strong"))
+                                    .count() >= 4)
+                            .collect(Collectors.toCollection(Elements::new));
+                    if (psWithStrongText.size() > 1) {
+                        List<DownloadIssueDTO> downloadIssueDTOS = new ArrayList<DownloadIssueDTO>();
+                        Element post_content = doc.selectFirst(".post-contents");
+                        Element paragraph = post_content.select("p").get(0);
+                        String description = paragraph.text();
 
-                    for (Element aio_pulse : list_aio_pulse) {
-                        Element a = aio_pulse.selectFirst("a");
-                        String link = a.attr("href");
-                        String platform = a.text();
-                        if (!platform.equals("Read Online")) {
-                            downLoadLinkDTOS.add(DownloadLinkDTO.builder().link(link).platform(platform).build());
-                        }
-                    }
+                        Element titleInfo = psWithStrongText.get(0).selectFirst("strong");
+                        String title = titleInfo.text();
 
-                    Element post_content = doc.selectFirst(".post-contents");
-                    Element paragraph = post_content.select("p").get(0);
 
-                    String description = paragraph.text();
+                        for (int i = 0; i < psWithStrongText.size(); ++i) {
+                            Element pCurrent = psWithStrongText.get(i);
+                            Element pNext = (i < psWithStrongText.size() - 1) ? psWithStrongText.get(i + 1) : null;
 
-                    String title = "";
-                    String size = "";
-                    String year = "";
+                            Element issueTitleInfo = pCurrent.selectFirst("strong");
+                            String issueTitle = issueTitleInfo.text();
+                            String idGcIssue = _generateidGcIssue(issueTitle);
 
-                    //Improve this parsing
-                    for (int i = 1; i < post_content.select("p").size(); ++i) {
-                        try {
-                            Element otherInfo = post_content.select("p").get(i);
-                            Elements infos = otherInfo.select("strong");
-                            title = infos.get(0).text();
-                            for (Element strong : infos) {
-                                String header = strong.text().trim();
-                                if (header.equalsIgnoreCase("Year :")) {
-                                    String parentText = strong.parent().ownText();
-                                    year = parentText.replaceAll("\\D+", "");
+                            List<DownloadLinkDTO> downLoadLinkDTOS = new ArrayList<>();
+
+                            // Start from the next sibling of pCurrent
+                            Element sibling = pCurrent.nextElementSibling();
+
+                            while (sibling != null && !sibling.equals(pNext)) {
+                                if (sibling.hasClass("aio-button-center")) {
+                                    Element aio_pulse = sibling.firstElementChild();
+                                    if (aio_pulse.hasClass("aio-pulse")) {
+                                        Element a = sibling.selectFirst("a");
+                                        if (a != null) {
+                                            String link = a.attr("href");
+                                            String platform = a.text();
+
+                                            if (!platform.equals("Read Online")) {
+                                                downLoadLinkDTOS.add(
+                                                        DownloadLinkDTO.builder()
+                                                                .link(link)
+                                                                .platform(platform)
+                                                                .build()
+                                                );
+                                            }
+                                        }
+                                    }
                                 }
-                                if (header.equalsIgnoreCase("Size :")) {
-                                    size = strong.parent().ownText().trim();
+                                sibling = sibling.nextElementSibling();
+                            }
+
+                            downloadIssueDTOS.add(DownloadIssueDTO.builder().links(downLoadLinkDTOS).description(issueTitle).idGcIssue(idGcIssue).title(issueTitle).build());
+                        }
+                        List<TagDTO> tags = scrapeTags(doc);
+                        TagDTO mainTag = getMainTag(tags, title);
+
+
+                        return ComicSearchDetailsLinksDTO.builder().description(description).downloadIssues(downloadIssueDTOS).tags(tags).mainTag(mainTag).build();
+
+                    } else {
+                        List<DownloadLinkDTO> downLoadLinkDTOS = new ArrayList<DownloadLinkDTO>();
+
+                        for (Element aio_pulse : list_aio_pulse) {
+                            Element a = aio_pulse.selectFirst("a");
+                            String link = a.attr("href");
+                            String platform = a.text();
+                            if (!platform.equals("Read Online")) {
+                                downLoadLinkDTOS.add(DownloadLinkDTO.builder().link(link).platform(platform).build());
+                            }
+                        }
+
+                        Element post_content = doc.selectFirst(".post-contents");
+                        Element paragraph = post_content.select("p").get(0);
+
+                        String description = paragraph.text();
+
+                        String title = "";
+                        String size = "";
+                        String year = "";
+
+                        //Improve this parsing
+                        for (int i = 1; i < post_content.select("p").size(); ++i) {
+                            try {
+                                Element otherInfo = post_content.select("p").get(i);
+                                Elements infos = otherInfo.select("strong");
+                                title = infos.get(0).text();
+                                for (Element strong : infos) {
+                                    String header = strong.text().trim();
+                                    if (header.equalsIgnoreCase("Year :")) {
+                                        String parentText = strong.parent().ownText();
+                                        year = parentText.replaceAll("\\D+", "");
+                                    }
+                                    if (header.equalsIgnoreCase("Size :")) {
+                                        size = strong.parent().ownText().trim();
+                                    }
+                                }
+                                break;
+                            } catch (Exception e) {
+                                if (i >= post_content.select("p").size() - 1) {
+                                    throw e;
                                 }
                             }
-                            break;
-                        } catch (Exception e) {
-                            if (i >= post_content.select("p").size() - 1) {
-                                throw e;
-                            }
                         }
+                        List<TagDTO> tags = scrapeTags(doc);
+                        TagDTO mainTag = getMainTag(tags, title);
+
+
+                        DownloadIssueDTO downloadIssueDTO = DownloadIssueDTO.builder().links(downLoadLinkDTOS).description(description).build();
+
+                        return ComicSearchDetailsLinksDTO.builder().
+                                description(description).
+                                downloadIssues(List.of(downloadIssueDTO)).
+                                title(title).
+                                year(year).
+                                size(size).
+                                category("").
+                                tags(tags).
+                                mainTag(mainTag).
+                                build();
                     }
-                    List<TagDTO> tags = scrapeTags(doc);
-                    TagDTO mainTag = getMainTag(tags, title);
-
-
-                    DownloadIssueDTO downloadIssueDTO = DownloadIssueDTO.builder().links(downLoadLinkDTOS).description(description).build();
-
-                    return ComicSearchDetailsLinksDTO.builder().
-                            description(description).
-                            downloadIssues(List.of(downloadIssueDTO)).
-                            title(title).
-                            year(year).
-                            size(size).
-                            category("").
-                            tags(tags).
-                            mainTag(mainTag).
-                            build();
                 } else {
                     Elements postContents = doc.select(".post-contents");
 

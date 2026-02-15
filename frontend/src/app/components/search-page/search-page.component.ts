@@ -112,7 +112,7 @@ export class SearchPageComponent implements OnInit {
         return observable$.pipe(
           catchError((err) => {
             this.miniSpinner$.next(false);
-            this.errorOrEmpty = true;
+            //this.errorOrEmpty = true;
             const error = err.error;
             if (
               isHttpResponseError(error) &&

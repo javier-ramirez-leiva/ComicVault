@@ -104,4 +104,12 @@ public class JobServiceImpl implements JobService {
         }
         return Optional.empty();
     }
+
+    @Override
+    public void cleanOnGoingJobs() {
+        for (JobEntity jobEntity : jobRepository.findAllByStatus(JobEntity.Status.ON_GOING)) {
+            jobEntity.setStatus(JobEntity.Status.INTERRUPTED);
+            jobRepository.save(jobEntity);
+        }
+    }
 }

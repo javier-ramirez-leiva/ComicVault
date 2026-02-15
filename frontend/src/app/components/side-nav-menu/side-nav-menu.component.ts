@@ -41,8 +41,12 @@ export class SideNavMenuComponent {
 
   protected readonly blurMaskService = inject(BlurMaskService);
   protected readonly router = inject(Router);
+  isDesktop = window.matchMedia('(min-width: 1022px)').matches;
 
   constructor() {
+    window.matchMedia('(min-width: 1022px)').addEventListener('change', (e) => {
+      this.isDesktop = e.matches;
+    });
     this.leftMenuOpen$ = this.leftMenuOpenTrigger$.pipe(
       throttleTime(100),
       tap((open) => this.blurMaskService.setActive(open)),
