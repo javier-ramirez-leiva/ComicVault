@@ -1,5 +1,5 @@
 export interface Exception {
-  jobId: string;
+  exceptionId: string;
   type: string;
   timeStamp: string;
   timeStampFomatted: string;

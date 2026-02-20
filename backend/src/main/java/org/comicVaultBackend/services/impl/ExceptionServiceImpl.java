@@ -12,6 +12,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class ExceptionServiceImpl implements ExceptionService {
@@ -27,6 +28,11 @@ public class ExceptionServiceImpl implements ExceptionService {
         Pageable pageable = PageRequest.of(page, 25, Sort.by(Sort.Direction.DESC, "timeStamp"));
         Page<ExceptionEntity> jobs = exceptionRepositoryPage.findAll(pageable);
         return jobs.getContent();
+    }
+
+    @Override
+    public Optional<ExceptionEntity> getByEntityId(long entityId) {
+        return exceptionRepository.findById(entityId);
     }
 
     @Override

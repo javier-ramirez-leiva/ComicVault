@@ -10,6 +10,7 @@ public class EntityNotFoundException extends Exception {
         REFRESH_TOKEN,
         DEVICES,
         JOB,
+        EXCEPTION,
     }
 
     public EntityNotFoundException(String id, Entity entity) {

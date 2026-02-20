@@ -116,3 +116,4 @@ export * from './jobs-table/jobs-table.component';
 export * from './job-page/job-page.component';
 export * from './exceptions-page/exceptions-page.component';
 export * from './exceptions-table/exceptions-table.component';
+export * from './exception-page/exception-page.component';

@@ -1,0 +1,17 @@
+<div class="whole-page-container">
+  @if (exception$ | async; as exception) {
+    <div class="px-4 pb-4 overflow-x-auto">
+      <h3 class="text-2xl font-bold text-generic-text pb-4">Exception</h3>
+      <app-exceptions-table
+        [exceptions]="[exception]"
+        [displayDetails]="false"
+      ></app-exceptions-table>
+      <h4 class="mt-4 ml-4 text-xl font-bold text-generic-text pb-4">Details</h4>
+      <div class="pb-4">
+        <div class="text-box">
+          <p class="text-box-p">{{ exception.details.join('\n') }}</p>
+        </div>
+      </div>
+    </div>
+  }
+</div>

@@ -18,7 +18,7 @@ import java.util.List;
 public class ExceptionEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long entityId;
+    private Long exceptionId;
 
     @Column(nullable = false)
     private Date timeStamp;

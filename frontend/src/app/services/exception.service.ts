@@ -16,4 +16,11 @@ export class ExceptionService {
   deleteAll(): Observable<void> {
     return this.httpService.request<void>('POST', '/exceptions/deleteAll');
   }
+
+  getException(exceptionId: number): Observable<Exception> {
+    return this.httpService.request<Exception>(
+      'GET',
+      `/exception/search?exceptionId=${exceptionId}`,
+    );
+  }
 }

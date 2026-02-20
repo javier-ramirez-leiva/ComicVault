@@ -3,6 +3,7 @@ package org.comicVaultBackend.controllers;
 import org.comicVaultBackend.config.ApiConfig;
 import org.comicVaultBackend.domain.dto.ExceptionDTO;
 import org.comicVaultBackend.domain.entities.ExceptionEntity;
+import org.comicVaultBackend.exceptions.EntityNotFoundException;
 import org.comicVaultBackend.mappers.Mapper;
 import org.comicVaultBackend.services.ExceptionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -33,6 +35,21 @@ public class ExceptionController {
                 .map(exceptionMapper::mapTo)
                 .collect(Collectors.toList());
     }
+
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    @GetMapping(path = "/exception/search")
+    public ExceptionDTO getJobById(@RequestParam(name = "exceptionId", required = false) Long exceptionId) throws EntityNotFoundException {
+
+        Optional<ExceptionEntity> exceptionEntity;
+        exceptionEntity = exceptionService.getByEntityId(exceptionId);
+
+        if (exceptionEntity.isEmpty()) {
+            throw new EntityNotFoundException(exceptionId.toString(), EntityNotFoundException.Entity.EXCEPTION);
+        }
+
+        return exceptionMapper.mapTo(exceptionEntity.get());
+    }
+
 
     @PreAuthorize("hasAnyAuthority('ADMIN')")
     @PostMapping("/exceptions/deleteAll")
