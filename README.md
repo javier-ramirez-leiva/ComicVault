@@ -1,5 +1,5 @@
 <p align="center">
-<img src="./docs/logo.png" alt="ComicVault" style="margin: 20px 0;">
+<img src="./docs/logo.png" alt="ComicVault" style="">
 </p>
 <p align="center">
 <img src="https://img.shields.io/github/last-commit/javier-ramirez-leiva/ComicVault" alt="GitHub last commit" />
