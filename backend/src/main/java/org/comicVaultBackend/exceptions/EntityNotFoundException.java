@@ -2,6 +2,8 @@ package org.comicVaultBackend.exceptions;
 
 public class EntityNotFoundException extends Exception {
 
+    public Entity entity;
+
     public enum Entity {
         COMIC,
         COMIC_SEARCH,
@@ -15,5 +17,6 @@ public class EntityNotFoundException extends Exception {
 
     public EntityNotFoundException(String id, Entity entity) {
         super(String.format("%s not found: %s", entity.name(), id));
+        this.entity = entity;
     }
 }

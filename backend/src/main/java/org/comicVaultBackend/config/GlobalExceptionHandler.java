@@ -13,9 +13,12 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Date;
+
+import static org.comicVaultBackend.exceptions.EntityNotFoundException.Entity.REFRESH_TOKEN;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -27,17 +30,23 @@ public class GlobalExceptionHandler {
         System.out.println(ex.getMessage());
         System.out.println(Arrays.toString(ex.getStackTrace()));
         //FileNotFoundException happens a lot when mini pages are not there. Filter it
-        if (!ex.getMessage().contains("covers/mini")) {
-            ExceptionEntity exception = ExceptionEntity.builder()
-                    .timeStamp(new Date())
-                    .message(ex.getMessage())
-                    .type(ex.getClass().getSimpleName())
-                    .details(Arrays.stream(ex.getStackTrace())
-                            .map(StackTraceElement::toString)
-                            .toList())
-                    .build();
-            exceptionService.save(exception);
+        if (ex instanceof FileNotFoundException exNotFound && exNotFound.getMessage().contains("covers/mini")) {
+            return;
         }
+
+        if (ex instanceof EntityNotFoundException exNotFound && exNotFound.entity == REFRESH_TOKEN) {
+            return;
+        }
+        ExceptionEntity exception = ExceptionEntity.builder()
+                .timeStamp(new Date())
+                .message(ex.getMessage())
+                .type(ex.getClass().getSimpleName())
+                .details(Arrays.stream(ex.getStackTrace())
+                        .map(StackTraceElement::toString)
+                        .toList())
+                .build();
+        exceptionService.save(exception);
+
 
     }
 
