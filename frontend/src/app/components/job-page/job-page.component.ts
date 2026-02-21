@@ -21,13 +21,13 @@ export class JobPageComponent {
   protected readonly logs$: Observable<Log[]>;
 
   constructor() {
-    const idGc$: Observable<string> = this.route.params.pipe(
+    const id$: Observable<string> = this.route.params.pipe(
       map((params) => params['id']),
       shareReplay({ bufferSize: 1, refCount: true }),
     );
 
-    this.job$ = idGc$.pipe(switchMap((jobId) => this.jobsService.getJob(Number(jobId))));
+    this.job$ = id$.pipe(switchMap((jobId) => this.jobsService.getJob(Number(jobId))));
 
-    this.logs$ = idGc$.pipe(switchMap((jobId) => this.logsService.getLogsForJobId(Number(jobId))));
+    this.logs$ = id$.pipe(switchMap((jobId) => this.logsService.getLogsForJobId(Number(jobId))));
   }
 }

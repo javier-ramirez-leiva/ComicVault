@@ -24,6 +24,8 @@ import java.util.stream.Collectors;
 @Service
 public class GetComicsScrapperImpl implements GetComicsScrapperService {
 
+    public static final int TRIES = 2;
+
     private static final List<String> _articlesToAvoid = List.of("article1", "article2");
     private static final List<String> _categoriesToAvoid = List.of("News", "Sponsored");
     private static final Map<String, ComicSearchDTO> _listCacheComicSearches = new HashMap<String, ComicSearchDTO>();
@@ -42,6 +44,20 @@ public class GetComicsScrapperImpl implements GetComicsScrapperService {
 
     @Override
     public List<ComicSearchDTO> getComics(String url, int page) throws ComicScrapperParsingException, ComicScrapperGatewayException, ComicScrapperGatewayPageException {
+        int i = 1;
+        while (i < TRIES) {
+            try {
+                return _getComics(url, page);
+            } catch (Exception e) {
+                ++i;
+            }
+        }
+
+        return _getComics(url, page);
+    }
+
+
+    private List<ComicSearchDTO> _getComics(String url, int page) throws ComicScrapperParsingException, ComicScrapperGatewayException, ComicScrapperGatewayPageException {
         List<ComicSearchDTO> listComics = new ArrayList<>();
         try {
             Document doc = Jsoup.connect(url).get();
@@ -147,6 +163,18 @@ public class GetComicsScrapperImpl implements GetComicsScrapperService {
 
     @Override
     public ComicSearchDetailsLinksDTO getComicDetails(String urlString) throws ComicScrapperParsingException, ComicScrapperGatewayException {
+        int i = 1;
+        while (i < TRIES) {
+            try {
+                return _getComicDetails(urlString);
+            } catch (Exception e) {
+                ++i;
+            }
+        }
+        return _getComicDetails(urlString);
+    }
+
+    private ComicSearchDetailsLinksDTO _getComicDetails(String urlString) throws ComicScrapperParsingException, ComicScrapperGatewayException {
         try {
             Document doc = Jsoup.connect(urlString).get();
 
