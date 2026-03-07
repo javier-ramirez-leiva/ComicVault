@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, Input } from '@angular/core';
+import { Component, inject, Input, OnInit } from '@angular/core';
 import { ActivePageService } from 'services';
 import { HideRolesDirective, OutsideClickDirective } from 'directives';
 import { Role } from 'interfaces';
@@ -11,7 +11,9 @@ import { DarkmodeService } from 'services';
 import { RouterModule } from '@angular/router';
 import { LeftNavButtonComponent } from '../left-nav-button/left-nav-button.component';
 import { DarkModeButtonComponent } from '../dark-mode-button/dark-mode-button.component';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
+@UntilDestroy()
 @Component({
   selector: 'app-left-nav-menu',
   imports: [
@@ -27,16 +29,13 @@ import { DarkModeButtonComponent } from '../dark-mode-button/dark-mode-button.co
   ],
   templateUrl: './left-nav-menu.component.html',
 })
-export class LeftNavMenuComponent {
+export class LeftNavMenuComponent implements OnInit {
   protected readonly activePageService = inject(ActivePageService);
   protected readonly authService = inject(AuthService);
   protected readonly darkModeService = inject(DarkmodeService);
   protected readonly Role = Role;
 
-  iconSrc: string =
-    this.darkModeService.darkModeSignal() === 'dark'
-      ? 'assets/icon-192x192.png'
-      : 'assets/icon-192x192.png';
+  iconSrc: string = '';
 
   protected displayLibraryMiniMenu = false;
   private _open = false;
@@ -49,6 +48,12 @@ export class LeftNavMenuComponent {
 
   get open(): boolean {
     return this._open;
+  }
+
+  ngOnInit() {
+    this.darkModeService.isDarkMode$.pipe(untilDestroyed(this)).subscribe((dark) => {
+      this.iconSrc = dark ? 'assets/icon-192x192.png' : 'assets/icon-light-192x192.png';
+    });
   }
 
   setDisplayLibraryMenu(value: boolean) {
