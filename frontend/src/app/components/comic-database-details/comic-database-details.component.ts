@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { Category, ComicsDatabase, HttpResponseError, Series } from 'interfaces';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { ComicsService, ModalService, NotifierService } from 'services';
@@ -92,6 +92,8 @@ export class ComicDatabaseDetailsComponent implements OnInit, CanComponentDeacti
 
   Role = Role;
 
+  protected spinner = signal(false);
+
   constructor() {
     this.form = this.formBuilder.group({
       table: this.formBuilder.group({
@@ -111,9 +113,12 @@ export class ComicDatabaseDetailsComponent implements OnInit, CanComponentDeacti
       }),
     );
     this.comic$ = combineLatest([this.id$, this.triggerFetch$.pipe(startWith(null))]).pipe(
+      tap(() => this.spinner.set(true)),
       switchMap(([id, _]) => this.comicsService.getComic(id)),
+      tap(() => this.spinner.set(false)),
       catchError((error) => {
         this.notFoundID$.next(this.id ?? '');
+        tap(() => this.spinner.set(false));
         return of(undefined);
       }),
       tap((comic) => (this.comic = comic)),

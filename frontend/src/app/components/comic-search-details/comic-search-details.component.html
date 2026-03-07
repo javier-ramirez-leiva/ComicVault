@@ -1,5 +1,8 @@
 @if (comicSearchDetailsLinks$ | async; as comicSearchDetailsLinks) {
-  <div class="details-page-container">
+  @if (spinner()) {
+    <app-loading-spinner-page></app-loading-spinner-page>
+  }
+  <div class="details-page-container" [class.hidden]="spinner()">
     <div class="lg:w-1/4 md:w-1/2 w-[100%] relative p-4 flex flex-col justify-center items-center">
       <div class="relative w-full">
         @if (!imageLoaded) {
@@ -88,12 +91,10 @@
     }
   </div>
 }
+
 @if (notFoundID$ | async; as notFoundID) {
   <app-comic-not-found [id]="notFoundID"></app-comic-not-found>
 }
 @if (errorMessage$ | async; as errorMessage) {
   <app-error-page [message]="errorMessage.message"></app-error-page>
-}
-@if (!(comicSearchDetailsLinks$ | async) && !(notFoundID$ | async)) {
-  <app-loading-spinner-page></app-loading-spinner-page>
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ComicsService, NotifierService } from 'services';
 import {
@@ -15,19 +15,13 @@ import {
   Subject,
   catchError,
   combineLatest,
-  delay,
-  distinct,
-  distinctUntilChanged,
   filter,
-  interval,
   map,
   of,
-  share,
   shareReplay,
   startWith,
   switchMap,
   tap,
-  withLatestFrom,
 } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { HideRolesDirective } from 'directives';
@@ -83,6 +77,8 @@ export class ComicSearchDetailsComponent implements OnInit {
   protected readonly scrollToIndex$: Subject<number> = new Subject<number>();
   protected errorMessage$ = new BehaviorSubject<HttpResponseError | null>(null);
 
+  protected spinner = signal(false);
+
   constructor() {
     const idGc$: Observable<string> = this.route.params.pipe(
       map((params) => params['idGc']),
@@ -104,8 +100,10 @@ export class ComicSearchDetailsComponent implements OnInit {
       this.triggerFetch$.pipe(startWith(undefined)),
       idGc$,
     ]).pipe(
+      tap(() => this.spinner.set(true)),
       switchMap(() => this.comicsService.getComicSearchDetailsLinks(this.idGc ?? '')),
       catchError((catchError) => {
+        this.spinner.set(false);
         const error = catchError.error;
         if (
           isHttpResponseError(error) &&
@@ -121,10 +119,12 @@ export class ComicSearchDetailsComponent implements OnInit {
           this.errorMessage$.next(catchError.error);
           return of(undefined);
         } else {
+          console.error('Error fetching comic search details links', catchError);
           this.notFoundID$.next(this.idGc ?? '');
           return of(undefined);
         }
       }),
+      tap(() => this.spinner.set(false)),
       shareReplay({ bufferSize: 1, refCount: true }),
     );
 
