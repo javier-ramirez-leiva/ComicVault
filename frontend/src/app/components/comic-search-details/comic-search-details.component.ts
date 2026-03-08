@@ -15,6 +15,7 @@ import {
   Subject,
   catchError,
   combineLatest,
+  delay,
   filter,
   map,
   of,
@@ -82,7 +83,10 @@ export class ComicSearchDetailsComponent implements OnInit {
   constructor() {
     const idGc$: Observable<string> = this.route.params.pipe(
       map((params) => params['idGc']),
-      tap((idGc) => (this.idGc = idGc)),
+      tap((idGc) => {
+        this.spinner.set(true);
+        this.idGc = idGc;
+      }),
       shareReplay({ bufferSize: 1, refCount: true }),
     );
 
@@ -100,7 +104,6 @@ export class ComicSearchDetailsComponent implements OnInit {
       this.triggerFetch$.pipe(startWith(undefined)),
       idGc$,
     ]).pipe(
-      tap(() => this.spinner.set(true)),
       switchMap(() => this.comicsService.getComicSearchDetailsLinks(this.idGc ?? '')),
       catchError((catchError) => {
         this.spinner.set(false);
