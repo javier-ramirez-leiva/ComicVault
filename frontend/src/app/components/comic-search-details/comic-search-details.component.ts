@@ -39,6 +39,7 @@ import { CarouselSeriesComicsComponent } from '../carousel-series-comics/carouse
 import { GoToComicButtonComponent } from '../go-to-comic-button/go-to-comic-button.component';
 import { MiniSpinnerComponent } from '../mini-spinner/mini-spinner.component';
 import { ErrorPageComponent } from '../error-page/error-page.component';
+import { CarouselScreenshotsComponent } from '../carousel-screenshots/carousel-screenshots.component';
 
 @Component({
   selector: 'app-comic-search-details',
@@ -54,6 +55,7 @@ import { ErrorPageComponent } from '../error-page/error-page.component';
     GoToComicButtonComponent,
     MiniSpinnerComponent,
     ErrorPageComponent,
+    CarouselScreenshotsComponent,
   ],
   templateUrl: './comic-search-details.component.html',
 })
@@ -128,6 +130,9 @@ export class ComicSearchDetailsComponent implements OnInit {
         }
       }),
       tap(() => this.spinner.set(false)),
+      tap((comicSearchDetailsLinks) =>
+        console.log('comicSearchDetailsLinks', comicSearchDetailsLinks),
+      ),
       shareReplay({ bufferSize: 1, refCount: true }),
     );
 

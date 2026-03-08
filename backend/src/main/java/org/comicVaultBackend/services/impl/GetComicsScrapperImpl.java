@@ -242,7 +242,7 @@ public class GetComicsScrapperImpl implements GetComicsScrapperService {
                         TagDTO mainTag = getMainTag(tags, title);
 
 
-                        return ComicSearchDetailsLinksDTO.builder().description(description).downloadIssues(downloadIssueDTOS).tags(tags).mainTag(mainTag).build();
+                        return ComicSearchDetailsLinksDTO.builder().description(description).downloadIssues(downloadIssueDTOS).tags(tags).mainTag(mainTag).screenshots(getScreenshots(doc)).build();
 
                     } else {
                         List<DownloadLinkDTO> downLoadLinkDTOS = new ArrayList<DownloadLinkDTO>();
@@ -303,6 +303,7 @@ public class GetComicsScrapperImpl implements GetComicsScrapperService {
                                 category("").
                                 tags(tags).
                                 mainTag(mainTag).
+                                screenshots(getScreenshots(doc)).
                                 build();
                     }
                 } else {
@@ -343,7 +344,7 @@ public class GetComicsScrapperImpl implements GetComicsScrapperService {
                     List<TagDTO> tags = scrapeTags(doc);
                     TagDTO mainTag = getMainTag(tags, title);
 
-                    return ComicSearchDetailsLinksDTO.builder().description(description).downloadIssues(downloadIssueDTOS).tags(tags).mainTag(mainTag).build();
+                    return ComicSearchDetailsLinksDTO.builder().description(description).downloadIssues(downloadIssueDTOS).tags(tags).mainTag(mainTag).screenshots(getScreenshots(doc)).build();
 
                 }
             } catch (Exception e) {
@@ -354,6 +355,26 @@ public class GetComicsScrapperImpl implements GetComicsScrapperService {
             logger.error("Error connecting to URL: " + urlString + ": " + e.getMessage());
             throw new ComicScrapperGatewayException("Error connecting to URL: " + urlString);
         }
+    }
+
+    private List<String> getScreenshots(Document doc) {
+        List<String> screenshots = new ArrayList<>();
+
+        try {
+            for (Element table : doc.select("table")) {
+                Elements images = table.select("img");
+
+                for (Element img : images) {
+                    String url = img.absUrl("src"); // resolves relative URLs
+                    if (!url.isEmpty()) {
+                        screenshots.add(url);
+                    }
+                }
+            }
+        } catch (Exception ex) {
+            //No error
+        }
+        return screenshots;
     }
 
     @Override
@@ -427,6 +448,7 @@ public class GetComicsScrapperImpl implements GetComicsScrapperService {
                     downloadIssues(comicSearchDetailsLinksDTO.getDownloadIssues()).
                     tags(comicSearchDetailsLinksDTO.getTags()).
                     mainTag(comicSearchDetailsLinksDTO.getMainTag()).
+                    screenshots(comicSearchDetailsLinksDTO.getScreenshots()).
                     build();
 
         } else {

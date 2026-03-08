@@ -27,6 +27,7 @@ export interface ComicSearchDetails extends ComicsSearch {
   description: string;
   tags: Tag[];
   mainTag: Tag | null;
+  screenshots: string[];
 }
 
 export interface ComicSearchDetailsLinks extends ComicSearchDetails {

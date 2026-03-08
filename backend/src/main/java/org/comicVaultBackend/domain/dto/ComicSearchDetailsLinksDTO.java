@@ -15,6 +15,5 @@ import java.util.List;
 @EqualsAndHashCode(callSuper = true)
 public class ComicSearchDetailsLinksDTO extends ComicSearchDetailsDTO {
     private List<DownloadIssueDTO> downloadIssues;
-    private List<TagDTO> tags;
     private TagDTO mainTag;
 }

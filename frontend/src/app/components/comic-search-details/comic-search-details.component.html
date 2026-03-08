@@ -77,7 +77,14 @@
         <p class="text-box-p">{{ comicSearchDetailsLinks.description }}</p>
       </div>
     </div>
-    <div class="justify-center pb-20 md:pb-4 pt-4 h-[28rem] md:h-96 w-full max-w-screen">
+    @if (comicSearchDetailsLinks.screenshots.length > 0) {
+      <div class="justify-center pb-4 pt-4 h-[22rem] md:h-80 w-full max-w-screen">
+        <app-carousel-screenshots
+          [coverUrls]="comicSearchDetailsLinks.screenshots"
+        ></app-carousel-screenshots>
+      </div>
+    }
+    <div class="justify-center pb-20 md:pb-4 pt-4 md:pt-12 h-[28rem] md:h-96 w-full max-w-screen">
       @if (comicsCarousel$ | async; as comicsCarousel) {
         <div>
           <app-carousel-series-comics
