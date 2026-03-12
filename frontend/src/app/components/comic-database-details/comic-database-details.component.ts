@@ -25,7 +25,6 @@ import { CommonModule } from '@angular/common';
 import { DownloadFileButtonComponent } from '../download-file-button/download-file-button.component';
 import { HideRolesDirective } from 'directives';
 import { Role } from 'interfaces';
-import { LoadingSpinnerPageComponent } from '../loading-spinner-page/loading-spinner-page.component';
 import { notNullOrUndefined } from 'src/app/utils/rsjx-operators';
 import { ComicNotFoundComponent } from '../comic-not-found/comic-not-found.component';
 import { CarouselSeriesComicsComponent } from '../carousel-series-comics/carousel-series-comics.component';
@@ -51,7 +50,6 @@ import { CanComponentDeactivate } from 'src/app/guard/unsaved-changes-guard.guar
     RouterModule,
     HideRolesDirective,
     CarouselSeriesComicsComponent,
-    LoadingSpinnerPageComponent,
     ComicNotFoundComponent,
     TwoColumnsTableComponent,
     TagChipComponent,
@@ -92,8 +90,6 @@ export class ComicDatabaseDetailsComponent implements OnInit, CanComponentDeacti
 
   Role = Role;
 
-  protected spinner = signal(false);
-
   constructor() {
     this.form = this.formBuilder.group({
       table: this.formBuilder.group({
@@ -113,12 +109,9 @@ export class ComicDatabaseDetailsComponent implements OnInit, CanComponentDeacti
       }),
     );
     this.comic$ = combineLatest([this.id$, this.triggerFetch$.pipe(startWith(null))]).pipe(
-      tap(() => this.spinner.set(true)),
       switchMap(([id, _]) => this.comicsService.getComic(id)),
-      tap(() => this.spinner.set(false)),
       catchError((error) => {
         this.notFoundID$.next(this.id ?? '');
-        tap(() => this.spinner.set(false));
         return of(undefined);
       }),
       tap((comic) => (this.comic = comic)),
