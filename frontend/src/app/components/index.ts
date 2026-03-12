@@ -118,3 +118,4 @@ export * from './exceptions-page/exceptions-page.component';
 export * from './exceptions-table/exceptions-table.component';
 export * from './exception-page/exception-page.component';
 export * from './carousel-screenshots/carousel-screenshots.component';
+export * from './offline-page/offline-page.component';

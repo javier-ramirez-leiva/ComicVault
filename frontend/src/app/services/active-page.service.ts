@@ -5,6 +5,8 @@ import { BehaviorSubject } from 'rxjs';
 
 const pages = [
   'login',
+  'register',
+  'offline',
   'home',
   'library',
   'search',

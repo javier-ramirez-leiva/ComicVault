@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { HomePageComponent, JobPageComponent } from 'components';
+import { HomePageComponent, JobPageComponent, OfflinePageComponent } from 'components';
 import { SearchPageComponent } from 'components';
 import { ComicSearchDetailsComponent } from 'components';
 import { DownloadsPageComponent } from 'components';
@@ -34,6 +34,17 @@ export const routes: Routes = [
     component: LoginPageComponent,
     title: 'Login',
     canActivate: [loginGuard],
+  },
+  {
+    path: 'register',
+    component: RegisterPageComponent,
+    title: 'Register',
+    canActivate: [registerGuard],
+  },
+  {
+    path: 'offline',
+    component: OfflinePageComponent,
+    title: 'Offline',
   },
   {
     path: 'home',
@@ -175,11 +186,5 @@ export const routes: Routes = [
     component: UserPageComponent,
     title: 'User',
     canActivate: [authGuard],
-  },
-  {
-    path: 'register',
-    component: RegisterPageComponent,
-    title: 'Register',
-    canActivate: [registerGuard],
   },
 ];
