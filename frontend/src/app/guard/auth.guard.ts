@@ -2,7 +2,7 @@ import { CanActivateFn, Router } from '@angular/router';
 import { AuthService, ActivePageService } from 'services';
 import { inject } from '@angular/core';
 import { allowRegisterAccess } from './register.guard';
-import { Observable, of } from 'rxjs';
+import { EMPTY, Observable, of } from 'rxjs';
 import { catchError, map, switchMap } from 'rxjs/operators';
 
 export const authGuard: CanActivateFn = (route, state) => {
@@ -22,7 +22,11 @@ export const authGuard: CanActivateFn = (route, state) => {
       } else {
         // If not authenticated, check if admin exists
         return authService.adminUserExists().pipe(
-          catchError((error) => of(false)),
+          catchError((error) => {
+            activePageService.activePage$.next('offline');
+            router.navigate(['/offline']);
+            return EMPTY;
+          }),
           map((exists) => {
             if (exists) {
               activePageService.activePage$.next('login');
