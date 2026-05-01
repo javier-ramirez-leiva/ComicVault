@@ -14,11 +14,16 @@ import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 @Service
@@ -28,7 +33,8 @@ public class GetComicsScrapperImpl implements GetComicsScrapperService {
 
     private static final List<String> _articlesToAvoid = List.of("article1", "article2");
     private static final List<String> _categoriesToAvoid = List.of("News", "Sponsored");
-    private static final Map<String, ComicSearchDTO> _listCacheComicSearches = new HashMap<String, ComicSearchDTO>();
+    private static final Map<String, ComicSearchDTO> _listCacheComicSearches = new ConcurrentHashMap<>();
+    private static final Map<String, ComicSearchDetailsLinksDTO> _listCacheComicDetails = new ConcurrentHashMap<>();
 
     @Autowired
     private ComicTitleParserService comicTitleParserService;
@@ -36,6 +42,21 @@ public class GetComicsScrapperImpl implements GetComicsScrapperService {
     private String baseURL = "";
 
     private static final Logger logger = LoggerFactory.getLogger(ConfigurationServiceImpl.class);
+
+    @Scheduled(fixedRate = 2 * 60 * 60 * 1000) // every 2 hours
+    public void clearCaches() {
+        logger.info("Clearing comic caches...");
+
+        synchronized (_listCacheComicSearches) {
+            _listCacheComicSearches.clear();
+        }
+
+        synchronized (_listCacheComicDetails) {
+            _listCacheComicDetails.clear();
+        }
+
+        logger.info("Caches cleared.");
+    }
 
     @Override
     public void setBaseURL(String baseURL) {
@@ -428,10 +449,13 @@ public class GetComicsScrapperImpl implements GetComicsScrapperService {
     @Override
     public ComicSearchDetailsLinksDTO getComicDetailsFromIDgc(String idGc) throws ComicScrapperParsingException, ComicScrapperGatewayException, ComicScrapperUntreatedException {
         //If the comic has been already scrapped, priorize cached information
+        if (_listCacheComicDetails.containsKey(idGc)) {
+            return _listCacheComicDetails.get(idGc);
+        }
         if (_listCacheComicSearches.containsKey(idGc)) {
             ComicSearchDTO comicSearchDto = _listCacheComicSearches.get(idGc);
             ComicSearchDetailsLinksDTO comicSearchDetailsLinksDTO = getComicDetails(comicSearchDto.getLink());
-            return ComicSearchDetailsLinksDTO.builder().
+            ComicSearchDetailsLinksDTO curatedComicSearchDetailsLinksDTO = ComicSearchDetailsLinksDTO.builder().
                     idGc(comicSearchDto.getIdGc()).
                     idGcIssue("").
                     title(comicSearchDto.getTitle()).
@@ -450,7 +474,8 @@ public class GetComicsScrapperImpl implements GetComicsScrapperService {
                     mainTag(comicSearchDetailsLinksDTO.getMainTag()).
                     screenshots(comicSearchDetailsLinksDTO.getScreenshots()).
                     build();
-
+            _listCacheComicDetails.put(idGc, curatedComicSearchDetailsLinksDTO);
+            return curatedComicSearchDetailsLinksDTO;
         } else {
             throw new ComicScrapperUntreatedException("Error id has not been previously threaded: " + idGc);
         }
