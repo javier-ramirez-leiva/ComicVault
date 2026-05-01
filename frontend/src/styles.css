@@ -203,7 +203,7 @@
   --color-settings-menu-border: var(--color-slate-500);
 
   /**Inputs**/
-  --color-input-background: var(--color-slate-100);
+  --color-input-background: var(--color-slate-50);
   --color-input-hover: var(--color-slate-200);
   --color-input-border: var(--color-slate-300);
   --color-input-button-focus-ring: var(--color-slate-100);
