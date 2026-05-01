@@ -1,12 +1,13 @@
 @if (title) {
-  <label class="block mb-2 text-sm font-medium text-generic-text">
+  <p class="block mb-2 text-sm font-medium text-generic-text">
     {{ title }}
-  </label>
+  </p>
 }
 @if (!multiLine) {
   <input
     #input
     type="text"
+    [id]="id"
     class="bg-input-background border border-input-border text-generic-text text-sm rounded-lg focus:ring-input-field-focus-ring focus:border-input-button-focus-ring block w-full p-2.5"
     (change)="onInput($event)"
     (blur)="onTouched()"
@@ -18,6 +19,7 @@
   <textarea
     #input
     rows="5"
+    [id]="id"
     class="bg-input-background border border-input-border text-generic-text text-sm rounded-lg focus:ring-input-field-focus-ring focus:border-input-button-focus-ring block w-full p-2.5"
     (input)="onInput($event)"
     (blur)="onTouched()"

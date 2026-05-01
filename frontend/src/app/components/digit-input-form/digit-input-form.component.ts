@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild, forwardRef, viewChild } from '@angular/core';
+import { Component, ElementRef, Input, ViewChild, forwardRef, viewChild } from '@angular/core';
 import { ControlValueAccessor, FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 
 @Component({
@@ -18,6 +18,7 @@ export class DigitInputFormComponent implements ControlValueAccessor {
   isDisabled = false;
 
   @ViewChild('input', { static: false }) input!: ElementRef<HTMLInputElement>;
+  @Input({ required: true }) id: string = '';
 
   private onChange = (_: any) => {};
   protected onTouched = () => {};

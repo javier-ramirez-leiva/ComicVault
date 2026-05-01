@@ -18,15 +18,23 @@
   <form [formGroup]="form" class="flex flex-col justify-between flex-1">
     <div class="space-y-6 text-right-panel-text">
       <div class="space-y-2">
-        <app-input-text-form formControlName="comicTitle" title="Comic Title">
+        <app-input-text-form id="comicTitle" formControlName="comicTitle" title="Comic Title">
         </app-input-text-form>
       </div>
       <div class="mb-4">
-        <app-date-text-form title="Date start" formControlName="dateStart"></app-date-text-form>
+        <app-date-text-form
+          id="date-start"
+          title="Date start"
+          formControlName="dateStart"
+        ></app-date-text-form>
       </div>
 
       <div class="mb-4">
-        <app-date-text-form title="Date end" formControlName="dateEnd"></app-date-text-form>
+        <app-date-text-form
+          id="date-end"
+          title="Date end"
+          formControlName="dateEnd"
+        ></app-date-text-form>
       </div>
 
       <!-- Read Status -->

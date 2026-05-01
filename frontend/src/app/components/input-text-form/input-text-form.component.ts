@@ -16,6 +16,7 @@ import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 export class InputTextFormComponent {
   @Input({ required: false }) title: string = '';
   @Input({ required: false }) multiLine = false;
+  @Input({ required: true }) id: string = '';
 
   value = '';
   isDisabled = false;

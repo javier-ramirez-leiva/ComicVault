@@ -10,7 +10,6 @@ import { ComicSearchComponent } from '../comic-search/comic-search.component';
 })
 export class ComicsSearchGridComponent {
   @Input({ required: true }) public comics!: ComicsSearch[];
-  @Input() public trackNames: Boolean = true;
 
   trackByComic(index: number, comic: ComicsSearch): string {
     return comic.idGc;

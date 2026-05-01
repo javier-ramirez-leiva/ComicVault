@@ -1,9 +1,9 @@
 <div class="relative max-w-sm">
   <div class="space-y-2">
     @if (title) {
-      <label class="block mb-2 text-sm font-medium text-generic-text">
+      <p class="block mb-2 text-sm font-medium text-generic-text">
         {{ title }}
-      </label>
+      </p>
     }
     <div
       class="absolute inset-y-0 start-0 top-9 flex items-center align-middle ps-3.5 pointer-events-none"
@@ -23,6 +23,8 @@
     <input
       datepicker
       #input
+      [id]="id"
+      autocomplete="off"
       type="text"
       class="text-sm rounded-lg block w-full ps-10 p-2.5 bg-input-background border-input-border text-generic-text focus:ring-input-field-focus-ring focus:border-input-button-focus-ring"
       (change)="onInput($event)"
