@@ -155,7 +155,6 @@ export class SearchPageComponent implements OnInit {
     this.windowService.scrollBottom$
       .pipe(
         debounceTime(1000),
-        tap(() => console.log('scroll event')),
         filter((_) => !this.errorOrEmpty),
         filter((_) => this.enableBottomEvents),
         untilDestroyed(this),
