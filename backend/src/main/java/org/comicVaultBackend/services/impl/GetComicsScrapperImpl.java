@@ -7,6 +7,7 @@ import org.comicVaultBackend.domain.regular.ComicTitle;
 import org.comicVaultBackend.exceptions.*;
 import org.comicVaultBackend.services.ComicTitleParserService;
 import org.comicVaultBackend.services.GetComicsScrapperService;
+import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -172,11 +173,16 @@ public class GetComicsScrapperImpl implements GetComicsScrapperService {
         } catch (IOException e) {
             String message = "Error connecting to URL: " + url + ": " + e.getMessage();
             logger.error(message);
-            if (page > 1) {
-                throw new ComicScrapperGatewayPageException(message);
+            if (e instanceof HttpStatusException httpStatusException && httpStatusException.getStatusCode() == 429) {
+                logger.error("Way too many requests, try again next time");
             } else {
-                throw new ComicScrapperGatewayException(message);
+                if (page > 1) {
+                    throw new ComicScrapperGatewayPageException(message);
+                } else {
+                    throw new ComicScrapperGatewayException(message);
+                }
             }
+
         }
 
         return listComics;

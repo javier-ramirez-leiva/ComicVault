@@ -55,7 +55,7 @@ export class SearchPageComponent implements OnInit {
   protected comics$ = new BehaviorSubject<ComicsSearch[] | undefined>(undefined);
   private comicsQuery$: Observable<ComicsSearch[]>;
   private scrollTrigger$ = new Subject<void>();
-  protected readonly miniSpinner$ = new Subject<boolean>();
+  protected readonly miniSpinner$ = new BehaviorSubject<boolean>(false);
   page: number = 1;
   query: string | null = null;
   tag: string | null = null;
@@ -135,6 +135,7 @@ export class SearchPageComponent implements OnInit {
       map((scrapperResponse) => {
         this.errorOrEmpty =
           scrapperResponse.comicsSearchs.length === 0 || scrapperResponse.endReached;
+        //this.errorOrEmpty = scrapperResponse.endReached;
         this.miniSpinner$.next(false);
         return scrapperResponse.comicsSearchs;
       }),
@@ -153,6 +154,8 @@ export class SearchPageComponent implements OnInit {
   ngOnInit(): void {
     this.windowService.scrollBottom$
       .pipe(
+        debounceTime(1000),
+        tap(() => console.log('scroll event')),
         filter((_) => !this.errorOrEmpty),
         filter((_) => this.enableBottomEvents),
         untilDestroyed(this),
