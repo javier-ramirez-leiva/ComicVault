@@ -16,6 +16,7 @@ import java.util.List;
 public class ComicSearchDetailsDTO extends ComicSearchDTO {
     private String description;
     private List<TagDTO> tags;
+    private List<String> screenshots;
 
     public ComicSearchDetailsDTO(ComicSearchDTO comicSearchDTO) {
         this.idGc = comicSearchDTO.getIdGc();

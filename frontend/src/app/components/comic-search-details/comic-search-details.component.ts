@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ComicsService, NotifierService } from 'services';
 import {
@@ -16,18 +16,13 @@ import {
   catchError,
   combineLatest,
   delay,
-  distinct,
-  distinctUntilChanged,
   filter,
-  interval,
   map,
   of,
-  share,
   shareReplay,
   startWith,
   switchMap,
   tap,
-  withLatestFrom,
 } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { HideRolesDirective } from 'directives';
@@ -44,6 +39,7 @@ import { CarouselSeriesComicsComponent } from '../carousel-series-comics/carouse
 import { GoToComicButtonComponent } from '../go-to-comic-button/go-to-comic-button.component';
 import { MiniSpinnerComponent } from '../mini-spinner/mini-spinner.component';
 import { ErrorPageComponent } from '../error-page/error-page.component';
+import { CarouselScreenshotsComponent } from '../carousel-screenshots/carousel-screenshots.component';
 
 @Component({
   selector: 'app-comic-search-details',
@@ -59,6 +55,7 @@ import { ErrorPageComponent } from '../error-page/error-page.component';
     GoToComicButtonComponent,
     MiniSpinnerComponent,
     ErrorPageComponent,
+    CarouselScreenshotsComponent,
   ],
   templateUrl: './comic-search-details.component.html',
 })
@@ -83,10 +80,15 @@ export class ComicSearchDetailsComponent implements OnInit {
   protected readonly scrollToIndex$: Subject<number> = new Subject<number>();
   protected errorMessage$ = new BehaviorSubject<HttpResponseError | null>(null);
 
+  protected spinner = signal(false);
+
   constructor() {
     const idGc$: Observable<string> = this.route.params.pipe(
       map((params) => params['idGc']),
-      tap((idGc) => (this.idGc = idGc)),
+      tap((idGc) => {
+        this.spinner.set(true);
+        this.idGc = idGc;
+      }),
       shareReplay({ bufferSize: 1, refCount: true }),
     );
 
@@ -106,6 +108,7 @@ export class ComicSearchDetailsComponent implements OnInit {
     ]).pipe(
       switchMap(() => this.comicsService.getComicSearchDetailsLinks(this.idGc ?? '')),
       catchError((catchError) => {
+        this.spinner.set(false);
         const error = catchError.error;
         if (
           isHttpResponseError(error) &&
@@ -121,10 +124,15 @@ export class ComicSearchDetailsComponent implements OnInit {
           this.errorMessage$.next(catchError.error);
           return of(undefined);
         } else {
+          console.error('Error fetching comic search details links', catchError);
           this.notFoundID$.next(this.idGc ?? '');
           return of(undefined);
         }
       }),
+      tap(() => this.spinner.set(false)),
+      tap((comicSearchDetailsLinks) =>
+        console.log('comicSearchDetailsLinks', comicSearchDetailsLinks),
+      ),
       shareReplay({ bufferSize: 1, refCount: true }),
     );
 

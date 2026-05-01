@@ -25,14 +25,15 @@ export class RegisterPageComponent implements OnInit {
   router: Router = inject(Router);
   darkMode: DarkmodeService = inject(DarkmodeService);
   deviceDetectorService: DeviceDetectorService = inject(DeviceDetectorService);
-  iconSrc: string =
-    this.darkMode.darkModeSignal() === 'dark'
-      ? 'assets/icon-192x192.png'
-      : 'assets/icon-192x192.png';
+  iconSrc: string = '';
 
   ngOnInit(): void {
     const deviceInfo = this.deviceDetectorService.getDeviceInfo();
     this.device = deviceInfo.device;
+
+    this.darkMode.isDarkMode$.pipe(untilDestroyed(this)).subscribe((dark) => {
+      this.iconSrc = dark ? 'assets/icon-192x192.png' : 'assets/icon-light-192x192.png';
+    });
   }
 
   register() {

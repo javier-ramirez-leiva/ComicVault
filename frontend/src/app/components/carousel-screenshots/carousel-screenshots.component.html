@@ -1,0 +1,73 @@
+<div class="pl-4 flex flex-row justify-between gap-8 items-center w-full text-generic-text">
+  <h3 class="text-2xl font-bold">Screenshots</h3>
+  <div class="flex flex-row gap-2">
+    <div class="size-10">
+      @if (canScrollLeft$ | async) {
+        <button
+          type="button"
+          (click)="scrollFullScreen('left')"
+          class="flex items-center justify-center h-10 w-10 rounded-full focus:outline-hidden group"
+        >
+          <svg
+            class="w-4 h-4"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 6 10"
+          >
+            <path
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M5 1 1 5l4 4"
+            ></path>
+          </svg>
+        </button>
+      }
+    </div>
+    <div class="size-10">
+      @if (canScrollRight$ | async) {
+        <button
+          type="button"
+          (click)="scrollFullScreen('right')"
+          class="flex items-center justify-center h-10 w-10 rounded-full focus:outline-hidden group"
+        >
+          <svg
+            class="w-4 h-4"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 6 10"
+          >
+            <path
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="m1 9 4-4-4-4"
+            ></path>
+          </svg>
+        </button>
+      }
+    </div>
+  </div>
+</div>
+@if (coverUrls.length > 0) {
+  <div
+    #scrollContainer
+    class="flex flex-nowrap overflow-x-auto overflow-y-hidden overflow-section no-scrollbar"
+  >
+    @for (coverUrl of coverUrls; track $index) {
+      <div class="p-4 shrink-0" style="width: 200px" #comicItem>
+        <a href="{{ coverUrl }}" target="_blank" rel="noopener noreferrer">
+          <img
+            class="relative inset-0 w-full h-full object-cover object-center rounded-md"
+            [src]="coverUrl"
+            route
+          />
+        </a>
+      </div>
+    }
+  </div>
+}

@@ -1,4 +1,5 @@
-@if (comic$ | async; as comic) {
+@let comic = comic$ | async;
+@if (comic) {
   @if (series$ | async; as series) {
     <ng-container [formGroup]="form">
       <div class="details-page-container">
@@ -186,7 +187,4 @@
 }
 @if (notFoundID$ | async; as notFoundID) {
   <app-comic-not-found [id]="notFoundID"></app-comic-not-found>
-}
-@if (!(comic$ | async) && !(notFoundID$ | async)) {
-  <app-loading-spinner-page></app-loading-spinner-page>
 }

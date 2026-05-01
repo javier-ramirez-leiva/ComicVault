@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { Category, ComicsDatabase, HttpResponseError, Series } from 'interfaces';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { ComicsService, ModalService, NotifierService } from 'services';
@@ -25,7 +25,6 @@ import { CommonModule } from '@angular/common';
 import { DownloadFileButtonComponent } from '../download-file-button/download-file-button.component';
 import { HideRolesDirective } from 'directives';
 import { Role } from 'interfaces';
-import { LoadingSpinnerPageComponent } from '../loading-spinner-page/loading-spinner-page.component';
 import { notNullOrUndefined } from 'src/app/utils/rsjx-operators';
 import { ComicNotFoundComponent } from '../comic-not-found/comic-not-found.component';
 import { CarouselSeriesComicsComponent } from '../carousel-series-comics/carousel-series-comics.component';
@@ -51,7 +50,6 @@ import { CanComponentDeactivate } from 'src/app/guard/unsaved-changes-guard.guar
     RouterModule,
     HideRolesDirective,
     CarouselSeriesComicsComponent,
-    LoadingSpinnerPageComponent,
     ComicNotFoundComponent,
     TwoColumnsTableComponent,
     TagChipComponent,
