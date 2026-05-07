@@ -49,4 +49,14 @@ public class HistoryController {
                 .collect(Collectors.toList());
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    @PostMapping(path = "/history/comic")
+    public List<HistoryDTO> listHistoryForComic(@RequestParam(name = "comicId", required = true) String comicId) {
+
+        List<HistoryEntity> userHistories = historyService.listHistoryForComicId(comicId);
+        return userHistories.stream()
+                .map(historyMapper::mapTo)
+                .collect(Collectors.toList());
+    }
+
 }

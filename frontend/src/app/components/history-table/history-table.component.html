@@ -2,50 +2,74 @@
   <table class="table-container-full">
     <thead class="table-head">
       <tr>
-        <th class="px-6 py-3">Comic</th>
-        <th class="px-6 py-3">Date</th>
-        <th class="px-6 py-3">Status</th>
-        <th class="px-6 py-3">In library</th>
+        @if (columns?.includes('comic')) {
+          <th class="px-6 py-3">Comic</th>
+        }
+        @if (columns?.includes('user')) {
+          <th class="px-6 py-3">User</th>
+        }
+        @if (columns?.includes('date')) {
+          <th class="px-6 py-3">Date</th>
+        }
+        @if (columns?.includes('status')) {
+          <th class="px-6 py-3">Status</th>
+        }
+        @if (columns?.includes('inLibrary')) {
+          <th class="px-6 py-3">In library</th>
+        }
       </tr>
     </thead>
     @if (histories.length > 0) {
       <tbody>
         @for (history of histories; track history) {
           <tr class="table-row">
-            <td class="px-6 py-4">
-              @if (history.alive) {
-                <a
-                  class="font-medium text-table-link hover:underline"
-                  [routerLink]="['/comics', history.comicId, 'details']"
-                >
-                  {{ history.comicTitle }}
-                </a>
-              } @else {
-                {{ history.comicTitle }}
-              }
-            </td>
-            <td class="px-6 py-4">
-              {{ history.progress_date | date: 'dd/MM/yyyy' }}
-            </td>
-            <td class="px-6 py-4">
-              <div class="flex w-full">
-                @if (history.readStatus) {
-                  <span class="chip chip-yes">READ</span>
-                } @else {
-                  {{ history.pages }} / {{ history.pageStatus }}
-                }
-              </div>
-            </td>
-            <td class="px-6 py-4">
-              <div class="flex w-full justify-between">
+            @if (columns?.includes('comic')) {
+              <td class="px-6 py-4">
                 @if (history.alive) {
-                  <span class="chip chip-yes"> YES </span>
+                  <a
+                    class="font-medium text-table-link hover:underline"
+                    [routerLink]="['/comics', history.comicId, 'details']"
+                  >
+                    {{ history.comicTitle }}
+                  </a>
+                } @else {
+                  {{ history.comicTitle }}
                 }
-                @if (!history.alive) {
-                  <span class="chip chip-no"> NO </span>
-                }
-              </div>
-            </td>
+              </td>
+            }
+            @if (columns?.includes('user')) {
+              <td class="px-6 py-4">
+                {{ history.username }}
+              </td>
+            }
+            @if (columns?.includes('date')) {
+              <td class="px-6 py-4">
+                {{ history.progress_date | date: 'dd/MM/yyyy' }}
+              </td>
+            }
+            @if (columns?.includes('status')) {
+              <td class="px-6 py-4">
+                <div class="flex w-full">
+                  @if (history.readStatus) {
+                    <span class="chip chip-yes">READ</span>
+                  } @else {
+                    {{ history.pages }} / {{ history.pageStatus }}
+                  }
+                </div>
+              </td>
+            }
+            @if (columns?.includes('inLibrary')) {
+              <td class="px-6 py-4">
+                <div class="flex w-full justify-between">
+                  @if (history.alive) {
+                    <span class="chip chip-yes"> YES </span>
+                  }
+                  @if (!history.alive) {
+                    <span class="chip chip-no"> NO </span>
+                  }
+                </div>
+              </td>
+            }
           </tr>
         }
       </tbody>

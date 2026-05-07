@@ -1,7 +1,7 @@
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, OnInit, Signal, inject, signal } from '@angular/core';
 import { Category, ComicsDatabase, HttpResponseError, Series } from 'interfaces';
 import { ActivatedRoute, RouterModule } from '@angular/router';
-import { ComicsService, ModalService, NotifierService } from 'services';
+import { ComicsService, HistoryService, ModalService, NotifierService } from 'services';
 import { ReadButtonComponent } from '../read-button/read-button.component';
 import { ConfigURLService } from 'services';
 import { DeleteButtonComponent } from '../delete-button/delete-button.component';
@@ -38,6 +38,8 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { resetRouteCache } from 'src/app/strategy_providers/custom-reuse-strategy';
 import { ModalMiniPagesComponent } from '../modal-mini-pages/modal-mini-pages.component';
 import { CanComponentDeactivate } from 'src/app/guard/unsaved-changes-guard.guard';
+import { ExpanderButtonComponent } from '../expander-button/expander-button.component';
+import { HistoryTableComponent } from '../history-table/history-table.component';
 
 @Component({
   selector: 'app-comic-database-details',
@@ -56,6 +58,8 @@ import { CanComponentDeactivate } from 'src/app/guard/unsaved-changes-guard.guar
     EditMetadataButtonComponent,
     ReactiveFormsModule,
     InputTextFormComponent,
+    ExpanderButtonComponent,
+    HistoryTableComponent,
   ],
   templateUrl: './comic-database-details.component.html',
 })
@@ -69,6 +73,7 @@ export class ComicDatabaseDetailsComponent implements OnInit, CanComponentDeacti
   private readonly formBuilder = inject(FormBuilder);
   private readonly notifierService = inject(NotifierService);
   private readonly modalService = inject(ModalService);
+  private readonly historyService = inject(HistoryService);
   private id: string | undefined;
   private comic: ComicsDatabase | undefined;
   private readonly id$: Observable<string>;
@@ -87,6 +92,11 @@ export class ComicDatabaseDetailsComponent implements OnInit, CanComponentDeacti
   form: FormGroup;
 
   imageLoaded: boolean = false;
+
+  displayProgressDetails = signal(false);
+  protected comicProgressDetails$ = this.historyService.historyComicId(
+    this.route.snapshot.paramMap.get('id') as string,
+  );
 
   Role = Role;
 
@@ -313,6 +323,10 @@ export class ComicDatabaseDetailsComponent implements OnInit, CanComponentDeacti
       return confirm('Are you sure you want to leave without saving?');
     }
     return true;
+  }
+
+  toggleDisplayProgressDetails() {
+    this.displayProgressDetails.update((value) => !value);
   }
 }
 
