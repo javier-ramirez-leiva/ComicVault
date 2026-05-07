@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, signal } from '@angular/core';
 
 @Component({
   selector: 'app-expander-button',
@@ -12,9 +12,9 @@ export class ExpanderButtonComponent {
   @Input({ required: false }) bottomBorder = false;
   @Output() buttonClicked = new EventEmitter<void>();
 
-  expanded = false;
+  expanded = signal(false);
   onButtonClick(): void {
-    this.expanded = !this.expanded;
+    this.expanded.update((value) => !value);
     this.buttonClicked.emit();
   }
 }

@@ -5,7 +5,7 @@
     class="flex items-center justify-between w-full p-5 font-medium rtl:text-right bg-settings-menu-background text-settings-menu-button-text border border-settings-menu-border hover:bg-settings-menu-button-active gap-3"
     [ngClass]="{
       'rounded-t-lg': upperBorder,
-      'rounded-b-lg': bottomBorder && !expanded,
+      'rounded-b-lg': bottomBorder && !expanded(),
     }"
     aria-expanded="false"
   >
@@ -17,13 +17,23 @@
       fill="none"
       viewBox="0 0 10 6"
     >
-      <path
-        stroke="currentColor"
-        stroke-linecap="round"
-        stroke-linejoin="round"
-        stroke-width="2"
-        d="M9 5 5 1 1 5"
-      ></path>
+      @if (expanded()) {
+        <path
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M1 1 5 5 9 1"
+        ></path>
+      } @else {
+        <path
+          stroke="currentColor"
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M9 5 5 1 1 5"
+        ></path>
+      }
     </svg>
   </button>
 </h2>
