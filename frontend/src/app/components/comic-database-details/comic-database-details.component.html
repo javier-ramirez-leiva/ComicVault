@@ -170,10 +170,10 @@
           [upperBorder]="true"
           [bottomBorder]="true"
           (buttonClicked)="toggleDisplayProgressDetails()"
-          class="w-full"
+          class="w-full px-4"
         ></app-expander-button>
         @if (displayProgressDetails()) {
-          <div class="m-4">
+          <div class="mx-4 py-4 px-4 border border-t-0 border-settings-menu-border rounded-b-lg">
             @if (comicProgressDetails$ | async; as progressDetails) {
               <app-history-table
                 [histories]="progressDetails"
