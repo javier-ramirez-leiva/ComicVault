@@ -15,6 +15,7 @@ import org.jsoup.select.Elements;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.util.Pair;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -36,6 +37,7 @@ public class GetComicsScrapperImpl implements GetComicsScrapperService {
     private static final List<String> _categoriesToAvoid = List.of("News", "Sponsored");
     private static final Map<String, ComicSearchDTO> _listCacheComicSearches = new ConcurrentHashMap<>();
     private static final Map<String, ComicSearchDetailsLinksDTO> _listCacheComicDetails = new ConcurrentHashMap<>();
+    private static final Map<Pair<String, Integer>, List<ComicSearchDTO>> _listCacheComicListSearches = new ConcurrentHashMap<>();
 
     @Autowired
     private ComicTitleParserService comicTitleParserService;
@@ -56,6 +58,10 @@ public class GetComicsScrapperImpl implements GetComicsScrapperService {
             _listCacheComicDetails.clear();
         }
 
+        synchronized (_listCacheComicListSearches) {
+            _listCacheComicListSearches.clear();
+        }
+
         logger.info("Caches cleared.");
     }
 
@@ -65,21 +71,38 @@ public class GetComicsScrapperImpl implements GetComicsScrapperService {
     }
 
     @Override
+    public List<ComicSearchDTO> getComicsCache(String url, int page) throws ComicScrapperNotInCache {
+        Pair<String, Integer> key = Pair.of(url, page);
+        if (_listCacheComicListSearches.containsKey(key)) {
+            return _listCacheComicListSearches.get(key);
+        }
+        throw new ComicScrapperNotInCache();
+    }
+
+    @Override
     public List<ComicSearchDTO> getComics(String url, int page) throws ComicScrapperParsingException, ComicScrapperGatewayException, ComicScrapperGatewayPageException {
+        Pair<String, Integer> key = Pair.of(url, page);
+        if (_listCacheComicListSearches.containsKey(key)) {
+            return _listCacheComicListSearches.get(key);
+        }
         int i = 1;
         while (i < TRIES) {
             try {
-                return _getComics(url, page);
+                List<ComicSearchDTO> result = _getComics(url, page);
+                _listCacheComicListSearches.put(key, result);
+                return result;
             } catch (Exception e) {
                 ++i;
             }
         }
-
-        return _getComics(url, page);
+        List<ComicSearchDTO> result = _getComics(url, page);
+        _listCacheComicListSearches.put(key, result);
+        return result;
     }
 
 
     private List<ComicSearchDTO> _getComics(String url, int page) throws ComicScrapperParsingException, ComicScrapperGatewayException, ComicScrapperGatewayPageException {
+        System.out.println("Scrapping: " + url + " " + page);
         List<ComicSearchDTO> listComics = new ArrayList<>();
         try {
             Document doc = Jsoup.connect(url).get();
