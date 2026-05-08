@@ -1059,7 +1059,7 @@ public class ComicController {
             file = targetPath;
         }
 
-        ComicDTO comicDto = comicMetaDataService.getComicMetaData(file, comicSearchDetailsDto, configurationService.getConfiguration().getGetComicsBaseUrl());
+        ComicDTO comicDto = comicMetaDataService.getComicMetaData(file, comicSearchDetailsDto, configurationService.getConfiguration().getGetComicsConfiguration().getBaseUrl());
         // Store tags previously
         if (comicSearchDetailsDto != null && comicSearchDetailsDto.getTags() != null) {
             for (TagDTO tagDTO : comicSearchDetailsDto.getTags()) {

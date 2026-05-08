@@ -1,7 +1,12 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpService } from './http.service';
 import { Observable } from 'rxjs';
-import { ComicsConfiguration, JDownloaderConfiguration, SlackConfiguration } from 'interfaces';
+import {
+  ComicsConfiguration,
+  GetComicsConfiguration,
+  JDownloaderConfiguration,
+  SlackConfiguration,
+} from 'interfaces';
 
 @Injectable({
   providedIn: 'root',
@@ -19,14 +24,6 @@ export class ConfigService {
 
   setSlackConfiguration(slackConfiguration: SlackConfiguration): Observable<any> {
     return this.httpService.request<any>('POST', `/configuration/slack`, slackConfiguration);
-  }
-
-  setgetcomicsBaseUrl(getComicsBaseUrl: string): Observable<any> {
-    return this.httpService.request<any>(
-      'POST',
-      `/configuration/getComicsBaseUrl`,
-      getComicsBaseUrl,
-    );
   }
 
   setScanArchives(value: boolean): Observable<any> {
@@ -59,5 +56,9 @@ export class ConfigService {
 
   setJDownloaderConfiguration(configuration: JDownloaderConfiguration): Observable<any> {
     return this.httpService.request<any>('POST', `/configuration/jDownloader`, configuration);
+  }
+
+  setGetcomicsConfiguration(configuration: GetComicsConfiguration): Observable<any> {
+    return this.httpService.request<any>('POST', `/configuration/getComics`, configuration);
   }
 }

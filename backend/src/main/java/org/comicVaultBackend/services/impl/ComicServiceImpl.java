@@ -241,7 +241,7 @@ public class ComicServiceImpl implements ComicService {
 
     //
     private void setLink(ComicEntity comic, String link) {
-        String newLink = link.replace(configurationService.getConfiguration().getGetComicsBaseUrl(), "");
+        String newLink = link.replace(configurationService.getConfiguration().getGetComicsConfiguration().getBaseUrl(), "");
         comic.setLink(newLink);
     }
 }
