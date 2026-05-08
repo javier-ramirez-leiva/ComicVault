@@ -21,13 +21,19 @@
               row.text | emptyToNA
             }}</ng-container>
             <ng-template #inputTextTmpl>
-              <app-input-text-form [formControlName]="row.formControlName"></app-input-text-form>
+              <app-input-text-form
+                [id]="row.formControlName"
+                [formControlName]="row.formControlName"
+              ></app-input-text-form>
             </ng-template>
           </td>
           <td *ngIf="row.type === 'editable-number'" class="px-6 py-4">
             <ng-container *ngIf="!editMode; else inputNumberTmpl">{{ row.number }}</ng-container>
             <ng-template #inputNumberTmpl>
-              <app-digit-input-form [formControlName]="row.formControlName"></app-digit-input-form>
+              <app-digit-input-form
+                [id]="row.formControlName"
+                [formControlName]="row.formControlName"
+              ></app-digit-input-form>
             </ng-template>
           </td>
           <td *ngIf="row.type === 'routerLink'" class="px-6 py-4">
@@ -59,7 +65,10 @@
               </a>
             </ng-container>
             <ng-template #inputLinkTmpl>
-              <app-input-text-form [formControlName]="row.formControlName"></app-input-text-form>
+              <app-input-text-form
+                [id]="row.formControlName"
+                [formControlName]="row.formControlName"
+              ></app-input-text-form>
             </ng-template>
           </td>
           <td *ngIf="row.type === 'image'" class="px-6 py-4">

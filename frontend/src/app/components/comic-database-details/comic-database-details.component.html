@@ -158,6 +158,31 @@
           }
         </div>
       }
+      <div
+        appHideRoles
+        [appHideForRoles]="[Role.Owner, Role.Contributor, Role.Requester, Role.Viewer]"
+        class="w-full flex flex-col justify-start text-generic-text"
+      >
+        <app-expander-button
+          appHideRoles
+          [appHideForRoles]="[Role.Owner, Role.Contributor, Role.Requester, Role.Viewer]"
+          title="Display progress details"
+          [upperBorder]="true"
+          [bottomBorder]="true"
+          (buttonClicked)="toggleDisplayProgressDetails()"
+          class="w-full px-4"
+        ></app-expander-button>
+        @if (displayProgressDetails()) {
+          <div class="mx-4 py-4 px-4 border border-t-0 border-settings-menu-border rounded-b-lg">
+            @if (comicProgressDetails$ | async; as progressDetails) {
+              <app-history-table
+                [histories]="progressDetails"
+                [columns]="['user', 'date', 'status']"
+              ></app-history-table>
+            }
+          </div>
+        }
+      </div>
       <div class="py-4">
         @if (!editStatus) {
           <div class="text-box">
@@ -166,6 +191,7 @@
         } @else {
           <div class="text-box">
             <app-input-text-form
+              id="description"
               class="text-box-input"
               [multiLine]="true"
               formControlName="description"

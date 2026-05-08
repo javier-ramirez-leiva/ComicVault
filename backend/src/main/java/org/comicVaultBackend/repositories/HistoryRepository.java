@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface HistoryRepository extends CrudRepository<HistoryEntity, Long> {
-    List<HistoryEntity> findAllByUsername (String username);
+    List<HistoryEntity> findAllByUsername(String username);
+
+    List<HistoryEntity> findAllByComicId(String comicId);
+
     Optional<HistoryEntity> findByAutomaticId(Long id);
 }

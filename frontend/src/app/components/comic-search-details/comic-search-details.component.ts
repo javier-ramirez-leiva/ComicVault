@@ -130,9 +130,6 @@ export class ComicSearchDetailsComponent implements OnInit {
         }
       }),
       tap(() => this.spinner.set(false)),
-      tap((comicSearchDetailsLinks) =>
-        console.log('comicSearchDetailsLinks', comicSearchDetailsLinks),
-      ),
       shareReplay({ bufferSize: 1, refCount: true }),
     );
 

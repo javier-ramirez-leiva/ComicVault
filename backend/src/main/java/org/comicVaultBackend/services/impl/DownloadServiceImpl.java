@@ -1,6 +1,5 @@
 package org.comicVaultBackend.services.impl;
 
-import org.comicVaultBackend.controllers.ComicController;
 import org.comicVaultBackend.domain.dto.ComicSearchDTO;
 import org.comicVaultBackend.domain.dto.DownloadLinkDTO;
 import org.comicVaultBackend.domain.dto.JDownloaderConfigurationDTO;

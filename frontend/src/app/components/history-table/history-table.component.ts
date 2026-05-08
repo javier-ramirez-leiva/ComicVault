@@ -10,4 +10,7 @@ import { RouterModule } from '@angular/router';
 })
 export class HistoryTableComponent {
   @Input({ required: true }) histories: History[] = [];
+  @Input({ required: true }) columns?: HistoryTableColumn[] = [];
 }
+
+type HistoryTableColumn = 'comic' | 'user' | 'date' | 'status' | 'inLibrary';

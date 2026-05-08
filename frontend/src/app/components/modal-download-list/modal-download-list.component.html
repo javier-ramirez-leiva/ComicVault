@@ -12,6 +12,7 @@
           }}</label>
           <select
             (change)="onPlatformChange($event, downloadIssue.idGcIssue)"
+            id="download-options"
             class="bg-input-select-background border border-input-select-border text-input-select-text text-sm rounded-lg focus:ring-input-select-focus-ring block w-full p-2.5"
           >
             @if (downloadIssue.links.length) {

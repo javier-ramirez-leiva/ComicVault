@@ -12,6 +12,7 @@ import {
   ConfigService,
   PaginationRatioService,
   ServerInfoService,
+  AuthService,
 } from 'services';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { HideRolesDirective } from 'directives';
@@ -20,7 +21,7 @@ import { ExpanderButtonComponent } from '../expander-button/expander-button.comp
 import { ScanLibButtonComponent } from '../scan-lib-button/scan-lib-button.component';
 import { CleanLibButtonComponent } from '../clean-lib-button/clean-lib-button.component';
 import { DeleteLibButtonComponent } from '../delete-lib-button/delete-lib-button.component';
-import { Subject, switchMap } from 'rxjs';
+import { filter, Subject, switchMap } from 'rxjs';
 import { BooleanSliderComponent } from '../boolean-slider/boolean-slider.component';
 import { DigitInputComponent } from '../digit-input/digit-input.component';
 import { InputTextComponent } from '../input-text/input-text.component';
@@ -87,6 +88,7 @@ export class SettingsPageComponent {
   protected readonly darkModeService = inject(DarkmodeService);
   protected readonly paginationRatioService = inject(PaginationRatioService);
   private readonly serverInfoService = inject(ServerInfoService);
+  private readonly authService = inject(AuthService);
 
   Role = Role;
 
@@ -95,9 +97,12 @@ export class SettingsPageComponent {
       this.darkMode = isDarkMode;
     });
     this.paginationRatio = this.paginationRatioService.getPaginationRatio();
-    this.configService
-      .getConfig()
-      .pipe(untilDestroyed(this))
+    this.authService.role$
+      .pipe(
+        filter((role) => role === 'ADMIN'),
+        switchMap(() => this.configService.getConfig()),
+        untilDestroyed(this),
+      )
       .subscribe((comicConfig) => {
         this.storagePath = comicConfig.downloadRoot;
         this.slackConfiguration = comicConfig.slackConfiguration;

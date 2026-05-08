@@ -9,6 +9,7 @@ import { FormsModule } from '@angular/forms';
 export class DigitInputComponent {
   @Input({ required: true }) value: number = 0;
   @Output() valueChange = new EventEmitter<number>();
+  @Input({ required: true }) id: string = '';
 
   onNgModelChange(value: any) {
     this.value = Number(value); // convert to number safely

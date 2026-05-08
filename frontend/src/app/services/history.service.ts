@@ -21,4 +21,8 @@ export class HistoryService {
       filterHistory,
     );
   }
+
+  historyComicId(comicId: string): Observable<History[]> {
+    return this.httpService.request<History[]>('POST', `/history/comic?comicId=${comicId}`);
+  }
 }

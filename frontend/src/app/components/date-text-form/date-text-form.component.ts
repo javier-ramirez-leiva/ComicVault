@@ -15,6 +15,7 @@ import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 })
 export class DateTextFormComponent {
   @Input({ required: false }) title: string = '';
+  @Input({ required: true }) id: string = '';
 
   value = '';
   isDisabled = false;

@@ -81,9 +81,7 @@
           ></app-help-button>
         </div>
         <div class="mb-5 mt-5">
-          <label class="block mb-4 text-sm font-medium text-generic-text"
-            >Manage library content</label
-          >
+          <p class="block mb-4 text-sm font-medium text-generic-text">Manage library content</p>
           <div class="flex flex-col md:flex-row gap-2 w-fit">
             <app-scan-lib-button [mini]="false"></app-scan-lib-button>
             <app-clean-lib-button
@@ -111,14 +109,15 @@
           label="Dark Mode"
         ></app-boolean-slider>
         <div class="flex gap-4">
-          <label class="block mb-2 text-sm font-medium text-generic-text">
+          <p class="block mb-2 text-sm font-medium text-generic-text">
             How many provider pages fit into one app page
-          </label>
+          </p>
           <app-help-button
             message="Adjust the ratio of provider pages per app page.This value should be high enough to fill your device with comics in one search"
           ></app-help-button>
         </div>
         <app-digit-input
+          id="pagination-ratio"
           [(value)]="paginationRatio"
           (valueChange)="updatePaginationRatio()"
         ></app-digit-input>

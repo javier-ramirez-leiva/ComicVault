@@ -15,14 +15,14 @@
       </app-input-text>
     </div>
     <div class="flex items-center justify-start gap-4">
-      <label for="hs-color-input" class="block text-sm font-medium mb-2"> Avatar color </label>
+      <p class="block text-sm font-medium mb-2">Avatar color</p>
       <div class="flex h-full justify-center">
         <app-input-color [(value)]="user.color"></app-input-color>
       </div>
     </div>
     @if (data?.input?.modifyRole === true) {
       <div class="p-4 md:p-5 text-center">
-        <label for="role" class="block mb-2 text-sm font-medium"> Select a role </label>
+        <p class="block mb-2 text-sm font-medium">Select a role</p>
         <div
           class="bg-input-select-background border border-input-select-border text-input-select-text text-sm rounded-lg focus:ring-input-select-focus-ring p-2.5"
         >

@@ -12,11 +12,18 @@ public class HistoryServiceImpl implements HistoryService {
 
     private final HistoryRepository historyRepository;
 
-    public HistoryServiceImpl(HistoryRepository historyRepository) {this.historyRepository = historyRepository;}
+    public HistoryServiceImpl(HistoryRepository historyRepository) {
+        this.historyRepository = historyRepository;
+    }
 
     @Override
     public List<HistoryEntity> listHistoryForUser(String username) {
         return historyRepository.findAllByUsername(username);
+    }
+
+    @Override
+    public List<HistoryEntity> listHistoryForComicId(String comicId) {
+        return historyRepository.findAllByComicId(comicId);
     }
 
     @Override
