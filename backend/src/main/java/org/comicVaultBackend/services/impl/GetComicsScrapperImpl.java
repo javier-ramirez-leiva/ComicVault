@@ -7,7 +7,6 @@ import org.comicVaultBackend.domain.regular.ComicTitle;
 import org.comicVaultBackend.exceptions.*;
 import org.comicVaultBackend.services.ComicTitleParserService;
 import org.comicVaultBackend.services.GetComicsScrapperService;
-import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -72,7 +71,6 @@ public class GetComicsScrapperImpl implements GetComicsScrapperService {
     @Override
     public List<ComicSearchDTO> getComicsCache(String url) throws ComicScrapperNotInCache {
         if (_listCacheComicListSearches.containsKey(url)) {
-            System.out.println("Found '" + url);
             return _listCacheComicListSearches.get(url);
         }
         throw new ComicScrapperNotInCache();
@@ -88,7 +86,6 @@ public class GetComicsScrapperImpl implements GetComicsScrapperService {
             try {
                 List<ComicSearchDTO> result = _getComics(url, page);
                 if (!result.isEmpty()) {
-                    System.out.println("Adding '" + url + "' : -> " + result.size());
                     _listCacheComicListSearches.put(url, result);
                 }
                 return result;
@@ -98,7 +95,6 @@ public class GetComicsScrapperImpl implements GetComicsScrapperService {
         }
         List<ComicSearchDTO> result = _getComics(url, page);
         if (!result.isEmpty()) {
-            System.out.println("Adding '" + url + "' : -> " + result.size());
             _listCacheComicListSearches.put(url, result);
         }
         return result;
@@ -106,7 +102,6 @@ public class GetComicsScrapperImpl implements GetComicsScrapperService {
 
 
     private List<ComicSearchDTO> _getComics(String url, int page) throws ComicScrapperParsingException, ComicScrapperGatewayException, ComicScrapperGatewayPageException {
-        System.out.println("Scrapping: " + url + " " + page);
         List<ComicSearchDTO> listComics = new ArrayList<>();
         try {
             Document doc = Jsoup.connect(url).get();
@@ -200,14 +195,19 @@ public class GetComicsScrapperImpl implements GetComicsScrapperService {
         } catch (IOException e) {
             String message = "Error connecting to URL: " + url + ": " + e.getMessage();
             logger.error(message);
-            if (e instanceof HttpStatusException httpStatusException && httpStatusException.getStatusCode() == 429) {
-                logger.error("Way too many requests, try again next time");
+//            if (e instanceof HttpStatusException httpStatusException && httpStatusException.getStatusCode() == 429) {
+//                logger.error("Way too many requests, try again next time");
+//            } else {
+//                if (page > 1) {
+//                    throw new ComicScrapperGatewayPageException(message);
+//                } else {
+//                    throw new ComicScrapperGatewayException(message);
+//                }
+//            }
+            if (page > 1) {
+                throw new ComicScrapperGatewayPageException(message);
             } else {
-                if (page > 1) {
-                    throw new ComicScrapperGatewayPageException(message);
-                } else {
-                    throw new ComicScrapperGatewayException(message);
-                }
+                throw new ComicScrapperGatewayException(message);
             }
 
         }
