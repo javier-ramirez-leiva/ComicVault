@@ -76,7 +76,7 @@ export class SettingsPageComponent {
   generateNavigationThumbnails: boolean = false;
   darkMode: boolean = false;
   paginationRatio: number = 1;
-  getComicsSpaceBetweenThreadsMs: number = 0;
+  getComicsRequestsPerSecond: number = 0;
   displayPaginationTooltip: boolean = false;
 
   resetStorageStatus$ = new Subject<void>();
@@ -113,8 +113,7 @@ export class SettingsPageComponent {
         this.scanArchives = comicConfig.scanArchives;
         this.deleteArchives = comicConfig.deleteArchives;
         this.generateNavigationThumbnails = comicConfig.generateNavigationThumbnails;
-        this.getComicsSpaceBetweenThreadsMs =
-          comicConfig.getComicsConfiguration.spaceBetweenThreadsMs;
+        this.getComicsRequestsPerSecond = comicConfig.getComicsConfiguration.requestsPerSecond;
       });
   }
 

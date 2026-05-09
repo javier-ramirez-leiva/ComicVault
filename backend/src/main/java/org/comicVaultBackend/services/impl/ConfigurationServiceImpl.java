@@ -68,9 +68,9 @@ public class ConfigurationServiceImpl implements ConfigurationService {
             }
         } else {
             final String getComicsBaseUrl = "https://getcomics.org"; // Working as of today 23/04/2025
-            final long getComicsSpaceBetweenThreadsMs = 500;
+            final double getComicsRequestPerSecond = 1.0;
             this.configurationDto = ConfigurationDTO.builder().downloadRoot("").comicVineAPIKey("")
-                    .getComicsConfiguration(GetComicsConfigurationDTO.builder().baseUrl(getComicsBaseUrl).spaceBetweenThreadsMs(getComicsSpaceBetweenThreadsMs).build())
+                    .getComicsConfiguration(GetComicsConfigurationDTO.builder().baseUrl(getComicsBaseUrl).requestsPerSecond(getComicsRequestPerSecond).build())
                     .slackConfiguration(SlackConfigurationDTO.builder().enableNotifications(false).slackWebHook("").comicVaultBaseUrl("").build())
                     .jDownloaderConfiguration(JDownloaderConfigurationDTO.builder().jDownloaderOutputPath("").jDownloaderCrawljobPath("").build()).
                     deleteArchives(true).scanArchives(true).generateNavigationThumbnails(true).build();

@@ -1,4 +1,10 @@
-<div class="relative flex items-center max-w-[8rem]">
+<div
+  class="relative flex items-center"
+  [ngClass]="{
+    'max-w-[16rem]': large === true,
+    'max-w-[8rem]': !large,
+  }"
+>
   <button
     (click)="onNgModelChange(value - 1)"
     type="button"
@@ -22,6 +28,7 @@
   </button>
   <input
     type="number"
+    step="any"
     [id]="id"
     class="no-arrows bg-input-background border border-input-border h-11 text-center text-generic-text text-sm focus:ring-input-field-focus-ring focus:border-input-field-focus-ring block w-full py-2.5 placeholder-input-placeholder"
     placeholder="1"

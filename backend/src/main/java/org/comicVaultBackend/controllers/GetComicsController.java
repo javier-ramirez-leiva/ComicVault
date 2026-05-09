@@ -128,12 +128,10 @@ public class GetComicsController {
 //                .build();
 //    }
 
-    private ScrapperResponseDTO scrappeComics(int page, int pageRatio, long spaceBetweenThreadsMs, SearchType searchType, String queryString) throws ComicScrapperGatewayException {
+    private ScrapperResponseDTO scrappeComics(int page, int pageRatio, double requestPerSecond, SearchType searchType, String queryString) throws ComicScrapperGatewayException {
         ExecutorService executor = Executors.newFixedThreadPool(pageRatio);
 
-        // 1 request every 2 seconds
-//        RateLimiter rateLimiter = RateLimiter.create(0.5); // 1 request every 2 seconds
-        RateLimiter rateLimiter = RateLimiter.create(1.0); // 1 request every 2 seconds
+        RateLimiter rateLimiter = RateLimiter.create(requestPerSecond);
 
         List<CompletableFuture<List<ComicSearchDTO>>> futures = new ArrayList<>();
 
@@ -150,11 +148,11 @@ public class GetComicsController {
 
             try {
                 List<ComicSearchDTO> comics =
-                        getComicsScrapperService.getComicsCache(url, currentPage);
+                        getComicsScrapperService.getComicsCache(url);
                 CompletableFuture
                         .supplyAsync(() -> {
                             try {
-                                List<ComicSearchDTO> comicsCache = getComicsScrapperService.getComicsCache(url, currentPage);
+                                List<ComicSearchDTO> comicsCache = getComicsScrapperService.getComicsCache(url);
                                 comicsCache.forEach(this::setDownloadingStatus);
                                 return comicsCache;
                             } catch (ComicScrapperNotInCache ex) {
@@ -229,7 +227,7 @@ public class GetComicsController {
     ) throws ComicScrapperParsingException, ComicScrapperGatewayException, ComicScrapperGatewayPageException {
 
         setBaseUrl();
-        return scrappeComics(page, pageRatio, configurationService.getConfiguration().getGetComicsConfiguration().getSpaceBetweenThreadsMs(), SearchType.SEARCH, query);
+        return scrappeComics(page, pageRatio, configurationService.getConfiguration().getGetComicsConfiguration().getRequestsPerSecond(), SearchType.SEARCH, query);
     }
 
     @PreAuthorize("hasAnyAuthority('ADMIN','OWNER', 'CONTRIBUTOR', 'REQUESTER', 'VIEWER')")
@@ -241,7 +239,7 @@ public class GetComicsController {
     ) throws ComicScrapperParsingException, ComicScrapperGatewayException, ComicScrapperGatewayPageException {
 
         setBaseUrl();
-        return scrappeComics(page, pageRatio, configurationService.getConfiguration().getGetComicsConfiguration().getSpaceBetweenThreadsMs(), SearchType.TAG, tag);
+        return scrappeComics(page, pageRatio, configurationService.getConfiguration().getGetComicsConfiguration().getRequestsPerSecond(), SearchType.TAG, tag);
     }
 
     @PreAuthorize("hasAnyAuthority('ADMIN','OWNER', 'CONTRIBUTOR', 'REQUESTER', 'VIEWER')")
@@ -251,7 +249,7 @@ public class GetComicsController {
             @RequestParam(name = "pageRatio", required = false, defaultValue = "1") int pageRatio
     ) throws ComicScrapperParsingException, ComicScrapperGatewayException, ComicScrapperGatewayPageException {
         setBaseUrl();
-        return scrappeComics(page, pageRatio, configurationService.getConfiguration().getGetComicsConfiguration().getSpaceBetweenThreadsMs(), SearchType.BASE_URL, "nevermind");
+        return scrappeComics(page, pageRatio, configurationService.getConfiguration().getGetComicsConfiguration().getRequestsPerSecond(), SearchType.BASE_URL, "nevermind");
     }
 
     @PreAuthorize("hasAnyAuthority('ADMIN','OWNER', 'CONTRIBUTOR', 'REQUESTER', 'VIEWER')")
@@ -262,7 +260,7 @@ public class GetComicsController {
             @RequestParam(name = "category", required = false, defaultValue = "") String category
     ) throws ComicScrapperParsingException, ComicScrapperGatewayException, ComicScrapperGatewayPageException {
         setBaseUrl();
-        return scrappeComics(page, pageRatio, configurationService.getConfiguration().getGetComicsConfiguration().getSpaceBetweenThreadsMs(), SearchType.CATEGORY, category);
+        return scrappeComics(page, pageRatio, configurationService.getConfiguration().getGetComicsConfiguration().getRequestsPerSecond(), SearchType.CATEGORY, category);
     }
 
     @PreAuthorize("hasAnyAuthority('ADMIN','OWNER', 'CONTRIBUTOR', 'REQUESTER', 'VIEWER')")

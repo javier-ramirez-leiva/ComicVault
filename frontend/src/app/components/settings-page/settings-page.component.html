@@ -175,31 +175,29 @@
     <div [ngClass]="{ hidden: !showComicProviders }">
       <div class="flex flex-col p-5 border border-settings-menu-border">
         <div class="mb-5">
-          <h2 class="text-lg text-generic-text">GetComics</h2>
-          <div class="p-4">
+          <h2 class="text-lg text-generic-text mb-2">GetComics</h2>
+          <div class="p-4 border border-settings-menu-border rounded-lg">
             <app-input-text
               [(value)]="getcomicsBaseUrl"
               title="Base URL"
               id="'getcomicsBaseUrl"
             ></app-input-text>
             <div class="flex gap-4 mt-4">
-              <p class="block mb-2 text-sm font-medium text-generic-text">
-                Delay between scraping threads (ms)
-              </p>
+              <p class="block mb-2 text-sm font-medium text-generic-text">Requests per second</p>
               <app-help-button
-                message="Adjust the delay between scraping threads to avoid ‘Too Many Requests’ errors while minimizing search times"
+                message="Adjust the number of requests per second. Setting this too high may cause 'Too Many Requests' errors. A value of 1 means one request per second, 0.5 means one request every two seconds, etc."
               ></app-help-button>
             </div>
             <app-digit-input
-              id="getComicsSpaceBetweenThreadsMs"
-              [(value)]="getComicsSpaceBetweenThreadsMs"
+              id="getComicsRequestsPerSecond"
+              [(value)]="getComicsRequestsPerSecond"
             ></app-digit-input>
             <div class="flex justify-end">
               <app-test-button
                 test="getcomicsBaseUrl"
                 [payload]="{
                   baseUrl: getcomicsBaseUrl,
-                  spaceBetweenThreadsMs: getComicsSpaceBetweenThreadsMs,
+                  requestsPerSecond: getComicsRequestsPerSecond,
                 }"
               ></app-test-button>
             </div>

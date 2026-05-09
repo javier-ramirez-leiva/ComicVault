@@ -17,7 +17,7 @@ export interface JDownloaderConfiguration {
 
 export interface GetComicsConfiguration {
   baseUrl: string;
-  spaceBetweenThreadsMs: number;
+  requestsPerSecond: number;
 }
 
 export interface ComicsConfiguration {

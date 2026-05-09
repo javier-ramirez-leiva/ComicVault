@@ -10,5 +10,5 @@ import lombok.*;
 
 public class GetComicsConfigurationDTO {
     String baseUrl;
-    long spaceBetweenThreadsMs;
+    double requestsPerSecond;
 }
