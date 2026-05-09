@@ -6,15 +6,14 @@ import org.comicVaultBackend.domain.dto.ComicSearchDTO;
 import org.comicVaultBackend.domain.dto.ComicSearchDetailsLinksDTO;
 import org.comicVaultBackend.domain.dto.ScrapperResponseDTO;
 import org.comicVaultBackend.domain.entities.ComicEntity;
+import org.comicVaultBackend.domain.entities.ExceptionEntity;
 import org.comicVaultBackend.exceptions.*;
 import org.comicVaultBackend.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 import java.util.concurrent.ExecutorService;
@@ -41,6 +40,9 @@ public class GetComicsController {
 
     @Autowired
     private ConfigurationService configurationService;
+
+    @Autowired
+    private ExceptionService exceptionService;
 
     private enum SearchType {
         BASE_URL,
@@ -181,6 +183,15 @@ public class GetComicsController {
                             } catch (ComicScrapperParsingException |
                                      ComicScrapperGatewayException |
                                      ComicScrapperGatewayPageException e) {
+                                ExceptionEntity exception = ExceptionEntity.builder()
+                                        .timeStamp(new Date())
+                                        .message(e.getMessage())
+                                        .type(e.getClass().getSimpleName())
+                                        .details(Arrays.stream(e.getStackTrace())
+                                                .map(StackTraceElement::toString)
+                                                .toList())
+                                        .build();
+                                exceptionService.save(exception);
                                 throw new CompletionException(e);
                             }
                         }, executor)
