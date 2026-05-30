@@ -7,7 +7,6 @@ import org.comicVaultBackend.domain.regular.ComicTitle;
 import org.comicVaultBackend.exceptions.*;
 import org.comicVaultBackend.services.ComicTitleParserService;
 import org.comicVaultBackend.services.GetComicsScrapperService;
-import org.jsoup.HttpStatusException;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -36,6 +35,7 @@ public class GetComicsScrapperImpl implements GetComicsScrapperService {
     private static final List<String> _categoriesToAvoid = List.of("News", "Sponsored");
     private static final Map<String, ComicSearchDTO> _listCacheComicSearches = new ConcurrentHashMap<>();
     private static final Map<String, ComicSearchDetailsLinksDTO> _listCacheComicDetails = new ConcurrentHashMap<>();
+    private static final Map<String, List<ComicSearchDTO>> _listCacheComicListSearches = new ConcurrentHashMap<>();
 
     @Autowired
     private ComicTitleParserService comicTitleParserService;
@@ -56,6 +56,10 @@ public class GetComicsScrapperImpl implements GetComicsScrapperService {
             _listCacheComicDetails.clear();
         }
 
+        synchronized (_listCacheComicListSearches) {
+            _listCacheComicListSearches.clear();
+        }
+
         logger.info("Caches cleared.");
     }
 
@@ -65,17 +69,35 @@ public class GetComicsScrapperImpl implements GetComicsScrapperService {
     }
 
     @Override
+    public List<ComicSearchDTO> getComicsCache(String url) throws ComicScrapperNotInCache {
+        if (_listCacheComicListSearches.containsKey(url)) {
+            return _listCacheComicListSearches.get(url);
+        }
+        throw new ComicScrapperNotInCache();
+    }
+
+    @Override
     public List<ComicSearchDTO> getComics(String url, int page) throws ComicScrapperParsingException, ComicScrapperGatewayException, ComicScrapperGatewayPageException {
+        if (_listCacheComicListSearches.containsKey(url)) {
+            return _listCacheComicListSearches.get(url);
+        }
         int i = 1;
         while (i < TRIES) {
             try {
-                return _getComics(url, page);
+                List<ComicSearchDTO> result = _getComics(url, page);
+                if (!result.isEmpty()) {
+                    _listCacheComicListSearches.put(url, result);
+                }
+                return result;
             } catch (Exception e) {
                 ++i;
             }
         }
-
-        return _getComics(url, page);
+        List<ComicSearchDTO> result = _getComics(url, page);
+        if (!result.isEmpty()) {
+            _listCacheComicListSearches.put(url, result);
+        }
+        return result;
     }
 
 
@@ -173,14 +195,19 @@ public class GetComicsScrapperImpl implements GetComicsScrapperService {
         } catch (IOException e) {
             String message = "Error connecting to URL: " + url + ": " + e.getMessage();
             logger.error(message);
-            if (e instanceof HttpStatusException httpStatusException && httpStatusException.getStatusCode() == 429) {
-                logger.error("Way too many requests, try again next time");
+//            if (e instanceof HttpStatusException httpStatusException && httpStatusException.getStatusCode() == 429) {
+//                logger.error("Way too many requests, try again next time");
+//            } else {
+//                if (page > 1) {
+//                    throw new ComicScrapperGatewayPageException(message);
+//                } else {
+//                    throw new ComicScrapperGatewayException(message);
+//                }
+//            }
+            if (page > 1) {
+                throw new ComicScrapperGatewayPageException(message);
             } else {
-                if (page > 1) {
-                    throw new ComicScrapperGatewayPageException(message);
-                } else {
-                    throw new ComicScrapperGatewayException(message);
-                }
+                throw new ComicScrapperGatewayException(message);
             }
 
         }

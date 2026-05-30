@@ -2,6 +2,7 @@ package org.comicVaultBackend.controllers;
 
 import org.comicVaultBackend.config.ApiConfig;
 import org.comicVaultBackend.domain.dto.ConfigurationDTO;
+import org.comicVaultBackend.domain.dto.GetComicsConfigurationDTO;
 import org.comicVaultBackend.domain.dto.JDownloaderConfigurationDTO;
 import org.comicVaultBackend.domain.dto.SlackConfigurationDTO;
 import org.comicVaultBackend.exceptions.*;
@@ -47,9 +48,9 @@ public class ConfigurationController {
     }
 
     @PreAuthorize("hasAnyAuthority('ADMIN')")
-    @PostMapping(path = "/getComicsBaseUrl")
-    public void setGetComicsBaseUrl(@RequestBody String getComicsBaseUrl) throws ComicScrapperParsingException, ConfigurationArgumentException, ComicScrapperGatewayException, ComicScrapperGatewayPageException {
-        configurationService.setGetComicsBaseUrl(getComicsBaseUrl);
+    @PostMapping(path = "/getComics")
+    public void setGetComicsConfiguration(@RequestBody GetComicsConfigurationDTO getComicsConfiguration) throws ComicScrapperParsingException, ConfigurationArgumentException, ComicScrapperGatewayException, ComicScrapperGatewayPageException {
+        configurationService.setGetComicsConfiguration(getComicsConfiguration);
     }
 
     @PreAuthorize("hasAnyAuthority('ADMIN')")
@@ -66,7 +67,7 @@ public class ConfigurationController {
 
     @PreAuthorize("hasAnyAuthority('ADMIN')")
     @PostMapping(path = "/jDownloader")
-    public void setjDownloaderConfiguration(@RequestBody JDownloaderConfigurationDTO jDownloaderConfiguration) throws ConfigurationArgumentException {
+    public void setDownloaderConfiguration(@RequestBody JDownloaderConfigurationDTO jDownloaderConfiguration) throws ConfigurationArgumentException {
         configurationService.setJDownloaderConfiguration(jDownloaderConfiguration);
     }
 

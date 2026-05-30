@@ -11,6 +11,8 @@ public interface GetComicsScrapperService {
 
     void setBaseURL(String baseURL);
 
+    List<ComicSearchDTO> getComicsCache(String url) throws ComicScrapperNotInCache;
+
     List<ComicSearchDTO> getComics(String url, int page) throws ComicScrapperParsingException, ComicScrapperGatewayException, ComicScrapperGatewayPageException;
 
     ComicSearchDetailsLinksDTO getComicDetails(String url) throws ComicScrapperParsingException, ComicScrapperGatewayException;

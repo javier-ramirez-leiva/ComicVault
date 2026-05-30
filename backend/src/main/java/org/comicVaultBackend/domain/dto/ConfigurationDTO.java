@@ -15,5 +15,5 @@ public class ConfigurationDTO {
     SlackConfigurationDTO slackConfiguration;
     String comicVineAPIKey;
     JDownloaderConfigurationDTO jDownloaderConfiguration;
-    String getComicsBaseUrl;
+    GetComicsConfigurationDTO getComicsConfiguration;
 }

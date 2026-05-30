@@ -3,6 +3,7 @@ package org.comicVaultBackend.services.impl;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
 import org.comicVaultBackend.domain.dto.ConfigurationDTO;
+import org.comicVaultBackend.domain.dto.GetComicsConfigurationDTO;
 import org.comicVaultBackend.domain.dto.JDownloaderConfigurationDTO;
 import org.comicVaultBackend.domain.dto.SlackConfigurationDTO;
 import org.comicVaultBackend.exceptions.*;
@@ -67,14 +68,16 @@ public class ConfigurationServiceImpl implements ConfigurationService {
             }
         } else {
             final String getComicsBaseUrl = "https://getcomics.org"; // Working as of today 23/04/2025
-            this.configurationDto = ConfigurationDTO.builder().downloadRoot("").comicVineAPIKey("").getComicsBaseUrl(getComicsBaseUrl)
+            final double getComicsRequestPerSecond = 1.0;
+            this.configurationDto = ConfigurationDTO.builder().downloadRoot("").comicVineAPIKey("")
+                    .getComicsConfiguration(GetComicsConfigurationDTO.builder().baseUrl(getComicsBaseUrl).requestsPerSecond(getComicsRequestPerSecond).build())
                     .slackConfiguration(SlackConfigurationDTO.builder().enableNotifications(false).slackWebHook("").comicVaultBaseUrl("").build())
                     .jDownloaderConfiguration(JDownloaderConfigurationDTO.builder().jDownloaderOutputPath("").jDownloaderCrawljobPath("").build()).
                     deleteArchives(true).scanArchives(true).generateNavigationThumbnails(true).build();
             updateConfigurationFile();
         }
-        urlBuilderService.setBaseURL(this.configurationDto.getGetComicsBaseUrl());
-        getComicsScrapperService.setBaseURL(this.configurationDto.getGetComicsBaseUrl());
+        urlBuilderService.setBaseURL(this.configurationDto.getGetComicsConfiguration().getBaseUrl());
+        getComicsScrapperService.setBaseURL(this.configurationDto.getGetComicsConfiguration().getBaseUrl());
         notificationFilePath = Paths.get(resourcesFilePath.toString(), "notify_slack.json");
         logger.info("Configuration file found: {}", configurationFilePath);
         logger.info("Notification file found: {}", notificationFilePath);
@@ -130,19 +133,19 @@ public class ConfigurationServiceImpl implements ConfigurationService {
     }
 
     @Override
-    public void setGetComicsBaseUrl(String getComicsBaseUrl) throws ConfigurationArgumentException, ComicScrapperParsingException, ComicScrapperGatewayException, ComicScrapperGatewayPageException {
-        urlBuilderService.setBaseURL(getComicsBaseUrl);
+    public void setGetComicsConfiguration(GetComicsConfigurationDTO getComicsConfiguration) throws ConfigurationArgumentException, ComicScrapperParsingException, ComicScrapperGatewayException, ComicScrapperGatewayPageException {
+        urlBuilderService.setBaseURL(getComicsConfiguration.getBaseUrl());
         String url = urlBuilderService.baseURL(1);
         try {
             getComicsScrapperService.getComics(url, 1);
         } catch (ComicScrapperParsingException | ComicScrapperGatewayException | ComicScrapperGatewayPageException ex) {
-            logger.error("Invalid getComicsBaseUrl: {}", getComicsBaseUrl);
+            logger.error("Invalid baseUrl: {}", getComicsConfiguration.getBaseUrl());
             throw ex;
         }
-        getComicsScrapperService.setBaseURL(getComicsBaseUrl);
-        configurationDto.setGetComicsBaseUrl(getComicsBaseUrl);
+        getComicsScrapperService.setBaseURL(getComicsConfiguration.getBaseUrl());
+        configurationDto.setGetComicsConfiguration(getComicsConfiguration);
         updateConfigurationFile();
-        logger.info("Configuration value `getComicsBaseUrl` updated: {}", getComicsBaseUrl);
+        logger.info("Configuration value `getComicsConfiguration` updated: {}", getComicsConfiguration);
     }
 
     @Override

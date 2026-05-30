@@ -48,7 +48,7 @@ export class TestButtonComponent implements OnInit {
       case 'jdownloader':
         return this.configService.setJDownloaderConfiguration(this.payload);
       case 'getcomicsBaseUrl':
-        return this.configService.setgetcomicsBaseUrl(this.payload);
+        return this.configService.setGetcomicsConfiguration(this.payload);
     }
   }
 

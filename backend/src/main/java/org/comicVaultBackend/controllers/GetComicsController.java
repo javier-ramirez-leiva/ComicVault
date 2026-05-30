@@ -1,19 +1,19 @@
 package org.comicVaultBackend.controllers;
 
+import com.google.common.util.concurrent.RateLimiter;
 import org.comicVaultBackend.config.ApiConfig;
 import org.comicVaultBackend.domain.dto.ComicSearchDTO;
 import org.comicVaultBackend.domain.dto.ComicSearchDetailsLinksDTO;
 import org.comicVaultBackend.domain.dto.ScrapperResponseDTO;
 import org.comicVaultBackend.domain.entities.ComicEntity;
+import org.comicVaultBackend.domain.entities.ExceptionEntity;
 import org.comicVaultBackend.exceptions.*;
 import org.comicVaultBackend.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 import java.util.concurrent.ExecutorService;
@@ -41,6 +41,9 @@ public class GetComicsController {
     @Autowired
     private ConfigurationService configurationService;
 
+    @Autowired
+    private ExceptionService exceptionService;
+
     private enum SearchType {
         BASE_URL,
         SEARCH,
@@ -49,66 +52,177 @@ public class GetComicsController {
     }
 
     private void setBaseUrl() {
-        urlBuilderService.setBaseURL(configurationService.getConfiguration().getGetComicsBaseUrl());
+        urlBuilderService.setBaseURL(configurationService.getConfiguration().getGetComicsConfiguration().getBaseUrl());
     }
 
-    private ScrapperResponseDTO scrappeComics(int page, int pageRatio, SearchType searchType, String queryString) throws ComicScrapperGatewayException {
+//    private ScrapperResponseDTO scrappeComics(int page, int pageRatio, long spaceBetweenThreadsMs, SearchType searchType, String queryString) throws ComicScrapperGatewayException {
+//        ExecutorService executor = Executors.newFixedThreadPool(pageRatio);
+//        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+//
+//        // One future per page, indexed by i (1..pageRatio)
+//        List<CompletableFuture<List<ComicSearchDTO>>> futures = new ArrayList<>();
+//
+//        for (int i = 1; i <= pageRatio; i++) {
+//            final int index = i;
+//            final int currentPage = ((page - 1) * pageRatio) + index;
+//            String url = "";
+//            switch (searchType) {
+//                case BASE_URL -> url = urlBuilderService.baseURL(currentPage);
+//                case SEARCH -> url = urlBuilderService.search(queryString, currentPage);
+//                case TAG -> url = urlBuilderService.tag(queryString, currentPage);
+//                case CATEGORY -> url = urlBuilderService.category(queryString, currentPage);
+//            }
+//
+//            String finalUrl = url;
+//            CompletableFuture<List<ComicSearchDTO>> future = new CompletableFuture<>();
+//
+//            scheduler.schedule(() -> {
+//                CompletableFuture
+//                        .supplyAsync(() -> {
+//                            try {
+//                                List<ComicSearchDTO> comics =
+//                                        getComicsScrapperService.getComics(finalUrl, currentPage);
+//                                comics.forEach(this::setDownloadingStatus);
+//                                return comics;
+//                            } catch (ComicScrapperParsingException |
+//                                     ComicScrapperGatewayException |
+//                                     ComicScrapperGatewayPageException e) {
+//                                throw new CompletionException(e);
+//                            }
+//                        }, executor)
+//                        .whenComplete((result, ex) -> {
+//                            if (ex != null) {
+//                                future.completeExceptionally(ex);
+//                            } else {
+//                                future.complete(result);
+//                            }
+//                        });
+//            }, (long) (i - 1) * spaceBetweenThreadsMs, TimeUnit.MILLISECONDS);
+//
+//            futures.add(future);
+//        }
+//
+//        List<ComicSearchDTO> allComics = new ArrayList<>();
+//        boolean endReached = false;
+//
+//        // Rebuild results in page order
+//        for (int i = 0; i < futures.size(); i++) {
+//            try {
+//                List<ComicSearchDTO> pageComics = futures.get(i).join();
+//                allComics.addAll(pageComics);
+//            } catch (CompletionException e) {
+//                Throwable cause = e.getCause();
+//
+//                if (i == 0 && cause instanceof ComicScrapperGatewayException) {
+//                    throw (ComicScrapperGatewayException) cause;
+//                }
+//
+//                endReached = true;
+//                break;
+//            }
+//        }
+//
+//        executor.shutdown();
+//
+//        return ScrapperResponseDTO.builder()
+//                .comicsSearchs(allComics)
+//                .endReached(endReached)
+//                .build();
+//    }
+
+    private ScrapperResponseDTO scrappeComics(int page, int pageRatio, double requestPerSecond, SearchType searchType, String queryString) throws ComicScrapperGatewayException {
         ExecutorService executor = Executors.newFixedThreadPool(pageRatio);
 
-        // One future per page, indexed by i (1..pageRatio)
+        RateLimiter rateLimiter = RateLimiter.create(requestPerSecond);
+
         List<CompletableFuture<List<ComicSearchDTO>>> futures = new ArrayList<>();
 
         for (int i = 1; i <= pageRatio; i++) {
             final int index = i;
             final int currentPage = ((page - 1) * pageRatio) + index;
-            String url = "";
-            switch (searchType) {
-                case BASE_URL -> url = urlBuilderService.baseURL(currentPage);
-                case SEARCH -> url = urlBuilderService.search(queryString, currentPage);
-                case TAG -> url = urlBuilderService.tag(queryString, currentPage);
-                case CATEGORY -> url = urlBuilderService.category(queryString, currentPage);
+            String url = switch (searchType) {
+                case BASE_URL -> urlBuilderService.baseURL(currentPage);
+                case SEARCH -> urlBuilderService.search(queryString, currentPage);
+                case TAG -> urlBuilderService.tag(queryString, currentPage);
+                case CATEGORY -> urlBuilderService.category(queryString, currentPage);
+            };
+            CompletableFuture<List<ComicSearchDTO>> future = new CompletableFuture<>();
+
+            try {
+                List<ComicSearchDTO> comics =
+                        getComicsScrapperService.getComicsCache(url);
+                CompletableFuture
+                        .supplyAsync(() -> {
+                            try {
+                                List<ComicSearchDTO> comicsCache = getComicsScrapperService.getComicsCache(url);
+                                comicsCache.forEach(this::setDownloadingStatus);
+                                return comicsCache;
+                            } catch (ComicScrapperNotInCache ex) {
+                                throw new CompletionException(ex);
+                            }
+                        }, executor)
+                        .whenComplete((resultCache, ex) -> {
+                            if (ex != null) {
+                                future.completeExceptionally(ex);
+                            } else {
+                                future.complete(resultCache);
+                            }
+                        });
+                futures.add(future);
+            } catch (ComicScrapperNotInCache exCache) {
+                CompletableFuture
+                        .supplyAsync(() -> {
+
+                            rateLimiter.acquire();
+
+                            try {
+                                List<ComicSearchDTO> comics =
+                                        getComicsScrapperService.getComics(url, currentPage);
+                                comics.forEach(this::setDownloadingStatus);
+                                return comics;
+                            } catch (ComicScrapperParsingException |
+                                     ComicScrapperGatewayException |
+                                     ComicScrapperGatewayPageException e) {
+                                ExceptionEntity exception = ExceptionEntity.builder()
+                                        .timeStamp(new Date())
+                                        .message(e.getMessage())
+                                        .type(e.getClass().getSimpleName())
+                                        .details(Arrays.stream(e.getStackTrace())
+                                                .map(StackTraceElement::toString)
+                                                .toList())
+                                        .build();
+                                exceptionService.save(exception);
+                                throw new CompletionException(e);
+                            }
+                        }, executor)
+                        .whenComplete((result, ex) -> {
+                            if (ex != null) {
+                                future.completeExceptionally(ex);
+                            } else {
+                                future.complete(result);
+                            }
+                        });
+                futures.add(future);
             }
-
-            String finalUrl = url;
-            CompletableFuture<List<ComicSearchDTO>> future =
-                    CompletableFuture.supplyAsync(() -> {
-                        try {
-                            List<ComicSearchDTO> comics =
-                                    getComicsScrapperService.getComics(finalUrl, currentPage);
-                            comics.forEach(this::setDownloadingStatus);
-                            return comics;
-                        } catch (ComicScrapperParsingException |
-                                 ComicScrapperGatewayException |
-                                 ComicScrapperGatewayPageException e) {
-                            throw new CompletionException(e);
-                        }
-                    }, executor);
-
-            futures.add(future);
         }
 
         List<ComicSearchDTO> allComics = new ArrayList<>();
         boolean endReached = false;
 
-        // Rebuild results in page order
         for (int i = 0; i < futures.size(); i++) {
             try {
                 List<ComicSearchDTO> pageComics = futures.get(i).join();
                 allComics.addAll(pageComics);
             } catch (CompletionException e) {
                 Throwable cause = e.getCause();
-
                 if (i == 0 && cause instanceof ComicScrapperGatewayException) {
                     throw (ComicScrapperGatewayException) cause;
                 }
-
                 endReached = true;
                 break;
             }
         }
-
         executor.shutdown();
-
         return ScrapperResponseDTO.builder()
                 .comicsSearchs(allComics)
                 .endReached(endReached)
@@ -124,7 +238,7 @@ public class GetComicsController {
     ) throws ComicScrapperParsingException, ComicScrapperGatewayException, ComicScrapperGatewayPageException {
 
         setBaseUrl();
-        return scrappeComics(page, pageRatio, SearchType.SEARCH, query);
+        return scrappeComics(page, pageRatio, configurationService.getConfiguration().getGetComicsConfiguration().getRequestsPerSecond(), SearchType.SEARCH, query);
     }
 
     @PreAuthorize("hasAnyAuthority('ADMIN','OWNER', 'CONTRIBUTOR', 'REQUESTER', 'VIEWER')")
@@ -136,7 +250,7 @@ public class GetComicsController {
     ) throws ComicScrapperParsingException, ComicScrapperGatewayException, ComicScrapperGatewayPageException {
 
         setBaseUrl();
-        return scrappeComics(page, pageRatio, SearchType.TAG, tag);
+        return scrappeComics(page, pageRatio, configurationService.getConfiguration().getGetComicsConfiguration().getRequestsPerSecond(), SearchType.TAG, tag);
     }
 
     @PreAuthorize("hasAnyAuthority('ADMIN','OWNER', 'CONTRIBUTOR', 'REQUESTER', 'VIEWER')")
@@ -146,7 +260,7 @@ public class GetComicsController {
             @RequestParam(name = "pageRatio", required = false, defaultValue = "1") int pageRatio
     ) throws ComicScrapperParsingException, ComicScrapperGatewayException, ComicScrapperGatewayPageException {
         setBaseUrl();
-        return scrappeComics(page, pageRatio, SearchType.BASE_URL, "nevermind");
+        return scrappeComics(page, pageRatio, configurationService.getConfiguration().getGetComicsConfiguration().getRequestsPerSecond(), SearchType.BASE_URL, "nevermind");
     }
 
     @PreAuthorize("hasAnyAuthority('ADMIN','OWNER', 'CONTRIBUTOR', 'REQUESTER', 'VIEWER')")
@@ -157,7 +271,7 @@ public class GetComicsController {
             @RequestParam(name = "category", required = false, defaultValue = "") String category
     ) throws ComicScrapperParsingException, ComicScrapperGatewayException, ComicScrapperGatewayPageException {
         setBaseUrl();
-        return scrappeComics(page, pageRatio, SearchType.CATEGORY, category);
+        return scrappeComics(page, pageRatio, configurationService.getConfiguration().getGetComicsConfiguration().getRequestsPerSecond(), SearchType.CATEGORY, category);
     }
 
     @PreAuthorize("hasAnyAuthority('ADMIN','OWNER', 'CONTRIBUTOR', 'REQUESTER', 'VIEWER')")

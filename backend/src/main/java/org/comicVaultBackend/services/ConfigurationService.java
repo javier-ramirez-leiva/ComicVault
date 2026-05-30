@@ -1,6 +1,7 @@
 package org.comicVaultBackend.services;
 
 import org.comicVaultBackend.domain.dto.ConfigurationDTO;
+import org.comicVaultBackend.domain.dto.GetComicsConfigurationDTO;
 import org.comicVaultBackend.domain.dto.JDownloaderConfigurationDTO;
 import org.comicVaultBackend.domain.dto.SlackConfigurationDTO;
 import org.comicVaultBackend.exceptions.*;
@@ -19,7 +20,7 @@ public interface ConfigurationService {
 
     void setSlackConfiguration(SlackConfigurationDTO slackConfiguration) throws SlackNotifyException, ConfigurationArgumentException;
 
-    void setGetComicsBaseUrl(String getComicsBaseUrl) throws ConfigurationArgumentException, ComicScrapperParsingException, ComicScrapperGatewayException, ComicScrapperGatewayPageException;
+    void setGetComicsConfiguration(GetComicsConfigurationDTO getComicsConfiguration) throws ConfigurationArgumentException, ComicScrapperParsingException, ComicScrapperGatewayException, ComicScrapperGatewayPageException;
 
     void setSlackNotify(Boolean slackNotify) throws ConfigurationArgumentException;
 

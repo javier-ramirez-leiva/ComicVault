@@ -76,6 +76,7 @@ export class SettingsPageComponent {
   generateNavigationThumbnails: boolean = false;
   darkMode: boolean = false;
   paginationRatio: number = 1;
+  getComicsRequestsPerSecond: number = 0;
   displayPaginationTooltip: boolean = false;
 
   resetStorageStatus$ = new Subject<void>();
@@ -107,11 +108,12 @@ export class SettingsPageComponent {
         this.storagePath = comicConfig.downloadRoot;
         this.slackConfiguration = comicConfig.slackConfiguration;
         this.jdownloaderConfiguration = comicConfig.jdownloaderConfiguration;
-        this.getcomicsBaseUrl = comicConfig.getComicsBaseUrl;
+        this.getcomicsBaseUrl = comicConfig.getComicsConfiguration.baseUrl;
         this.comicVineAPIKey = comicConfig.comicVine_apiKey;
         this.scanArchives = comicConfig.scanArchives;
         this.deleteArchives = comicConfig.deleteArchives;
         this.generateNavigationThumbnails = comicConfig.generateNavigationThumbnails;
+        this.getComicsRequestsPerSecond = comicConfig.getComicsConfiguration.requestsPerSecond;
       });
   }
 

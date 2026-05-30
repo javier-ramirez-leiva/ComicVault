@@ -36,7 +36,7 @@ public class ComicMapperImpl implements Mapper<ComicEntity, ComicDTO> {
         ComicDTO comicDto = modelMapper.map(comicEntity, ComicDTO.class);
         //Fix the linkif relative
         if (!comicDto.getLink().isEmpty() && !comicDto.getLink().startsWith("http")) {
-            comicDto.setLink(configurationService.getConfiguration().getGetComicsBaseUrl() + comicEntity.getLink());
+            comicDto.setLink(configurationService.getConfiguration().getGetComicsConfiguration().getBaseUrl() + comicEntity.getLink());
         }
 
 

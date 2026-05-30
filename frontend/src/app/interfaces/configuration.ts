@@ -15,6 +15,11 @@ export interface JDownloaderConfiguration {
   deleteFolderOutputFolder: boolean;
 }
 
+export interface GetComicsConfiguration {
+  baseUrl: string;
+  requestsPerSecond: number;
+}
+
 export interface ComicsConfiguration {
   downloadRoot: string;
   scanArchives: boolean;
@@ -23,5 +28,5 @@ export interface ComicsConfiguration {
   slackConfiguration: SlackConfiguration;
   comicVine_apiKey: string;
   jdownloaderConfiguration: JDownloaderConfiguration;
-  getComicsBaseUrl: string;
+  getComicsConfiguration: GetComicsConfiguration;
 }
