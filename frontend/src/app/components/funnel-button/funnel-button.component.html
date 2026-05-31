@@ -29,7 +29,7 @@
 
       <!-- Categories -->
       <div class="space-y-2" formGroupName="categories">
-        <h6 class="text-base font-medium">Read Status</h6>
+        <h6 class="text-base font-medium">Categories</h6>
         <div class="flex items-center">
           <app-boolean-slider-form
             formControlName="marvel"
@@ -48,24 +48,26 @@
       </div>
 
       <!-- Read Status -->
-      <div class="space-y-2" formGroupName="readStatus">
-        <h6 class="text-base font-medium">Read Status</h6>
-        <div class="flex items-center">
-          <app-boolean-slider-form
-            formControlName="notStarted"
-            label="Not Started"
-          ></app-boolean-slider-form>
+      @if (seriesContent === false) {
+        <div class="space-y-2" formGroupName="readStatus">
+          <h6 class="text-base font-medium">Read Status</h6>
+          <div class="flex items-center">
+            <app-boolean-slider-form
+              formControlName="notStarted"
+              label="Not Started"
+            ></app-boolean-slider-form>
+          </div>
+          <div class="flex items-center">
+            <app-boolean-slider-form
+              formControlName="ongoing"
+              label="On going"
+            ></app-boolean-slider-form>
+          </div>
+          <div class="flex items-center">
+            <app-boolean-slider-form formControlName="read" label="Read"></app-boolean-slider-form>
+          </div>
         </div>
-        <div class="flex items-center">
-          <app-boolean-slider-form
-            formControlName="ongoing"
-            label="On going"
-          ></app-boolean-slider-form>
-        </div>
-        <div class="flex items-center">
-          <app-boolean-slider-form formControlName="read" label="Read"></app-boolean-slider-form>
-        </div>
-      </div>
+      }
 
       <!-- Year -->
       <div class="space-y-2" formGroupName="year">

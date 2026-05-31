@@ -7,6 +7,7 @@ import org.comicVaultBackend.domain.dto.ComicDTO;
 import org.comicVaultBackend.domain.dto.SeriesDTO;
 import org.comicVaultBackend.domain.entities.ComicEntity;
 import org.comicVaultBackend.domain.entities.SeriesEntity;
+import org.comicVaultBackend.domain.regular.FilterSeries;
 import org.comicVaultBackend.exceptions.EmptySeriesException;
 import org.comicVaultBackend.exceptions.EntityNotFoundException;
 import org.comicVaultBackend.exceptions.FileManagerException;
@@ -99,6 +100,16 @@ public class SeriesController {
         return seriesMapper.mapTo(seriesEntity);
     }
 
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    @PostMapping(path = "seriesAdmin")
+    public List<SeriesDTO> listSeriesAdmin(@RequestBody FilterSeries filterSeries) throws Exception {
+
+        List<SeriesEntity> series = seriesService.listAllWithFilter(filterSeries);
+
+        return series.stream()
+                .map(seriesMapper::mapTo)
+                .collect(Collectors.toList());
+    }
 
     @GetMapping(path = "/{seriesID}/cover/small")
     @SkipLogging

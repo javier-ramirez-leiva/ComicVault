@@ -90,6 +90,27 @@ public class ComicEntity {
         return progressEntity.map(ProgressEntity::getReadStatus).orElse(false);
     }
 
+    public boolean getReadStatusForUser(String username) {
+        Optional<ProgressEntity> progressEntity = progress.stream()
+                .filter(progress -> progress.getUser().getUsername().equals(username))
+                .findFirst();
+        return progressEntity.map(ProgressEntity::getReadStatus).orElse(false);
+    }
+
+    public boolean getOnGoingStatusForUser(String username) {
+        Optional<ProgressEntity> progressEntity = progress.stream()
+                .filter(progress -> progress.getUser().getUsername().equals(username))
+                .findFirst();
+        return progressEntity.map(ProgressEntity::getReadStatus).map(value -> !value).orElse(false);
+    }
+
+    public boolean getNotStartedForUser(String username) {
+        Optional<ProgressEntity> progressEntity = progress.stream()
+                .filter(progress -> progress.getUser().getUsername().equals(username))
+                .findFirst();
+        return progressEntity.isEmpty();
+    }
+
     public Date getProgressDate() {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<ProgressEntity> progressEntity = progress.stream()

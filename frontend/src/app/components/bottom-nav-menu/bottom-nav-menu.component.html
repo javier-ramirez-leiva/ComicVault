@@ -25,6 +25,16 @@
         route="library"
       ></app-bottom-drawer-line>
     </li>
+    <li
+      appHideRoles
+      [appHideForRoles]="[Role.Owner, Role.Contributor, Role.Requester, Role.Viewer]"
+    >
+      <app-bottom-drawer-line
+        label="Advance library"
+        route="advanceLibrary"
+        activeRoute="advanceLibrary"
+      ></app-bottom-drawer-line>
+    </li>
     <li>
       <app-bottom-drawer-line
         label="Search"

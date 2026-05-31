@@ -1,0 +1,222 @@
+<app-right-panel-funnel-button
+  (funnelButtonClicked)="onOpenDrawer()"
+></app-right-panel-funnel-button>
+<div
+  class="right-panel-mask"
+  [ngClass]="{ hidden: !(isDrawerOpen$ | async) }"
+  (click)="onCloseDrawer()"
+></div>
+<div
+  class="right-panel-container bg-right-panel-background"
+  [ngClass]="{
+    'translate-x-full': !(isDrawerOpen$ | async),
+    '-translate-x-0': (isDrawerOpen$ | async),
+  }"
+>
+  <app-right-panel-title title="Filters" (onCloseClick)="onCloseDrawer()"></app-right-panel-title>
+
+  <form [formGroup]="form" class="flex flex-col justify-between flex-1">
+    <div class="space-y-6 text-right-panel-text">
+      <div class="space-y-2">
+        <h6 class="text-base font-medium">Content</h6>
+        <app-two-choices-chip
+          trueChipLabel="Series"
+          falseChipLabel="Issues"
+          (valueChange)="OnContentTypeSeries($event)"
+          [value]="seriesContent"
+        ></app-two-choices-chip>
+      </div>
+
+      <!-- Sort -->
+      @if (seriesContent === false) {
+        <div class="space-y-2">
+          <h6 class="text-base font-medium">Sort</h6>
+          <div>
+            <select
+              id="comicSortAttribute"
+              formControlName="comicSortAttribute"
+              class="w-full mr-8 mt-2 mb-4"
+            >
+              @for (sortAttribute of comicSortAttributes; track $index) {
+                <option
+                  [value]="sortAttribute"
+                  [selected]="sortAttribute === form.get('comicSortAttribute')?.value"
+                >
+                  {{ sortAttribute | titlecase }}
+                </option>
+              }
+            </select>
+            <app-boolean-slider-form
+              formControlName="sortDescendingDirection"
+              label="Sorting descending"
+            ></app-boolean-slider-form>
+          </div>
+        </div>
+      } @else {
+        <div class="space-y-2">
+          <h6 class="text-base font-medium">Sort</h6>
+          <div>
+            <select
+              id="seriesSortAttribute"
+              formControlName="seriesSortAttribute"
+              class="w-full mr-8 mt-2 mb-4"
+            >
+              @for (sortAttribute of seriesSortAttributes; track $index) {
+                <option
+                  [value]="sortAttribute"
+                  [selected]="sortAttribute === form.get('seriesSortAttribute')?.value"
+                >
+                  {{ sortAttribute | titlecase }}
+                </option>
+              }
+            </select>
+            <app-boolean-slider-form
+              formControlName="sortDescendingDirection"
+              label="Sorting descending"
+            ></app-boolean-slider-form>
+          </div>
+        </div>
+      }
+
+      <!-- Categories -->
+      <div class="space-y-2" formGroupName="categories">
+        <h6 class="text-base font-medium">Categories</h6>
+        <div class="flex items-center">
+          <app-boolean-slider-form
+            formControlName="marvel"
+            label="Marvel"
+          ></app-boolean-slider-form>
+        </div>
+        <div class="flex items-center">
+          <app-boolean-slider-form formControlName="dc" label="DC"></app-boolean-slider-form>
+        </div>
+        <div class="flex items-center">
+          <app-boolean-slider-form
+            formControlName="other"
+            label="Other-comics"
+          ></app-boolean-slider-form>
+        </div>
+      </div>
+
+      <!-- Year -->
+      <div class="space-y-2" formGroupName="year">
+        <h6 class="text-base font-medium">Year</h6>
+        <div class="flex items-center justify-between col-span-2 space-x-3">
+          <div class="w-full">
+            <p class="block mb-2 text-sm font-medium text-generic-text">From</p>
+            <app-digit-input-form id="from-year" formControlName="from"></app-digit-input-form>
+          </div>
+          <div class="w-full">
+            <p class="block mb-2 text-sm font-medium text-generic-text">To</p>
+            <app-digit-input-form id="to-year" formControlName="to"></app-digit-input-form>
+          </div>
+        </div>
+      </div>
+
+      <!-- Size -->
+      @if (seriesContent === false) {
+        <div class="space-y-2" formGroupName="size">
+          <h6 class="text-base font-medium">Size (MB)</h6>
+          <div class="flex items-center justify-between col-span-2 space-x-3">
+            <div class="w-full">
+              <p class="block mb-2 text-sm font-medium text-generic-text">From</p>
+              <app-digit-input-form id="from-size" formControlName="from"></app-digit-input-form>
+            </div>
+            <div class="w-full">
+              <p class="block mb-2 text-sm font-medium text-generic-text">To</p>
+              <app-digit-input-form id="to-size" formControlName="to"></app-digit-input-form>
+            </div>
+          </div>
+        </div>
+      }
+
+      <!-- Issues -->
+      @if (seriesContent === true) {
+        <div class="space-y-2" formGroupName="issues">
+          <h6 class="text-base font-medium">Issues</h6>
+          <div class="flex items-center justify-between col-span-2 space-x-3">
+            <div class="w-full">
+              <p class="block mb-2 text-sm font-medium text-generic-text">From</p>
+              <app-digit-input-form id="from-issue" formControlName="from"></app-digit-input-form>
+            </div>
+            <div class="w-full">
+              <p class="block mb-2 text-sm font-medium text-generic-text">To</p>
+              <app-digit-input-form id="to-issue" formControlName="to"></app-digit-input-form>
+            </div>
+          </div>
+        </div>
+      }
+
+      <!-- Read Status -->
+      @if (seriesContent === false) {
+        <div class="space-y-2" formArrayName="usersReadStatus">
+          <h6 class="text-base font-medium">Read Status</h6>
+          @for (userGroup of usersReadStatusArray.controls; track $index) {
+            <div
+              class="p-4 border rounded-lg border-input-border space-y-3"
+              [formGroupName]="$index"
+            >
+              <div class="flex justify-between items-center">
+                <select id="userName" formControlName="userName" class="w-full mr-8">
+                  @for (user of users; track $index) {
+                    <option [value]="user" [selected]="user === userGroup.get('userName')?.value">
+                      {{ user }}
+                    </option>
+                  }
+                </select>
+                <button
+                  type="button"
+                  class="button-icon-circle-small"
+                  (click)="removeUserRule($index)"
+                >
+                  ✕
+                </button>
+              </div>
+              <div class="flex items-center">
+                <app-boolean-slider-form
+                  formControlName="notStarted"
+                  label="Not Started"
+                ></app-boolean-slider-form>
+              </div>
+              <div class="flex items-center">
+                <app-boolean-slider-form
+                  formControlName="ongoing"
+                  label="On Going"
+                ></app-boolean-slider-form>
+              </div>
+              <div class="flex items-center">
+                <app-boolean-slider-form
+                  formControlName="read"
+                  label="Read"
+                ></app-boolean-slider-form>
+              </div>
+            </div>
+          }
+          <div class="flex items-center align-middle gap-4 my-2">
+            <p class="block text-md font-medium text-generic-text">Add user rule</p>
+            <button
+              type="button"
+              class="button-icon-circle-small button-add"
+              (click)="addUserRule()"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="size-6"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M12 4.5v15m7.5-7.5h-15"
+                ></path>
+              </svg>
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+  </form>
+</div>

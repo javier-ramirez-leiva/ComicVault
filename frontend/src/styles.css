@@ -718,6 +718,10 @@ ul.grid-mini-pages {
   @apply focus:ring-4 focus:outline-hidden font-medium rounded-full text-sm p-2.5 text-center inline-flex items-center me-2;
 }
 
+.button-icon-circle-small {
+  @apply focus:ring-2 focus:outline-hidden font-medium rounded-full text-sm p-1 text-center inline-flex items-center me-1;
+}
+
 .button-primary {
   @apply text-button-primary-text bg-button-primary-background hover:bg-button-primary-hover focus:ring-button-primary-focus-ring;
 }

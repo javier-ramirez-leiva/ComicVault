@@ -19,9 +19,11 @@ import { UserPageComponent } from 'components';
 import { DevicesPageComponent } from 'components';
 import { UnsavedChangesGuard } from './guard/unsaved-changes-guard.guard';
 import { libraryRedirectGuard } from './guard/library-redicrect-guard';
-import { JobsPageComponent } from './components/jobs-page/jobs-page.component';
-import { ExceptionsPageComponent } from './components/exceptions-page/exceptions-page.component';
-import { ExceptionPageComponent } from './components/exception-page/exception-page.component';
+import { JobsPageComponent } from 'components';
+import { ExceptionsPageComponent } from 'components';
+import { ExceptionPageComponent } from 'components';
+import { AdvanceLibraryPageComponent } from 'components';
+import { advanceLibraryRedirectGuard } from './guard/advance-library-redirect-guard';
 
 export const routes: Routes = [
   {
@@ -59,8 +61,8 @@ export const routes: Routes = [
       {
         path: '', // when hitting /library
         pathMatch: 'full',
-        canActivate: [libraryRedirectGuard], // guard decides series/issues
-        component: LibraryPageComponent, // 👈 REQUIRED parent outlet host
+        canActivate: [libraryRedirectGuard],
+        component: LibraryPageComponent,
       },
       {
         path: 'series',
@@ -71,6 +73,28 @@ export const routes: Routes = [
         path: 'issues',
         component: LibraryPageComponent,
         title: 'Library',
+      },
+    ],
+  },
+  {
+    path: 'advanceLibrary',
+    canActivate: [authGuard],
+    children: [
+      {
+        path: '', // when hitting /library
+        pathMatch: 'full',
+        canActivate: [advanceLibraryRedirectGuard],
+        component: AdvanceLibraryPageComponent,
+      },
+      {
+        path: 'series',
+        component: AdvanceLibraryPageComponent,
+        title: 'Advance library',
+      },
+      {
+        path: 'issues',
+        component: AdvanceLibraryPageComponent,
+        title: 'Advance library',
       },
     ],
   },

@@ -9,6 +9,10 @@ import { BackButtonComponent } from '../back-button/back-button.component';
 import { AvatarDropdownComponent } from '../avatar-dropdown/avatar-dropdown.component';
 import { SearchAndCategoryComponent } from '../search-and-category/search-and-category.component';
 import { GridButtonComponent } from '../grid-button/grid-button.component';
+import {
+  AdvanceFilterFunnel,
+  AdvanceFunnelButtonComponent,
+} from '../advance-funnel-button/advance-funnel-button.component';
 
 @UntilDestroy()
 @Component({
@@ -20,6 +24,7 @@ import { GridButtonComponent } from '../grid-button/grid-button.component';
     AvatarDropdownComponent,
     SearchAndCategoryComponent,
     GridButtonComponent,
+    AdvanceFunnelButtonComponent,
   ],
   templateUrl: './top-bar.component.html',
 })
@@ -29,6 +34,7 @@ export class TopBarComponent implements OnInit {
     displaySearchInputSearch: false,
     displayTitle: false,
     displayFunnel: false,
+    displayAdvanceFunnel: false,
     displayTrending: false,
     displayGridButton: false,
   };
@@ -52,6 +58,10 @@ export class TopBarComponent implements OnInit {
     this.topBarService.emitFilterChangeEvent(filter);
   }
 
+  emitAdvanceFilterChange(filter: AdvanceFilterFunnel) {
+    this.topBarService.emitAdvanceFilterChangeEvent(filter);
+  }
+
   emitContentChange(content: boolean) {
     this.topBarService.emitContentChangeEvent(content);
   }
@@ -64,6 +74,7 @@ export class TopBarComponent implements OnInit {
           displaySearchInputSearch: true,
           displayTitle: false,
           displayFunnel: false,
+          displayAdvanceFunnel: false,
           displayTrending: false,
           displayGridButton: false,
         };
@@ -75,6 +86,19 @@ export class TopBarComponent implements OnInit {
           displaySearchInputSearch: false,
           displayTitle: false,
           displayFunnel: true,
+          displayAdvanceFunnel: false,
+          displayTrending: false,
+          displayGridButton: true,
+        };
+        break;
+
+      case currentRoute.startsWith('/advanceLibrary'):
+        this.displaySettings = {
+          displaySearchInputLibrary: true,
+          displaySearchInputSearch: false,
+          displayTitle: false,
+          displayFunnel: false,
+          displayAdvanceFunnel: true,
           displayTrending: false,
           displayGridButton: true,
         };
@@ -86,6 +110,7 @@ export class TopBarComponent implements OnInit {
           displaySearchInputSearch: true,
           displayTitle: false,
           displayFunnel: false,
+          displayAdvanceFunnel: false,
           displayTrending: true,
           displayGridButton: true,
         };
@@ -98,6 +123,7 @@ export class TopBarComponent implements OnInit {
           displaySearchInputSearch: true,
           displayTitle: false,
           displayFunnel: false,
+          displayAdvanceFunnel: false,
           displayTrending: true,
           displayGridButton: false,
         };
@@ -109,6 +135,7 @@ export class TopBarComponent implements OnInit {
           displaySearchInputSearch: true,
           displayTitle: false,
           displayFunnel: false,
+          displayAdvanceFunnel: false,
           displayTrending: true,
           displayGridButton: true,
         };
@@ -120,6 +147,7 @@ export class TopBarComponent implements OnInit {
           displaySearchInputSearch: true,
           displayTitle: false,
           displayFunnel: false,
+          displayAdvanceFunnel: false,
           displayTrending: false,
           displayGridButton: true,
         };
@@ -133,6 +161,7 @@ export class TopBarComponent implements OnInit {
           displaySearchInputSearch: true,
           displayTitle: false,
           displayFunnel: false,
+          displayAdvanceFunnel: false,
           displayTrending: false,
           displayGridButton: false,
         };
@@ -144,6 +173,7 @@ export class TopBarComponent implements OnInit {
           displaySearchInputSearch: true,
           displayTitle: false,
           displayFunnel: false,
+          displayAdvanceFunnel: false,
           displayTrending: false,
           displayGridButton: false,
         };
@@ -157,6 +187,7 @@ type DisplaySettings = {
   displaySearchInputSearch: boolean;
   displayTitle: boolean;
   displayFunnel: boolean;
+  displayAdvanceFunnel: boolean;
   displayTrending: boolean;
   displayGridButton: boolean;
 };

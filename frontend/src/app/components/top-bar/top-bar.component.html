@@ -25,6 +25,14 @@
     (filterChange)="emitFilterChange($event)"
     (contentChange)="emitContentChange($event)"
   ></app-funnel-button>
+  <app-advance-funnel-button
+    [class.hidden]="!displaySettings.displayAdvanceFunnel"
+    div
+    class="ml-auto"
+    (filterChange)="emitAdvanceFilterChange($event)"
+    (contentChange)="emitContentChange($event)"
+  ></app-advance-funnel-button>
+
   @if (displaySettings.displayGridButton) {
     <app-grid-button></app-grid-button>
   }

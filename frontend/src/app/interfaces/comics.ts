@@ -108,3 +108,34 @@ export type Category = 'all' | 'marvel' | 'dc' | 'other-comics';
 export function isCategory(value: string): value is Category {
   return ['all', 'marvel', 'dc', 'other-comics'].includes(value);
 }
+
+export interface FilterComics {
+  comicTitle: string;
+  notNotStartedUsers: string[];
+  notOnGoingUsers: string[];
+  notReadUsers: string[];
+  removeCategories: string[];
+  yearStart: number;
+  yearEnd: number;
+  sizeStart: number;
+  sizeEnd: number;
+
+  sortAttribute: ComicSortAttribute;
+  sortDescendingDirection: boolean;
+}
+
+export type ComicSortAttribute = 'LATEST' | 'TITLE' | 'YEAR' | 'CATEGORY' | 'SIZE';
+
+export interface FilterSeries {
+  comicTitle: string;
+  removeCategories: string[];
+  yearStart: number;
+  yearEnd: number;
+  issuesStart: number;
+  issuesEnd: number;
+
+  sortAttribute: SeriesSortAttribute;
+  sortDescendingDirection: boolean;
+}
+
+export type SeriesSortAttribute = 'LATEST' | 'TITLE' | 'YEAR' | 'CATEGORY' | 'ISSUES';

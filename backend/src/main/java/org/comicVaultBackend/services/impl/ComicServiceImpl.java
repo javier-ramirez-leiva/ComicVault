@@ -1,10 +1,12 @@
 package org.comicVaultBackend.services.impl;
 
+import org.apache.commons.lang3.StringUtils;
 import org.comicVaultBackend.domain.dto.ComicDTO;
 import org.comicVaultBackend.domain.entities.ComicEntity;
 import org.comicVaultBackend.domain.entities.ProgressEntity;
 import org.comicVaultBackend.domain.entities.SeriesEntity;
 import org.comicVaultBackend.domain.entities.UserEntity;
+import org.comicVaultBackend.domain.regular.FilterComics;
 import org.comicVaultBackend.exceptions.EntityWriteException;
 import org.comicVaultBackend.repositories.ComicRepository;
 import org.comicVaultBackend.services.ComicService;
@@ -51,6 +53,17 @@ public class ComicServiceImpl implements ComicService {
                 .stream(
                         comicRepository.findAllByOrderByCreatedAtDesc().spliterator(),
                         false)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<ComicEntity> listAllWithFilter(FilterComics filterComics) {
+        return StreamSupport
+                .stream(
+                        comicRepository.findAllByOrderByCreatedAtDesc().spliterator(),
+                        false)
+                .filter(comicEntity -> filterComic(comicEntity, filterComics))
+                .sorted(buildComparator(filterComics))
                 .collect(Collectors.toList());
     }
 
@@ -243,5 +256,94 @@ public class ComicServiceImpl implements ComicService {
     private void setLink(ComicEntity comic, String link) {
         String newLink = link.replace(configurationService.getConfiguration().getGetComicsConfiguration().getBaseUrl(), "");
         comic.setLink(newLink);
+    }
+
+    private boolean filterComic(ComicEntity comic, FilterComics filter) {
+        if (StringUtils.isNotBlank(filter.getComicTitle()) && !comic.getTitle().toLowerCase().contains(filter.getComicTitle().toLowerCase())) {
+            return false;
+        }
+
+        try {
+            int comicYear = Integer.parseInt(comic.getYear());
+            if (comicYear > filter.getYearEnd() || comicYear < filter.getYearStart()) {
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            logger.warn("Not a valid year integer for \"" + comic.getId() + "\": " + comic.getYear());
+        }
+
+        try {
+            double comicSize = Double.parseDouble(comic.getSize().replace(" MB", ""));
+            if (comicSize > filter.getSizeEnd() || comicSize < filter.getSizeStart()) {
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            logger.warn("Not a valid size double for \"" + comic.getId() + "\": " + comic.getSize());
+        }
+
+        if (filter.getRemoveCategories().contains(comic.getCategory())) {
+            return false;
+        }
+
+        for (String user : filter.getNotNotStartedUsers()) {
+            if (comic.getNotStartedForUser(user)) {
+                return false;
+            }
+        }
+
+        for (String user : filter.getNotOnGoingUsers()) {
+            if (comic.getOnGoingStatusForUser(user)) {
+                return false;
+            }
+        }
+
+        for (String user : filter.getNotReadUsers()) {
+            if (comic.getReadStatusForUser(user)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    private Comparator<ComicEntity> buildComparator(FilterComics filter) {
+        Comparator<ComicEntity> comparator;
+        switch (filter.getSortAttribute()) {
+            case TITLE:
+                comparator = Comparator.comparing(
+                        ComicEntity::getTitle,
+                        Comparator.nullsLast(String.CASE_INSENSITIVE_ORDER)
+                );
+                break;
+            case YEAR:
+                comparator = Comparator.comparing(
+                        ComicEntity::getYear,
+                        Comparator.nullsLast(String.CASE_INSENSITIVE_ORDER)
+                );
+                break;
+            case SIZE:
+                comparator = Comparator.comparing(
+                        ComicEntity::getSize,
+                        Comparator.nullsLast(String.CASE_INSENSITIVE_ORDER)
+                );
+                break;
+            case CATEGORY:
+                comparator = Comparator.comparing(
+                        ComicEntity::getCategory,
+                        String.CASE_INSENSITIVE_ORDER
+
+                );
+                break;
+            case LATEST:
+            default:
+                comparator = Comparator.comparing(
+                        ComicEntity::getCreatedAt,
+                        Comparator.nullsLast(Comparator.naturalOrder())
+                );
+                break;
+        }
+        return filter.isSortDescendingDirection()
+                ? comparator.reversed()
+                : comparator;
     }
 }

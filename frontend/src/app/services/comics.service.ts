@@ -24,6 +24,8 @@ import {
   DownloadIssueRequest,
   DownloadIssue,
   DeleteReadOptions,
+  FilterComics,
+  FilterSeries,
 } from 'interfaces';
 import { HttpService } from './http.service';
 import { ModalService } from './modal.service';
@@ -70,6 +72,10 @@ export class ComicsService {
     return this.httpService.request<ComicsDatabase[]>('GET', `/comics`);
   }
 
+  allComicsAdvanced(filterComics: FilterComics): Observable<ComicsDatabase[]> {
+    return this.httpService.request<ComicsDatabase[]>('POST', `/comicsAdmin`, filterComics);
+  }
+
   ongoingComics(): Observable<ComicsDatabase[]> {
     return this.httpService.request<ComicsDatabase[]>('GET', `/comics/ongoing`);
   }
@@ -80,6 +86,10 @@ export class ComicsService {
 
   allSeries(): Observable<Series[]> {
     return this.httpService.request<Series[]>('GET', `/series`);
+  }
+
+  allSeriesAdvanced(filterSeries: FilterSeries): Observable<Series[]> {
+    return this.httpService.request<Series[]>('POST', `/series/seriesAdmin`, filterSeries);
   }
 
   ongoingSeries(): Observable<Series[]> {
