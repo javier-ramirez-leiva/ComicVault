@@ -323,8 +323,17 @@ public class ComicServiceImpl implements ComicService {
                 break;
             case SIZE:
                 comparator = Comparator.comparing(
-                        ComicEntity::getSize,
-                        Comparator.nullsLast(String.CASE_INSENSITIVE_ORDER)
+                        comic -> {
+                            try {
+                                if (comic.getSize() == null) return 0.0;
+                                return Double.parseDouble(
+                                        comic.getSize().replace(" MB", "").trim()
+                                );
+                            } catch (Exception e) {
+                                return 0.0;
+                            }
+                        },
+                        Comparator.nullsLast(Double::compareTo)
                 );
                 break;
             case CATEGORY:
