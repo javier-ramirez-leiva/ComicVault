@@ -42,7 +42,9 @@ export class MultiSelectComponent implements OnInit {
       if (event instanceof NavigationEnd) {
         const routeString = event.urlAfterRedirects;
         this.displayed =
-          routeString.startsWith('/series') || routeString.startsWith('/library/issues');
+          routeString.startsWith('/series') ||
+          routeString.startsWith('/library/issues') ||
+          routeString.startsWith('/advanceLibrary/issues');
         if (!this.displayed) {
           this.displayDropdown = false;
           this.coverCardClickCollectorService.clearActiveHovers();
