@@ -11,6 +11,7 @@ import { TwoChoicesChipComponent } from '../two-choices-chip/two-choices-chip.co
 import { RightPanelTitleComponent } from '../right-panel-title/right-panel-title.component';
 import { RightPanelFunnelButtonComponent } from '../right-panel-funnel-button/right-panel-funnel-button.component';
 import { NavigationEnd, Router } from '@angular/router';
+import { ComicSortAttribute, SeriesSortAttribute } from 'src/app/interfaces/comics';
 
 @UntilDestroy()
 @Component({
@@ -40,7 +41,26 @@ export class FunnelButtonComponent {
 
   seriesContent: boolean = true;
 
+  readonly comicSortAttributes: ComicSortAttributeFront[] = [
+    'LATEST',
+    'TITLE',
+    'YEAR',
+    'CATEGORY',
+    'SIZE',
+    'READ STATUS',
+  ];
+  readonly seriesSortAttributes: SeriesSortAttributeFront[] = [
+    'LATEST',
+    'TITLE',
+    'YEAR',
+    'CATEGORY',
+    'ISSUES',
+  ];
+
   readonly initForm: FilterFunnel = {
+    comicSortAttribute: 'LATEST',
+    seriesSortAttribute: 'LATEST',
+    sortDescendingDirection: false,
     categories: {
       marvel: true,
       dc: true,
@@ -67,6 +87,9 @@ export class FunnelButtonComponent {
 
   constructor() {
     this.form = this.formBuilder.group({
+      comicSortAttribute: new FormControl('LATEST'),
+      seriesSortAttribute: new FormControl('LATEST'),
+      sortDescendingDirection: new FormControl(false),
       categories: this.formBuilder.group({
         marvel: new FormControl(true),
         dc: new FormControl(true),
@@ -131,7 +154,13 @@ export class FunnelButtonComponent {
   }
 }
 
+export type ComicSortAttributeFront = ComicSortAttribute | 'READ STATUS';
+export type SeriesSortAttributeFront = SeriesSortAttribute;
+
 export type FilterFunnel = {
+  comicSortAttribute: ComicSortAttribute;
+  seriesSortAttribute: SeriesSortAttribute;
+  sortDescendingDirection: boolean;
   categories: {
     marvel: boolean;
     dc: boolean;

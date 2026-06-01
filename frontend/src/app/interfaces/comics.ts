@@ -39,7 +39,6 @@ export interface ComicsDatabase {
   idGc: string;
   idGcIssue: string;
   description: string;
-  createdAt: string;
   path: string;
   title: string;
   issue: number;
@@ -55,6 +54,7 @@ export interface ComicsDatabase {
   tags: Tag[];
   doublePages: number[];
   doublePageCover: boolean;
+  createdAt: Date;
 
   //UI stuff
   highlight: boolean;
@@ -97,6 +97,7 @@ export interface Series {
   readIssues: number;
   totalIssues: number;
   comics: ComicsDatabase[];
+  modifiedAt: Date;
 }
 
 export interface ScrapperResponse {

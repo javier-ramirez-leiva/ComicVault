@@ -26,6 +26,56 @@
           [value]="seriesContent"
         ></app-two-choices-chip>
       </div>
+      <!-- Sort -->
+      @if (seriesContent === false) {
+        <div class="space-y-2">
+          <h6 class="text-base font-medium">Sort</h6>
+          <div>
+            <select
+              id="comicSortAttribute"
+              formControlName="comicSortAttribute"
+              class="w-full pr-8 mt-2 mb-4"
+            >
+              @for (sortAttribute of comicSortAttributes; track $index) {
+                <option
+                  [value]="sortAttribute"
+                  [selected]="sortAttribute === form.get('comicSortAttribute')?.value"
+                >
+                  {{ sortAttribute | titlecase }}
+                </option>
+              }
+            </select>
+            <app-boolean-slider-form
+              formControlName="sortDescendingDirection"
+              label="Sorting descending"
+            ></app-boolean-slider-form>
+          </div>
+        </div>
+      } @else {
+        <div class="space-y-2">
+          <h6 class="text-base font-medium">Sort</h6>
+          <div>
+            <select
+              id="seriesSortAttribute"
+              formControlName="seriesSortAttribute"
+              class="w-full pr-8 mt-2 mb-4"
+            >
+              @for (sortAttribute of seriesSortAttributes; track $index) {
+                <option
+                  [value]="sortAttribute"
+                  [selected]="sortAttribute === form.get('seriesSortAttribute')?.value"
+                >
+                  {{ sortAttribute | titlecase }}
+                </option>
+              }
+            </select>
+            <app-boolean-slider-form
+              formControlName="sortDescendingDirection"
+              label="Sorting descending"
+            ></app-boolean-slider-form>
+          </div>
+        </div>
+      }
 
       <!-- Categories -->
       <div class="space-y-2" formGroupName="categories">
