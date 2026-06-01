@@ -13,6 +13,8 @@ import {
   AdvanceFilterFunnel,
   AdvanceFunnelButtonComponent,
 } from '../advance-funnel-button/advance-funnel-button.component';
+import { HideRolesDirective } from 'src/app/directives/hide-roles.directive';
+import { Role } from 'src/app/interfaces/users';
 
 @UntilDestroy()
 @Component({
@@ -25,6 +27,7 @@ import {
     SearchAndCategoryComponent,
     GridButtonComponent,
     AdvanceFunnelButtonComponent,
+    HideRolesDirective,
   ],
   templateUrl: './top-bar.component.html',
 })
@@ -41,6 +44,8 @@ export class TopBarComponent implements OnInit {
 
   private readonly router: Router = inject(Router);
   protected readonly topBarService: TopBarService = inject(TopBarService);
+
+  protected readonly Role = Role;
 
   ngOnInit(): void {
     this.router.events.pipe(untilDestroyed(this)).subscribe((event) => {
