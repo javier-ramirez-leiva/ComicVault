@@ -1,6 +1,13 @@
 import { RouteReuseStrategy, DetachedRouteHandle, ActivatedRouteSnapshot } from '@angular/router';
 
-const storedRoutes = ['search', /*library*/ 'series', /*library*/ 'issues', 'home'] as const;
+const storedRoutes = [
+  'search',
+  'library/series',
+  'library/issues',
+  'advanceLibrary/series',
+  'advanceLibrary/issues',
+  'home',
+] as const;
 let storedRouteString = '';
 export const nonResetRoutes = [
   'comics/:id/details',

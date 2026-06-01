@@ -67,12 +67,12 @@ export const routes: Routes = [
       {
         path: 'series',
         component: LibraryPageComponent,
-        title: 'Library',
+        title: 'Library - Series',
       },
       {
         path: 'issues',
         component: LibraryPageComponent,
-        title: 'Library',
+        title: 'Library - Issues',
       },
     ],
   },
@@ -89,12 +89,12 @@ export const routes: Routes = [
       {
         path: 'series',
         component: AdvanceLibraryPageComponent,
-        title: 'Advance library',
+        title: 'Advance library - Series',
       },
       {
         path: 'issues',
         component: AdvanceLibraryPageComponent,
-        title: 'Advance library',
+        title: 'Advance library - Issues',
       },
     ],
   },
