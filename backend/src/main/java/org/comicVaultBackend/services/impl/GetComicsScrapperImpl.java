@@ -398,16 +398,61 @@ public class GetComicsScrapperImpl implements GetComicsScrapperService {
 
                     Element ul = postContents.get(0).selectFirst("ul");
 
-                    //One of the titles
-                    String title = null;
+                    //Get cover
+                    String coverUrl = "";
+                    Element coverHeader = doc.selectFirst(".cover-single");
+                    if (coverHeader != null) {
+                        Element coverBackground = coverHeader.selectFirst(".cover-background");
+                        if (coverBackground != null) {
+                            String style = coverBackground.attr("style");
+                            Matcher matcher = Pattern.compile("url\\('([^']+)'\\)").matcher(style);
+                            if (matcher.find()) {
+                                coverUrl = matcher.group(1);
+                            }
+                        }
+                    }
+
+                    Element post_content = doc.selectFirst(".post-contents");
+                    Element paragraph = post_content.select("p").get(0);
+
+                    String title = "";
+                    String size = "";
+                    String year = "";
+
+                    for (int i = 1; i < post_content.select("p").size(); ++i) {
+                        try {
+                            Element otherInfo = post_content.select("p").get(i);
+                            Elements infos = otherInfo.select("strong");
+                            title = infos.get(0).text();
+                            for (Element strong : infos) {
+                                String header = strong.text().trim();
+                                if (header.equalsIgnoreCase("Year :")) {
+                                    String parentText = strong.parent().ownText();
+                                    String[] parts = parentText.split("\\|");
+                                    year = parts.length > 2
+                                            ? parts[2].replaceAll("\\D+", "").trim()
+                                            : "N/A";
+                                }
+                                if (header.equalsIgnoreCase("Size :")) {
+                                    String parentText = strong.parent().ownText();
+                                    String[] parts = parentText.split("\\|");
+                                    size = parts.length > 3
+                                            ? parts[3].trim()
+                                            : "N/A";
+                                }
+                            }
+                            break;
+                        } catch (Exception e) {
+                            if (i >= post_content.select("p").size() - 1) {
+                                throw e;
+                            }
+                        }
+                    }
 
                     List<DownloadIssueDTO> downloadIssueDTOS = new ArrayList<DownloadIssueDTO>();
                     for (Element li : ul.select("li")) {
                         String descriptionIssue = li.text().split(":", 2)[0];
                         String issueTitle = _generateTitleIssue(descriptionIssue);
-                        if (title == null) {
-                            title = issueTitle;
-                        }
                         String idGcIssue = _generateidGcIssue(issueTitle);
                         //Try all the strings we may find
                         for (Element strong : li.select("strong")) {
@@ -429,7 +474,18 @@ public class GetComicsScrapperImpl implements GetComicsScrapperService {
                     List<TagDTO> tags = scrapeTags(doc);
                     TagDTO mainTag = getMainTag(tags, title);
 
-                    return ComicSearchDetailsLinksDTO.builder().description(description).downloadIssues(downloadIssueDTOS).tags(tags).mainTag(mainTag).screenshots(getScreenshots(doc)).build();
+                    return ComicSearchDetailsLinksDTO.builder().
+                            description(description).
+                            downloadIssues(downloadIssueDTOS).
+                            title(title).
+                            year(year).
+                            size(size).
+                            category(category).
+                            image(coverUrl).
+                            link(urlString).
+                            tags(tags).mainTag(mainTag).
+                            screenshots(getScreenshots(doc)).
+                            build();
 
                 }
             } catch (Exception e) {
@@ -538,25 +594,25 @@ public class GetComicsScrapperImpl implements GetComicsScrapperService {
                     mainTag(comicSearchDetailsLinksDTO.getMainTag()).
                     screenshots(comicSearchDetailsLinksDTO.getScreenshots()).
                     build();
-            _listCacheComicDetails.put(idGc, curatedComicSearchDetailsLinksDTO);
+            //_listCacheComicDetails.put(idGc, curatedComicSearchDetailsLinksDTO);
             return curatedComicSearchDetailsLinksDTO;
         } else {
             try {
                 String urlMarvel = baseURL + "/marvel/" + idGc;
                 ComicSearchDetailsLinksDTO marvelTry = getComicDetails(urlMarvel);
-                _listCacheComicDetails.put(idGc, marvelTry);
+                //_listCacheComicDetails.put(idGc, marvelTry);
                 return marvelTry;
             } catch (Exception exMarvel) {
                 try {
                     String urlDc = baseURL + "/marvel/" + idGc;
                     ComicSearchDetailsLinksDTO dcTry = getComicDetails(urlDc);
-                    _listCacheComicDetails.put(idGc, dcTry);
+                    //_listCacheComicDetails.put(idGc, dcTry);
                     return dcTry;
                 } catch (Exception exDc) {
                     try {
                         String urlOther = baseURL + "/pother-comics/" + idGc;
                         ComicSearchDetailsLinksDTO otherTry = getComicDetails(urlOther);
-                        _listCacheComicDetails.put(idGc, otherTry);
+                        //_listCacheComicDetails.put(idGc, otherTry);
                         return otherTry;
                     } catch (Exception exOther) {
                         throw new ComicScrapperUntreatedException("Error id has not been previously threaded: " + idGc);
