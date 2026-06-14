@@ -24,6 +24,8 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
@@ -232,6 +234,13 @@ public class GetComicsScrapperImpl implements GetComicsScrapperService {
         try {
             Document doc = Jsoup.connect(urlString).get();
 
+            String category = "other-comics";
+            if (urlString.contains("/marvel/")) {
+                category = "marvel";
+            } else if (urlString.contains("/dc/")) {
+                category = "dc";
+            }
+
             try {
                 URL url = new URL(urlString);
                 String path = url.getPath();
@@ -310,6 +319,20 @@ public class GetComicsScrapperImpl implements GetComicsScrapperService {
                             }
                         }
 
+                        //Get cover
+                        String coverUrl = "";
+                        Element coverHeader = doc.selectFirst(".cover-single");
+                        if (coverHeader != null) {
+                            Element coverBackground = coverHeader.selectFirst(".cover-background");
+                            if (coverBackground != null) {
+                                String style = coverBackground.attr("style");
+                                Matcher matcher = Pattern.compile("url\\('([^']+)'\\)").matcher(style);
+                                if (matcher.find()) {
+                                    coverUrl = matcher.group(1);
+                                }
+                            }
+                        }
+
                         Element post_content = doc.selectFirst(".post-contents");
                         Element paragraph = post_content.select("p").get(0);
 
@@ -319,7 +342,6 @@ public class GetComicsScrapperImpl implements GetComicsScrapperService {
                         String size = "";
                         String year = "";
 
-                        //Improve this parsing
                         for (int i = 1; i < post_content.select("p").size(); ++i) {
                             try {
                                 Element otherInfo = post_content.select("p").get(i);
@@ -329,10 +351,17 @@ public class GetComicsScrapperImpl implements GetComicsScrapperService {
                                     String header = strong.text().trim();
                                     if (header.equalsIgnoreCase("Year :")) {
                                         String parentText = strong.parent().ownText();
-                                        year = parentText.replaceAll("\\D+", "");
+                                        String[] parts = parentText.split("\\|");
+                                        year = parts.length > 2
+                                                ? parts[2].replaceAll("\\D+", "").trim()
+                                                : "N/A";
                                     }
                                     if (header.equalsIgnoreCase("Size :")) {
-                                        size = strong.parent().ownText().trim();
+                                        String parentText = strong.parent().ownText();
+                                        String[] parts = parentText.split("\\|");
+                                        size = parts.length > 3
+                                                ? parts[3].trim()
+                                                : "N/A";
                                     }
                                 }
                                 break;
@@ -354,7 +383,9 @@ public class GetComicsScrapperImpl implements GetComicsScrapperService {
                                 title(title).
                                 year(year).
                                 size(size).
-                                category("").
+                                category(category).
+                                image(coverUrl).
+                                link(urlString).
                                 tags(tags).
                                 mainTag(mainTag).
                                 screenshots(getScreenshots(doc)).
@@ -510,9 +541,29 @@ public class GetComicsScrapperImpl implements GetComicsScrapperService {
             _listCacheComicDetails.put(idGc, curatedComicSearchDetailsLinksDTO);
             return curatedComicSearchDetailsLinksDTO;
         } else {
-            throw new ComicScrapperUntreatedException("Error id has not been previously threaded: " + idGc);
+            try {
+                String urlMarvel = baseURL + "/marvel/" + idGc;
+                ComicSearchDetailsLinksDTO marvelTry = getComicDetails(urlMarvel);
+                _listCacheComicDetails.put(idGc, marvelTry);
+                return marvelTry;
+            } catch (Exception exMarvel) {
+                try {
+                    String urlDc = baseURL + "/marvel/" + idGc;
+                    ComicSearchDetailsLinksDTO dcTry = getComicDetails(urlDc);
+                    _listCacheComicDetails.put(idGc, dcTry);
+                    return dcTry;
+                } catch (Exception exDc) {
+                    try {
+                        String urlOther = baseURL + "/pother-comics/" + idGc;
+                        ComicSearchDetailsLinksDTO otherTry = getComicDetails(urlOther);
+                        _listCacheComicDetails.put(idGc, otherTry);
+                        return otherTry;
+                    } catch (Exception exOther) {
+                        throw new ComicScrapperUntreatedException("Error id has not been previously threaded: " + idGc);
+                    }
+                }
+            }
         }
-
     }
 
 
