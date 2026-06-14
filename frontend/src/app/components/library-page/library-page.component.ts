@@ -98,9 +98,9 @@ export class LibraryPageComponent implements OnInit {
           if (!aValid && !bValid) {
             compare = 0;
           } else if (!aValid) {
-            compare = 1; // a goes after b
-          } else if (!bValid) {
             compare = -1; // b goes after a
+          } else if (!bValid) {
+            compare = 1; // a goes after b
           } else {
             compare = yearA - yearB;
           }
@@ -139,9 +139,9 @@ export class LibraryPageComponent implements OnInit {
           if (!aValid && !bValid) {
             compare = 0;
           } else if (!aValid) {
-            compare = 1; // a goes after b
-          } else if (!bValid) {
             compare = -1; // b goes after a
+          } else if (!bValid) {
+            compare = 1; // a goes after b
           } else {
             compare = yearA - yearB;
           }

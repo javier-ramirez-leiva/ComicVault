@@ -185,7 +185,7 @@ public class SeriesServiceImpl implements SeriesService {
             default:
                 comparator = Comparator.comparing(
                         SeriesEntity::getModifiedAt,
-                        Comparator.nullsLast(Comparator.naturalOrder())
+                        Comparator.nullsLast(Comparator.reverseOrder())
                 );
                 break;
         }

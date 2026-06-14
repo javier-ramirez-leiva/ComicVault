@@ -347,7 +347,7 @@ public class ComicServiceImpl implements ComicService {
             default:
                 comparator = Comparator.comparing(
                         ComicEntity::getCreatedAt,
-                        Comparator.nullsLast(Comparator.naturalOrder())
+                        Comparator.nullsLast(Comparator.reverseOrder())
                 );
                 break;
         }
