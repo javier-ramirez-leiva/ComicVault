@@ -121,7 +121,7 @@ export class AdvanceFunnelButtonComponent {
 
   ngOnInit(): void {
     this.form.patchValue(this.initForm, { emitEvent: true });
-    this.topBarService.resetFilterFunnelFormEvent$
+    this.topBarService.resetAdvancedFilterFunnelFormEvent$
       .pipe(untilDestroyed(this))
       .subscribe((filter) => {
         this.form.patchValue(this.initForm, { emitEvent: true });

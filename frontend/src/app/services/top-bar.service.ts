@@ -16,6 +16,7 @@ export class TopBarService {
   searchTextChangeLibEvent$: ReplaySubject<string> = new ReplaySubject<string>();
   filterHistoryFormEvent$: ReplaySubject<FilterHistory> = new ReplaySubject<FilterHistory>();
   resetFilterFunnelFormEvent$: Subject<void> = new Subject<void>();
+  resetAdvancedFilterFunnelFormEvent$: Subject<void> = new Subject<void>();
 
   filterEvent$: ReplaySubject<FilterFunnel> = new ReplaySubject<FilterFunnel>();
   advanceFilterEvent$: ReplaySubject<AdvanceFilterFunnel> =
@@ -28,9 +29,15 @@ export class TopBarService {
 
   constructor() {
     this.activePageService.activePage$.pipe(untilDestroyed(this)).subscribe((activePage) => {
-      if (activePage !== 'library' && activePage !== 'advanceLibrary') {
+      if (activePage !== 'library') {
+        console.log('library');
         this.setSearchBarTextLib('');
         this.resetFilterFunnel();
+      }
+      if (activePage !== 'advanceLibrary') {
+        console.log('resetAdvancedFilterFunnel');
+        this.setSearchBarTextLib('');
+        this.resetAdvancedFilterFunnel();
       }
     });
   }
@@ -58,6 +65,10 @@ export class TopBarService {
 
   resetFilterFunnel() {
     this.resetFilterFunnelFormEvent$.next();
+  }
+
+  resetAdvancedFilterFunnel() {
+    this.resetAdvancedFilterFunnelFormEvent$.next();
   }
 
   setFilterHistoryFormValue(filter: FilterHistory) {
