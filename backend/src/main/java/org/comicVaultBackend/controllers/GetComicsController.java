@@ -293,6 +293,7 @@ public class GetComicsController {
 
     private void setDownloadingStatus(ComicSearchDTO comicSearchDto) {
         Optional<ComicEntity> comicEntity = comicService.getcomicbyidGc(comicSearchDto.getIdGc());
+        comicSearchDto.setDownloadingStatus("not-downloaded");
         //Series are never considered as download. To be improved
         if (comicEntity.isPresent() && (comicEntity.get().getIdGcIssue() == null || comicEntity.get().getIdGcIssue().isBlank())) {
             comicSearchDto.setDownloadingStatus("downloaded");
@@ -302,6 +303,7 @@ public class GetComicsController {
                     comicSearchDto.setDownloadingStatus("downloading");
                     comicSearchDto.setTotalBytes(comic.getTotalBytes());
                     comicSearchDto.setCurrentBytes(comic.getCurrentBytes());
+                    break;
                 }
             }
         }
