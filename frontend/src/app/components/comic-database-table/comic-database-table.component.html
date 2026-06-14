@@ -15,6 +15,7 @@
         <th class="px-6 py-3">Status</th>
         <th class="px-6 py-3">Publisher</th>
         <th class="px-6 py-3">Year</th>
+        <th class="px-6 py-3">Added</th>
         <th class="px-6 py-3">Size</th>
       </tr>
     </thead>
@@ -106,6 +107,9 @@
           </td>
           <td class="py-4 px-6 font-semibold text-generic-text">
             {{ rowComic.comic.year.trim().length > 0 ? rowComic.comic.year : 'N/A' }}
+          </td>
+          <td class="py-4 px-6 font-semibold text-generic-text">
+            {{ rowComic.comic.createdAt | date: 'mediumDate' }}
           </td>
           <td class="py-4 px-6 font-semibold text-generic-text">{{ rowComic.comic.size }}</td>
         </tr>

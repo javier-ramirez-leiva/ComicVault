@@ -156,6 +156,17 @@ export class SeriesDetailsComponent implements OnInit, CanComponentDeactivate {
           text: series.year.trim().length > 0 ? series.year : 'N/A',
         },
         {
+          title: 'Latest addition',
+          type: 'text',
+          text: new Date(series.modifiedAt).toLocaleString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+          }),
+        },
+        {
           title: 'Issues',
           type: 'text',
           text: series.readIssues + ' / ' + series.totalIssues,
