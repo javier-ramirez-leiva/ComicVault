@@ -30,12 +30,10 @@ export class TopBarService {
   constructor() {
     this.activePageService.activePage$.pipe(untilDestroyed(this)).subscribe((activePage) => {
       if (activePage !== 'library') {
-        console.log('library');
         this.setSearchBarTextLib('');
         this.resetFilterFunnel();
       }
       if (activePage !== 'advanceLibrary') {
-        console.log('resetAdvancedFilterFunnel');
         this.setSearchBarTextLib('');
         this.resetAdvancedFilterFunnel();
       }
