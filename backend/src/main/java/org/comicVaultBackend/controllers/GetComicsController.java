@@ -11,6 +11,7 @@ import org.comicVaultBackend.exceptions.*;
 import org.comicVaultBackend.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.*;
@@ -183,10 +184,12 @@ public class GetComicsController {
                             } catch (ComicScrapperParsingException |
                                      ComicScrapperGatewayException |
                                      ComicScrapperGatewayPageException e) {
+                                String username = SecurityContextHolder.getContext().getAuthentication().getName();
                                 ExceptionEntity exception = ExceptionEntity.builder()
                                         .timeStamp(new Date())
                                         .message(e.getMessage())
                                         .type(e.getClass().getSimpleName())
+                                        .username(username)
                                         .details(Arrays.stream(e.getStackTrace())
                                                 .map(StackTraceElement::toString)
                                                 .toList())

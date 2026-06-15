@@ -18,5 +18,6 @@ public class ExceptionDTO {
     private Date timeStamp;
     private String type;
     private String message;
+    private String username;
     private List<String> details;
 }

@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.rest.webmvc.ResourceNotFoundException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -37,6 +38,8 @@ public class GlobalExceptionHandler {
         if (ex instanceof EntityNotFoundException exNotFound && exNotFound.entity == REFRESH_TOKEN) {
             return;
         }
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+
         ExceptionEntity exception = ExceptionEntity.builder()
                 .timeStamp(new Date())
                 .message(ex.getMessage())
@@ -44,6 +47,7 @@ public class GlobalExceptionHandler {
                 .details(Arrays.stream(ex.getStackTrace())
                         .map(StackTraceElement::toString)
                         .toList())
+                .username(username)
                 .build();
         exceptionService.save(exception);
 
