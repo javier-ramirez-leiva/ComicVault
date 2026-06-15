@@ -31,6 +31,14 @@ import java.util.stream.Collectors;
 @Service
 public class GetComicsScrapperImpl implements GetComicsScrapperService {
 
+    private static class BasicScrappingInfo {
+        String year;
+        String size;
+        String cover;
+        String title;
+        String description;
+    }
+
     public static final int TRIES = 2;
 
     private static final List<String> _articlesToAvoid = List.of("article1", "article2");
@@ -319,72 +327,21 @@ public class GetComicsScrapperImpl implements GetComicsScrapperService {
                             }
                         }
 
-                        //Get cover
-                        String coverUrl = "";
-                        Element coverHeader = doc.selectFirst(".cover-single");
-                        if (coverHeader != null) {
-                            Element coverBackground = coverHeader.selectFirst(".cover-background");
-                            if (coverBackground != null) {
-                                String style = coverBackground.attr("style");
-                                Matcher matcher = Pattern.compile("url\\('([^']+)'\\)").matcher(style);
-                                if (matcher.find()) {
-                                    coverUrl = matcher.group(1);
-                                }
-                            }
-                        }
-
-                        Element post_content = doc.selectFirst(".post-contents");
-                        Element paragraph = post_content.select("p").get(0);
-
-                        String description = paragraph.text();
-
-                        String title = "";
-                        String size = "";
-                        String year = "";
-
-                        for (int i = 1; i < post_content.select("p").size(); ++i) {
-                            try {
-                                Element otherInfo = post_content.select("p").get(i);
-                                Elements infos = otherInfo.select("strong");
-                                title = infos.get(0).text();
-                                for (Element strong : infos) {
-                                    String header = strong.text().trim();
-                                    if (header.equalsIgnoreCase("Year :")) {
-                                        String parentText = strong.parent().ownText();
-                                        String[] parts = parentText.split("\\|");
-                                        year = parts.length > 2
-                                                ? parts[2].replaceAll("\\D+", "").trim()
-                                                : "N/A";
-                                    }
-                                    if (header.equalsIgnoreCase("Size :")) {
-                                        String parentText = strong.parent().ownText();
-                                        String[] parts = parentText.split("\\|");
-                                        size = parts.length > 3
-                                                ? parts[3].trim()
-                                                : "N/A";
-                                    }
-                                }
-                                break;
-                            } catch (Exception e) {
-                                if (i >= post_content.select("p").size() - 1) {
-                                    throw e;
-                                }
-                            }
-                        }
+                        BasicScrappingInfo basicScrappingInfo = _getBasicScrappingInfo(doc);
                         List<TagDTO> tags = scrapeTags(doc);
-                        TagDTO mainTag = getMainTag(tags, title);
+                        TagDTO mainTag = getMainTag(tags, basicScrappingInfo.title);
 
 
-                        DownloadIssueDTO downloadIssueDTO = DownloadIssueDTO.builder().links(downLoadLinkDTOS).description(description).build();
+                        DownloadIssueDTO downloadIssueDTO = DownloadIssueDTO.builder().links(downLoadLinkDTOS).description(basicScrappingInfo.description).build();
 
                         return ComicSearchDetailsLinksDTO.builder().
-                                description(description).
+                                description(basicScrappingInfo.description).
                                 downloadIssues(List.of(downloadIssueDTO)).
-                                title(title).
-                                year(year).
-                                size(size).
+                                title(basicScrappingInfo.title).
+                                year(basicScrappingInfo.year).
+                                size(basicScrappingInfo.size).
                                 category(category).
-                                image(coverUrl).
+                                image(basicScrappingInfo.cover).
                                 link(urlString).
                                 tags(tags).
                                 mainTag(mainTag).
@@ -398,56 +355,7 @@ public class GetComicsScrapperImpl implements GetComicsScrapperService {
 
                     Element ul = postContents.get(0).selectFirst("ul");
 
-                    //Get cover
-                    String coverUrl = "";
-                    Element coverHeader = doc.selectFirst(".cover-single");
-                    if (coverHeader != null) {
-                        Element coverBackground = coverHeader.selectFirst(".cover-background");
-                        if (coverBackground != null) {
-                            String style = coverBackground.attr("style");
-                            Matcher matcher = Pattern.compile("url\\('([^']+)'\\)").matcher(style);
-                            if (matcher.find()) {
-                                coverUrl = matcher.group(1);
-                            }
-                        }
-                    }
-
-                    Element post_content = doc.selectFirst(".post-contents");
-                    Element paragraph = post_content.select("p").get(0);
-
-                    String title = "";
-                    String size = "";
-                    String year = "";
-
-                    for (int i = 1; i < post_content.select("p").size(); ++i) {
-                        try {
-                            Element otherInfo = post_content.select("p").get(i);
-                            Elements infos = otherInfo.select("strong");
-                            title = infos.get(0).text();
-                            for (Element strong : infos) {
-                                String header = strong.text().trim();
-                                if (header.equalsIgnoreCase("Year :")) {
-                                    String parentText = strong.parent().ownText();
-                                    String[] parts = parentText.split("\\|");
-                                    year = parts.length > 2
-                                            ? parts[2].replaceAll("\\D+", "").trim()
-                                            : "N/A";
-                                }
-                                if (header.equalsIgnoreCase("Size :")) {
-                                    String parentText = strong.parent().ownText();
-                                    String[] parts = parentText.split("\\|");
-                                    size = parts.length > 3
-                                            ? parts[3].trim()
-                                            : "N/A";
-                                }
-                            }
-                            break;
-                        } catch (Exception e) {
-                            if (i >= post_content.select("p").size() - 1) {
-                                throw e;
-                            }
-                        }
-                    }
+                    BasicScrappingInfo basicScrappingInfo = _getBasicScrappingInfo(doc);
 
                     List<DownloadIssueDTO> downloadIssueDTOS = new ArrayList<DownloadIssueDTO>();
                     for (Element li : ul.select("li")) {
@@ -472,16 +380,16 @@ public class GetComicsScrapperImpl implements GetComicsScrapperService {
                     }
 
                     List<TagDTO> tags = scrapeTags(doc);
-                    TagDTO mainTag = getMainTag(tags, title);
+                    TagDTO mainTag = getMainTag(tags, basicScrappingInfo.title);
 
                     return ComicSearchDetailsLinksDTO.builder().
                             description(description).
                             downloadIssues(downloadIssueDTOS).
-                            title(title).
-                            year(year).
-                            size(size).
+                            title(basicScrappingInfo.title).
+                            year(basicScrappingInfo.year).
+                            size(basicScrappingInfo.size).
                             category(category).
-                            image(coverUrl).
+                            image(basicScrappingInfo.cover).
                             link(urlString).
                             tags(tags).mainTag(mainTag).
                             screenshots(getScreenshots(doc)).
@@ -620,6 +528,63 @@ public class GetComicsScrapperImpl implements GetComicsScrapperService {
                 }
             }
         }
+    }
+
+    private BasicScrappingInfo _getBasicScrappingInfo(Document doc) {
+        BasicScrappingInfo basicScrappingInfo = new BasicScrappingInfo();
+        basicScrappingInfo.cover = "";
+        basicScrappingInfo.title = "";
+        basicScrappingInfo.size = "";
+        basicScrappingInfo.year = "";
+        basicScrappingInfo.description = "";
+        Element coverHeader = doc.selectFirst(".cover-single");
+        if (coverHeader != null) {
+            Element coverBackground = coverHeader.selectFirst(".cover-background");
+            if (coverBackground != null) {
+                String style = coverBackground.attr("style");
+                Matcher matcher = Pattern.compile("url\\('([^']+)'\\)").matcher(style);
+                if (matcher.find()) {
+                    basicScrappingInfo.cover = matcher.group(1);
+                }
+            }
+        }
+
+        Element post_content = doc.selectFirst(".post-contents");
+        Element paragraph = post_content.select("p").get(0);
+
+        basicScrappingInfo.description = paragraph.text();
+
+
+        for (int i = 1; i < post_content.select("p").size(); ++i) {
+            try {
+                Element otherInfo = post_content.select("p").get(i);
+                Elements infos = otherInfo.select("strong");
+                basicScrappingInfo.title = infos.get(0).text();
+                for (Element strong : infos) {
+                    String header = strong.text().trim();
+                    if (header.equalsIgnoreCase("Year :")) {
+                        String parentText = strong.parent().ownText();
+                        String[] parts = parentText.split("\\|");
+                        basicScrappingInfo.year = parts.length > 2
+                                ? parts[2].replaceAll("\\D+", "").trim()
+                                : "N/A";
+                    }
+                    if (header.equalsIgnoreCase("Size :")) {
+                        String parentText = strong.parent().ownText();
+                        String[] parts = parentText.split("\\|");
+                        basicScrappingInfo.size = parts.length > 3
+                                ? parts[3].trim()
+                                : "N/A";
+                    }
+                }
+                break;
+            } catch (Exception e) {
+                if (i >= post_content.select("p").size() - 1) {
+                    throw e;
+                }
+            }
+        }
+        return basicScrappingInfo;
     }
 
 
