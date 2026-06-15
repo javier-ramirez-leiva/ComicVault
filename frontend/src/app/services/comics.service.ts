@@ -26,6 +26,7 @@ import {
   DeleteReadOptions,
   FilterComics,
   FilterSeries,
+  DownloadingStatus,
 } from 'interfaces';
 import { HttpService } from './http.service';
 import { ModalService } from './modal.service';
@@ -129,6 +130,10 @@ export class ComicsService {
 
   getComicSearchDetailsLinks(idGc: string): Observable<ComicSearchDetailsLinks> {
     return this.httpService.request<ComicSearchDetailsLinks>('GET', `/searchs/${idGc}/details`);
+  }
+
+  getComicSearchDownloadingStatus(idGc: string): Observable<DownloadingStatus> {
+    return this.httpService.request<DownloadingStatus>('GET', `/searchs/${idGc}/downloadingStatus`);
   }
 
   download(downloadRequest: DownloadRequest): Observable<string> {

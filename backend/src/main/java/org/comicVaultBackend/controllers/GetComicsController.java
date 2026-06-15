@@ -4,6 +4,7 @@ import com.google.common.util.concurrent.RateLimiter;
 import org.comicVaultBackend.config.ApiConfig;
 import org.comicVaultBackend.domain.dto.ComicSearchDTO;
 import org.comicVaultBackend.domain.dto.ComicSearchDetailsLinksDTO;
+import org.comicVaultBackend.domain.dto.DownloadingStatusDTO;
 import org.comicVaultBackend.domain.dto.ScrapperResponseDTO;
 import org.comicVaultBackend.domain.entities.ComicEntity;
 import org.comicVaultBackend.domain.entities.ExceptionEntity;
@@ -286,6 +287,12 @@ public class GetComicsController {
     }
 
     @PreAuthorize("hasAnyAuthority('ADMIN','OWNER', 'CONTRIBUTOR', 'REQUESTER', 'VIEWER')")
+    @GetMapping(path = "/searchs/{idGc}/downloadingStatus")
+    public DownloadingStatusDTO downloadingStatus(@PathVariable String idGc) {
+        return getDownloadingStatus(idGc);
+    }
+
+    @PreAuthorize("hasAnyAuthority('ADMIN','OWNER', 'CONTRIBUTOR', 'REQUESTER', 'VIEWER')")
     @GetMapping(path = "/searchs/search")
     public ComicSearchDTO getComicSearchByIdgc(@RequestParam(name = "idGc", required = true) String idGc) throws EntityNotFoundException {
         ComicSearchDTO comicSearchDto = getComicsScrapperService.getCachedComicSearchByIdgc(idGc);
@@ -310,5 +317,24 @@ public class GetComicsController {
                 }
             }
         }
+    }
+
+    private DownloadingStatusDTO getDownloadingStatus(String idGc) {
+        Optional<ComicEntity> comicEntity = comicService.getcomicbyidGc(idGc);
+        DownloadingStatusDTO downloadingStatusDTO = new DownloadingStatusDTO();
+        downloadingStatusDTO.setDownloadingStatus("not-downloaded");
+        if (comicEntity.isPresent() && (comicEntity.get().getIdGcIssue() == null || comicEntity.get().getIdGcIssue().isBlank())) {
+            downloadingStatusDTO.setDownloadingStatus("downloaded");
+        } else {
+            for (ComicSearchDTO comic : downloadService.getListDownloadingComics()) {
+                if (comic.getIdGc().equals(idGc)) {
+                    downloadingStatusDTO.setDownloadingStatus("downloading");
+                    downloadingStatusDTO.setTotalBytes(comic.getTotalBytes());
+                    downloadingStatusDTO.setCurrentBytes(comic.getCurrentBytes());
+                    break;
+                }
+            }
+        }
+        return downloadingStatusDTO;
     }
 }

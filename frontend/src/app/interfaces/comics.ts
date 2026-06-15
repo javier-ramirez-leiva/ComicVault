@@ -7,6 +7,12 @@ export interface Tag {
 
 export type DeleteReadOptions = `READ_BY_ME` | `READ_BY_ALL` | `READ_BY_ME_NOT_STARTED_BY_OTHER`;
 
+export type DownloadingStatus = {
+  downloadingStatus: DownloadStatus;
+  totalBytes: number;
+  currentBytes: number;
+};
+
 export interface ComicsSearch {
   link: string;
   category: Category;

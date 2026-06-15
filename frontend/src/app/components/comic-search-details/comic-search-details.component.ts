@@ -106,7 +106,23 @@ export class ComicSearchDetailsComponent implements OnInit {
       this.triggerFetch$.pipe(startWith(undefined)),
       idGc$,
     ]).pipe(
-      switchMap(() => this.comicsService.getComicSearchDetailsLinks(this.idGc ?? '')),
+      switchMap(() => {
+        if (this.comicSearchDetailsLinks) {
+          return this.comicsService
+            .getComicSearchDownloadingStatus(this.comicSearchDetailsLinks.idGc)
+            .pipe(
+              map((downloadingStatus): ComicSearchDetailsLinks => {
+                return {
+                  ...this.comicSearchDetailsLinks!,
+                  downloadingStatus: downloadingStatus.downloadingStatus,
+                  totalBytes: downloadingStatus.totalBytes,
+                  currentBytes: downloadingStatus.currentBytes,
+                };
+              }),
+            );
+        }
+        return this.comicsService.getComicSearchDetailsLinks(this.idGc ?? '');
+      }),
       catchError((catchError) => {
         this.spinner.set(false);
         const error = catchError.error;
