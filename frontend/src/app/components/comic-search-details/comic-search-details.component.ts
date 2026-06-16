@@ -106,8 +106,8 @@ export class ComicSearchDetailsComponent implements OnInit {
       this.triggerFetch$.pipe(startWith(undefined)),
       idGc$,
     ]).pipe(
-      switchMap(() => {
-        if (this.comicSearchDetailsLinks) {
+      switchMap(([_, idGc]) => {
+        if (this.comicSearchDetailsLinks && idGc === this.comicSearchDetailsLinks.idGc) {
           return this.comicsService
             .getComicSearchDownloadingStatus(this.comicSearchDetailsLinks.idGc)
             .pipe(
