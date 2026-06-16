@@ -56,6 +56,7 @@
   --color-cover-card-read: oklch(50.8% 0.118 165.612 / 0.95);
   /*emerald-700*/
   --color-cover-card-download: oklch(50% 0.134 242.749 / 0.95);
+  --color-cover-card-download-border: var(--color-sky-500);
   /*sky-700*/
   --color-cover-card-new: oklch(66.6% 0.179 58.318 / 1);
   /*amber-600*/
@@ -124,6 +125,7 @@
   --color-button-primary-text: var(--color-slate-100);
   --color-button-primary-hover: var(--color-sky-600);
   --color-button-primary-focus-ring: var(--color-sky-300);
+  --color-button-primary-border: var(--color-sky-500);
 
   /*Buttons success*/
   --color-button-success-background: var(--color-emerald-700);
@@ -330,6 +332,7 @@
     --color-cover-card-read: oklch(50.8% 0.118 165.612 / 0.95);
     /*emerald-700*/
     --color-cover-card-download: oklch(50% 0.134 242.749 / 0.95);
+    --color-cover-card-download-border: var(--color-sky-600);
     /*sky-700*/
     --color-cover-card-new: oklch(66.6% 0.179 58.318 / 1);
     /*amber-600*/
@@ -571,7 +574,7 @@ ul.grid-mini-pages {
 }
 
 .cover-card-badge-circle {
-  @apply absolute top-1 right-1 z-20 rounded-md size-7 flex items-center align-middle justify-center;
+  @apply absolute top-1 right-1 z-20 rounded-md size-7 flex items-center align-middle justify-center border-2;
 }
 
 .cover-card-badge-large {
@@ -731,7 +734,7 @@ ul.grid-mini-pages {
 }
 
 .button-download {
-  @apply text-button-primary-text bg-button-primary-background hover:bg-button-primary-hover focus:ring-button-primary-focus-ring;
+  @apply text-button-primary-text bg-button-primary-background hover:bg-button-primary-hover focus:ring-button-primary-focus-ring border-button-primary-border;
 }
 
 .button-card-dragger-background {
