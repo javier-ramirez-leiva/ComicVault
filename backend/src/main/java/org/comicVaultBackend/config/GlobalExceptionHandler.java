@@ -1,5 +1,6 @@
 package org.comicVaultBackend.config;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.apache.coyote.BadRequestException;
 import org.comicVaultBackend.domain.dto.ResponseErrorDTO;
 import org.comicVaultBackend.domain.entities.ExceptionEntity;
@@ -13,6 +14,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -40,6 +43,20 @@ public class GlobalExceptionHandler {
         }
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
 
+        String endpoint = null;
+        String httpMethod = null;
+        String queryString = null;
+
+        ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+
+        if (attributes != null) {
+            HttpServletRequest request = attributes.getRequest();
+            endpoint = request.getRequestURI();
+            httpMethod = request.getMethod();
+            queryString = request.getQueryString();
+
+        }
+
         ExceptionEntity exception = ExceptionEntity.builder()
                 .timeStamp(new Date())
                 .message(ex.getMessage())
@@ -48,6 +65,7 @@ public class GlobalExceptionHandler {
                         .map(StackTraceElement::toString)
                         .toList())
                 .username(username)
+                .endpoint(endpoint)
                 .build();
         exceptionService.save(exception);
 

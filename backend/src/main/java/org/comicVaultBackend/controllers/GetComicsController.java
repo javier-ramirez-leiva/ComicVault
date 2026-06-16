@@ -1,6 +1,7 @@
 package org.comicVaultBackend.controllers;
 
 import com.google.common.util.concurrent.RateLimiter;
+import jakarta.servlet.http.HttpServletRequest;
 import org.comicVaultBackend.config.ApiConfig;
 import org.comicVaultBackend.domain.dto.ComicSearchDTO;
 import org.comicVaultBackend.domain.dto.ComicSearchDetailsLinksDTO;
@@ -14,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -186,11 +189,23 @@ public class GetComicsController {
                                      ComicScrapperGatewayException |
                                      ComicScrapperGatewayPageException e) {
                                 String username = SecurityContextHolder.getContext().getAuthentication().getName();
+                                String endpoint = null;
+                                String httpMethod = null;
+
+                                ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+
+                                if (attributes != null) {
+                                    HttpServletRequest request = attributes.getRequest();
+                                    endpoint = request.getRequestURI();
+                                    httpMethod = request.getMethod();
+
+                                }
                                 ExceptionEntity exception = ExceptionEntity.builder()
                                         .timeStamp(new Date())
                                         .message(e.getMessage())
                                         .type(e.getClass().getSimpleName())
                                         .username(username)
+                                        .endpoint(endpoint)
                                         .details(Arrays.stream(e.getStackTrace())
                                                 .map(StackTraceElement::toString)
                                                 .toList())
