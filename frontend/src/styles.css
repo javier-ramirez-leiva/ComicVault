@@ -63,6 +63,7 @@
   --color-cover-card-number-download: oklch(50% 0.134 242.749 / 0.95);
   /*sky-700*/
   --color-cover-card-number-read: oklch(66.6% 0.179 58.318 / 0.95);
+  --color-cover-card-number-read-border: var(--color-amber-500);
   /*amber-600*/
   --color-cover-card-badge-text: var(--color-slate-100);
   --color-cover-card-edit-button: var(--color-violet-700);
@@ -339,6 +340,7 @@
     --color-cover-card-number-download: oklch(50% 0.134 242.749 / 0.95);
     /*sky-700*/
     --color-cover-card-number-read: oklch(66.6% 0.179 58.318 / 0.95);
+    --color-cover-card-number-read-border: var(--color-amber-500);
     /*amber-600*/
     --color-cover-card-badge-text: var(--color-slate-100);
     --color-cover-card-edit-button: var(--color-violet-700);
@@ -570,7 +572,7 @@ ul.grid-mini-pages {
 }
 
 .cover-card-badge {
-  @apply absolute top-0 right-0 z-20 rounded-tr-md size-7 flex items-center align-middle justify-center;
+  @apply absolute top-0 right-0 z-20 rounded-tr-md size-7 flex items-center align-middle justify-center border-2;
 }
 
 .cover-card-badge-circle {

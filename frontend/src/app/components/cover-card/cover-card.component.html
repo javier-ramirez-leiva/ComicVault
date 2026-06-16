@@ -94,12 +94,16 @@
         <div class="cover-card-badge-triangle cover-card-badge-triangle-new"></div>
       }
       @if (numberBadge) {
-        <div class="cover-card-badge bg-cover-card-number-read text-cover-card-badge-text">
+        <div
+          class="cover-card-badge bg-cover-card-number-read text-cover-card-badge-text border-cover-card-number-read-border"
+        >
           {{ numberBadge }}
         </div>
       }
       @if (numberBadge$ | async; as numberBadgeProgress) {
-        <div class="cover-card-badge bg-cover-card-number-download text-cover-card-badge-text">
+        <div
+          class="cover-card-badge bg-cover-card-number-download text-cover-card-badge-text border-cover-card-download-border"
+        >
           {{ numberBadgeProgress }}
         </div>
       }
