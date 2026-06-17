@@ -171,6 +171,8 @@ export class ComicSearchDetailsComponent implements OnInit {
             setTimeout(() => {
               this.scrollToIndex$.next(i);
             }, 500);
+          } else {
+            comics[i].highlight = false;
           }
         }
       });
