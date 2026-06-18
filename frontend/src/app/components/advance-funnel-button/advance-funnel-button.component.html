@@ -35,7 +35,7 @@
             <select
               id="comicSortAttribute"
               formControlName="comicSortAttribute"
-              class="w-full pr-8 mt-2 mb-4"
+              class="w-full pr-8 mt-2 mb-4 cursor-pointer"
             >
               @for (sortAttribute of comicSortAttributes; track $index) {
                 <option
@@ -59,7 +59,7 @@
             <select
               id="seriesSortAttribute"
               formControlName="seriesSortAttribute"
-              class="w-full pr-8 mt-2 mb-4"
+              class="w-full pr-8 mt-2 mb-4 cursor-pointer"
             >
               @for (sortAttribute of seriesSortAttributes; track $index) {
                 <option
@@ -157,7 +157,7 @@
               [formGroupName]="$index"
             >
               <div class="flex justify-between items-center">
-                <select id="userName" formControlName="userName" class="w-full mr-8">
+                <select id="userName" formControlName="userName" class="w-full mr-8 cursor-pointer">
                   @for (user of users; track $index) {
                     <option [value]="user" [selected]="user === userGroup.get('userName')?.value">
                       {{ user }}

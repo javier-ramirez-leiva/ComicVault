@@ -21,11 +21,14 @@
               <img
                 [src]="comic.image"
                 [routerLink]="comic.url"
-                class="w-24 md:w-24 max-w-full max-h-full rounded-md border-1 border-cover-card-border"
+                class="w-24 md:w-24 max-w-full max-h-full rounded-md border-1 border-cover-card-border cursor-pointer"
               />
             </td>
             <td class="px-6 py-2">
-              <span class="font-semibold text-table-link hover:underline" [routerLink]="comic.url">
+              <span
+                class="font-semibold text-table-link hover:underline cursor-pointer"
+                [routerLink]="comic.url"
+              >
                 {{ comic.title }}
               </span>
             </td>
