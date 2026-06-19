@@ -3,6 +3,7 @@ package org.comicVaultBackend.services;
 import org.comicVaultBackend.domain.dto.SeriesDTO;
 import org.comicVaultBackend.domain.entities.ComicEntity;
 import org.comicVaultBackend.domain.entities.SeriesEntity;
+import org.comicVaultBackend.domain.regular.FilterSeries;
 
 import java.util.List;
 import java.util.Optional;
@@ -11,6 +12,8 @@ public interface SeriesService {
     SeriesEntity createSeries(SeriesEntity series);
 
     List<SeriesEntity> listAll();
+
+    List<SeriesEntity> listAllWithFilter(FilterSeries filterSeries);
 
     List<SeriesEntity> listOnGoingSeries();
 

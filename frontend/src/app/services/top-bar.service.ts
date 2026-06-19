@@ -6,6 +6,7 @@ import { FilterHistory } from 'interfaces';
 import { Router } from '@angular/router';
 import { ActivePageService } from './active-page.service';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { AdvanceFilterFunnel } from '../components/advance-funnel-button/advance-funnel-button.component';
 
 @UntilDestroy()
 @Injectable({
@@ -15,8 +16,11 @@ export class TopBarService {
   searchTextChangeLibEvent$: ReplaySubject<string> = new ReplaySubject<string>();
   filterHistoryFormEvent$: ReplaySubject<FilterHistory> = new ReplaySubject<FilterHistory>();
   resetFilterFunnelFormEvent$: Subject<void> = new Subject<void>();
+  resetAdvancedFilterFunnelFormEvent$: Subject<void> = new Subject<void>();
 
   filterEvent$: ReplaySubject<FilterFunnel> = new ReplaySubject<FilterFunnel>();
+  advanceFilterEvent$: ReplaySubject<AdvanceFilterFunnel> =
+    new ReplaySubject<AdvanceFilterFunnel>();
   contentChange$: ReplaySubject<boolean> = new ReplaySubject<boolean>();
   searchBarTextModifierLib$: Subject<string> = new Subject<string>();
   searchBarTextModifierSearch$: Subject<string> = new Subject<string>();
@@ -29,6 +33,10 @@ export class TopBarService {
         this.setSearchBarTextLib('');
         this.resetFilterFunnel();
       }
+      if (activePage !== 'advanceLibrary') {
+        this.setSearchBarTextLib('');
+        this.resetAdvancedFilterFunnel();
+      }
     });
   }
 
@@ -38,6 +46,10 @@ export class TopBarService {
 
   emitFilterChangeEvent(filter: FilterFunnel) {
     this.filterEvent$.next(filter);
+  }
+
+  emitAdvanceFilterChangeEvent(filter: AdvanceFilterFunnel) {
+    this.advanceFilterEvent$.next(filter);
   }
 
   emitContentChangeEvent(content: boolean) {
@@ -51,6 +63,10 @@ export class TopBarService {
 
   resetFilterFunnel() {
     this.resetFilterFunnelFormEvent$.next();
+  }
+
+  resetAdvancedFilterFunnel() {
+    this.resetAdvancedFilterFunnelFormEvent$.next();
   }
 
   setFilterHistoryFormValue(filter: FilterHistory) {

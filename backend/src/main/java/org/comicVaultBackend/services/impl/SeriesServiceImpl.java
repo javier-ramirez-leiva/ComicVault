@@ -1,10 +1,12 @@
 package org.comicVaultBackend.services.impl;
 
 
+import org.apache.commons.lang3.StringUtils;
 import org.comicVaultBackend.domain.dto.ComicDTO;
 import org.comicVaultBackend.domain.dto.SeriesDTO;
 import org.comicVaultBackend.domain.entities.ComicEntity;
 import org.comicVaultBackend.domain.entities.SeriesEntity;
+import org.comicVaultBackend.domain.regular.FilterSeries;
 import org.comicVaultBackend.mappers.Mapper;
 import org.comicVaultBackend.repositories.SeriesRepository;
 import org.comicVaultBackend.services.SeriesService;
@@ -16,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -37,6 +40,17 @@ public class SeriesServiceImpl implements SeriesService {
     @Override
     public List<SeriesEntity> listAll() {
         return new ArrayList<>(seriesRepository.findAllByOrderByModifiedAtDesc());
+    }
+
+    @Override
+    public List<SeriesEntity> listAllWithFilter(FilterSeries filterSeries) {
+        return StreamSupport
+                .stream(
+                        seriesRepository.findAllByOrderByModifiedAtDesc().spliterator(),
+                        false)
+                .filter(seriesEntity -> filterSeries(seriesEntity, filterSeries))
+                .sorted(buildComparator(filterSeries))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -111,6 +125,73 @@ public class SeriesServiceImpl implements SeriesService {
             }
         }
         return null;
+    }
+
+    private boolean filterSeries(SeriesEntity series, FilterSeries filter) {
+        if (StringUtils.isNotBlank(filter.getComicTitle()) && !series.getTitle().toLowerCase().contains(filter.getComicTitle().toLowerCase())) {
+            return false;
+        }
+
+        try {
+            int seriesYear = Integer.parseInt(series.getYear());
+            if (seriesYear > filter.getYearEnd() || seriesYear < filter.getYearStart()) {
+                return false;
+            }
+        } catch (NumberFormatException e) {
+            logger.warn("Not a valid year integer for \"" + series.getSeriesID() + "\": " + series.getYear());
+        }
+
+        long issues = series.getComics().size();
+        if (issues > filter.getIssuesEnd() || issues < filter.getIssuesStart()) {
+            return false;
+        }
+
+        if (filter.getRemoveCategories().contains(series.getCategory())) {
+            return false;
+        }
+
+        return true;
+    }
+
+    private Comparator<SeriesEntity> buildComparator(FilterSeries filter) {
+        Comparator<SeriesEntity> comparator;
+        switch (filter.getSortAttribute()) {
+            case TITLE:
+                comparator = Comparator.comparing(
+                        SeriesEntity::getTitle,
+                        Comparator.nullsLast(String.CASE_INSENSITIVE_ORDER)
+                );
+                break;
+            case YEAR:
+                comparator = Comparator.comparing(
+                        SeriesEntity::getYear,
+                        Comparator.nullsLast(String.CASE_INSENSITIVE_ORDER)
+                );
+                break;
+            case ISSUES:
+                comparator = Comparator.comparing(
+                        series -> series.getComics() == null ? 0 : series.getComics().size(),
+                        Comparator.nullsLast(Integer::compareTo)
+                );
+                break;
+            case CATEGORY:
+                comparator = Comparator.comparing(
+                        SeriesEntity::getCategory,
+                        String.CASE_INSENSITIVE_ORDER
+
+                );
+                break;
+            case LATEST:
+            default:
+                comparator = Comparator.comparing(
+                        SeriesEntity::getModifiedAt,
+                        Comparator.nullsLast(Comparator.reverseOrder())
+                );
+                break;
+        }
+        return filter.isSortDescendingDirection()
+                ? comparator.reversed()
+                : comparator;
     }
 
 

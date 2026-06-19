@@ -27,6 +27,8 @@ public class ExceptionEntity {
     private String type;
 
     String message;
+    String username;
+    String endpoint;
 
     List<String> details;
 }

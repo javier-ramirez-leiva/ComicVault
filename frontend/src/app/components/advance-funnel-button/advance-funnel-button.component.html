@@ -26,6 +26,7 @@
           [value]="seriesContent"
         ></app-two-choices-chip>
       </div>
+
       <!-- Sort -->
       @if (seriesContent === false) {
         <div class="space-y-2">
@@ -97,28 +98,6 @@
         </div>
       </div>
 
-      <!-- Read Status -->
-      @if (seriesContent === false) {
-        <div class="space-y-2" formGroupName="readStatus">
-          <h6 class="text-base font-medium">Read Status</h6>
-          <div class="flex items-center">
-            <app-boolean-slider-form
-              formControlName="notStarted"
-              label="Not Started"
-            ></app-boolean-slider-form>
-          </div>
-          <div class="flex items-center">
-            <app-boolean-slider-form
-              formControlName="ongoing"
-              label="On going"
-            ></app-boolean-slider-form>
-          </div>
-          <div class="flex items-center">
-            <app-boolean-slider-form formControlName="read" label="Read"></app-boolean-slider-form>
-          </div>
-        </div>
-      }
-
       <!-- Year -->
       <div class="space-y-2" formGroupName="year">
         <h6 class="text-base font-medium">Year</h6>
@@ -164,6 +143,77 @@
               <p class="block mb-2 text-sm font-medium text-generic-text">To</p>
               <app-digit-input-form id="to-issue" formControlName="to"></app-digit-input-form>
             </div>
+          </div>
+        </div>
+      }
+
+      <!-- Read Status -->
+      @if (seriesContent === false) {
+        <div class="space-y-2" formArrayName="usersReadStatus">
+          <h6 class="text-base font-medium">Read Status</h6>
+          @for (userGroup of usersReadStatusArray.controls; track $index) {
+            <div
+              class="p-4 border rounded-lg border-input-border space-y-3"
+              [formGroupName]="$index"
+            >
+              <div class="flex justify-between items-center">
+                <select id="userName" formControlName="userName" class="w-full mr-8 cursor-pointer">
+                  @for (user of users; track $index) {
+                    <option [value]="user" [selected]="user === userGroup.get('userName')?.value">
+                      {{ user }}
+                    </option>
+                  }
+                </select>
+                <button
+                  type="button"
+                  class="button-icon-circle-small"
+                  (click)="removeUserRule($index)"
+                >
+                  ✕
+                </button>
+              </div>
+              <div class="flex items-center">
+                <app-boolean-slider-form
+                  formControlName="notStarted"
+                  label="Not Started"
+                ></app-boolean-slider-form>
+              </div>
+              <div class="flex items-center">
+                <app-boolean-slider-form
+                  formControlName="ongoing"
+                  label="On Going"
+                ></app-boolean-slider-form>
+              </div>
+              <div class="flex items-center">
+                <app-boolean-slider-form
+                  formControlName="read"
+                  label="Read"
+                ></app-boolean-slider-form>
+              </div>
+            </div>
+          }
+          <div class="flex items-center align-middle gap-4 my-2">
+            <p class="block text-md font-medium text-generic-text">Add user rule</p>
+            <button
+              type="button"
+              class="button-icon-circle-small button-add"
+              (click)="addUserRule()"
+            >
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                stroke-width="1.5"
+                stroke="currentColor"
+                class="size-6"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  d="M12 4.5v15m7.5-7.5h-15"
+                ></path>
+              </svg>
+            </button>
           </div>
         </div>
       }

@@ -43,7 +43,15 @@ export class LibraryPageComponent implements OnInit {
       this.comicService.allSeries(),
       this.topBarService.filterEvent$.pipe(),
       this.topBarService.searchTextChangeLibEvent$.pipe(startWith('')),
-    ]).pipe(map(([series, filter, search]) => this.filterSeries(series, filter, search)));
+    ]).pipe(
+      map(([series, filter, search]) =>
+        this.sortSeries(
+          this.filterSeries(series, filter, search),
+          filter?.seriesSortAttribute ?? 'LATEST',
+          filter?.sortDescendingDirection ?? false,
+        ),
+      ),
+    );
     const allComics$ = this.multiSelectService.refresh$.pipe(
       startWith(null),
       switchMap(() => this.comicService.allComics()),
@@ -53,13 +61,127 @@ export class LibraryPageComponent implements OnInit {
       this.topBarService.filterEvent$.pipe(),
       this.topBarService.searchTextChangeLibEvent$.pipe(startWith('')),
       this.multiSelectService.refresh$.pipe(startWith(null)),
-    ]).pipe(map(([comics, filter, search, _]) => this.filterComics(comics, filter, search)));
+    ]).pipe(
+      map(([comics, filter, search, _]) =>
+        this.sortComics(
+          this.filterComics(comics, filter, search),
+          filter?.comicSortAttribute ?? 'LATEST',
+          filter?.sortDescendingDirection ?? false,
+        ),
+      ),
+    );
   }
 
   ngOnInit(): void {
     this.route.url.subscribe((segments) => {
       const last = segments[segments.length - 1]?.path;
       this.contentSeries = last === 'series';
+    });
+  }
+
+  sortSeries(series: Series[], sortAttribute: string, descending: boolean): Series[] {
+    return series.sort((a, b) => {
+      let compare = 0;
+      switch (sortAttribute) {
+        case 'LATEST':
+          compare = new Date(b.modifiedAt).getTime() - new Date(a.modifiedAt).getTime();
+          break;
+        case 'TITLE':
+          compare = a.title.localeCompare(b.title);
+          break;
+        case 'YEAR':
+          const yearA = parseInt(a.year, 10);
+          const yearB = parseInt(b.year, 10);
+          const aValid = !isNaN(yearA);
+          const bValid = !isNaN(yearB);
+
+          if (!aValid && !bValid) {
+            compare = 0;
+          } else if (!aValid) {
+            compare = -1; // b goes after a
+          } else if (!bValid) {
+            compare = 1; // a goes after b
+          } else {
+            compare = yearA - yearB;
+          }
+          break;
+        case 'CATEGORY':
+          compare = a.category.localeCompare(b.category);
+          break;
+        case 'ISSUES':
+          compare = a.totalIssues - b.totalIssues;
+          break;
+      }
+      return descending ? -compare : compare;
+    });
+  }
+
+  sortComics(
+    comics: ComicsDatabase[],
+    sortAttribute: string,
+    descending: boolean,
+  ): ComicsDatabase[] {
+    return comics.sort((a, b) => {
+      let compare = 0;
+      switch (sortAttribute) {
+        case 'LATEST':
+          compare = new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+          break;
+        case 'TITLE':
+          compare = a.title.localeCompare(b.title);
+          break;
+        case 'YEAR':
+          const yearA = parseInt(a.year, 10);
+          const yearB = parseInt(b.year, 10);
+          const aValid = !isNaN(yearA);
+          const bValid = !isNaN(yearB);
+
+          if (!aValid && !bValid) {
+            compare = 0;
+          } else if (!aValid) {
+            compare = -1; // b goes after a
+          } else if (!bValid) {
+            compare = 1; // a goes after b
+          } else {
+            compare = yearA - yearB;
+          }
+          break;
+        case 'CATEGORY':
+          compare = a.category.localeCompare(b.category);
+          break;
+        case 'SIZE':
+          const sizeA = parseInt(a.size.replace(' MB', ''), 10);
+          const sizeB = parseInt(b.size.replace(' MB', ''), 10);
+          const aSizeValid = !isNaN(sizeA);
+          const bSizeValid = !isNaN(sizeB);
+
+          if (!aSizeValid && !bSizeValid) {
+            compare = 0;
+          } else if (!aSizeValid) {
+            compare = 1; // a goes after b
+          } else if (!bSizeValid) {
+            compare = -1; // b goes after a
+          } else {
+            compare = sizeA - sizeB;
+          }
+          break;
+        case 'READ STATUS':
+          const getRank = (s: ComicsDatabase) => {
+            if (s.readStatus) return 0;
+            if (s.pageStatus > 0) return 1;
+            return 2;
+          };
+          const rankCompare = getRank(a) - getRank(b);
+          if (rankCompare !== 0) {
+            compare = rankCompare;
+          } else if (!a.readStatus) {
+            const aProgress = a.pageStatus / a.pages;
+            const bProgress = b.pageStatus / b.pages;
+            compare = bProgress - aProgress; // most progressed first
+          }
+          break;
+      }
+      return descending ? -compare : compare;
     });
   }
 

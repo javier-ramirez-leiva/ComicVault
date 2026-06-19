@@ -7,6 +7,12 @@ export interface Tag {
 
 export type DeleteReadOptions = `READ_BY_ME` | `READ_BY_ALL` | `READ_BY_ME_NOT_STARTED_BY_OTHER`;
 
+export type DownloadingStatus = {
+  downloadingStatus: DownloadStatus;
+  totalBytes: number;
+  currentBytes: number;
+};
+
 export interface ComicsSearch {
   link: string;
   category: Category;
@@ -39,7 +45,6 @@ export interface ComicsDatabase {
   idGc: string;
   idGcIssue: string;
   description: string;
-  createdAt: string;
   path: string;
   title: string;
   issue: number;
@@ -55,6 +60,7 @@ export interface ComicsDatabase {
   tags: Tag[];
   doublePages: number[];
   doublePageCover: boolean;
+  createdAt: Date;
 
   //UI stuff
   highlight: boolean;
@@ -97,6 +103,7 @@ export interface Series {
   readIssues: number;
   totalIssues: number;
   comics: ComicsDatabase[];
+  modifiedAt: Date;
 }
 
 export interface ScrapperResponse {
@@ -108,3 +115,34 @@ export type Category = 'all' | 'marvel' | 'dc' | 'other-comics';
 export function isCategory(value: string): value is Category {
   return ['all', 'marvel', 'dc', 'other-comics'].includes(value);
 }
+
+export interface FilterComics {
+  comicTitle: string;
+  notNotStartedUsers: string[];
+  notOnGoingUsers: string[];
+  notReadUsers: string[];
+  removeCategories: string[];
+  yearStart: number;
+  yearEnd: number;
+  sizeStart: number;
+  sizeEnd: number;
+
+  sortAttribute: ComicSortAttribute;
+  sortDescendingDirection: boolean;
+}
+
+export type ComicSortAttribute = 'LATEST' | 'TITLE' | 'YEAR' | 'CATEGORY' | 'SIZE';
+
+export interface FilterSeries {
+  comicTitle: string;
+  removeCategories: string[];
+  yearStart: number;
+  yearEnd: number;
+  issuesStart: number;
+  issuesEnd: number;
+
+  sortAttribute: SeriesSortAttribute;
+  sortDescendingDirection: boolean;
+}
+
+export type SeriesSortAttribute = 'LATEST' | 'TITLE' | 'YEAR' | 'CATEGORY' | 'ISSUES';

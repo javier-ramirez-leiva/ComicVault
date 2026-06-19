@@ -27,7 +27,7 @@
         ></app-left-nav-button>
 
         <button
-          class="relative items-center p-2 text-sm font-medium text-center text-nav-menu-button-text rounded-lg hover:ring-4 hover:ring-nav-menu-button-border focus:ring-4 focus:outline-hidden focus:ring-nav-menu-button-border"
+          class="relative items-center p-2 text-sm font-medium text-center text-nav-menu-button-text rounded-lg hover:ring-4 hover:ring-nav-menu-button-border focus:ring-4 focus:outline-hidden focus:ring-nav-menu-button-border cursor-pointer"
           type="button"
           appHideRoles
           [appHideForRoles]="[Role.Requester, Role.Viewer]"
@@ -82,6 +82,17 @@
           }
         </button>
       </div>
+    </li>
+    <li
+      appHideRoles
+      [appHideForRoles]="[Role.Owner, Role.Contributor, Role.Requester, Role.Viewer]"
+    >
+      <app-left-nav-button
+        route="advanceLibrary"
+        activeRoute="advanceLibrary"
+        label="Advance library"
+        svgPath="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0 0 12 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75Z"
+      ></app-left-nav-button>
     </li>
     <li>
       <app-left-nav-button

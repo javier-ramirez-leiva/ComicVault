@@ -22,6 +22,7 @@ public class SeriesDTO {
     private Boolean readStatus;
     @Getter(AccessLevel.NONE)
     private Integer readIssues;
+    private Date modifiedAt;
 
     private List<ComicDTO> comics;
 

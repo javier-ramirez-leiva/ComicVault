@@ -14,6 +14,7 @@ export class GridService {
 
   gridOptions$ = new BehaviorSubject<GridOptions>({
     library: true,
+    advanceLibrary: true,
     search: true,
     seriesDetails: true,
     downloads: true,
@@ -33,6 +34,8 @@ export class GridService {
       map(([activeRoot, gridOptions]) => {
         if (activeRoot === 'library') {
           return gridOptions.library;
+        } else if (activeRoot === 'advanceLibrary') {
+          return gridOptions.advanceLibrary;
         } else if (activeRoot === 'search') {
           return gridOptions.search;
         } else if (activeRoot === 'series') {
@@ -50,6 +53,8 @@ export class GridService {
     const activeRoot = this.activePageService.activeRoot$.value;
     if (activeRoot === 'library') {
       value.library = !value.library;
+    } else if (activeRoot === 'advanceLibrary') {
+      value.advanceLibrary = !value.advanceLibrary;
     } else if (activeRoot === 'search') {
       value.search = !value.search;
     } else if (activeRoot === 'series') {
@@ -64,6 +69,7 @@ export class GridService {
 
 type GridOptions = {
   library: boolean;
+  advanceLibrary: boolean;
   search: boolean;
   seriesDetails: boolean;
   downloads: boolean;

@@ -9,6 +9,7 @@ const pages = [
   'offline',
   'home',
   'library',
+  'advanceLibrary',
   'search',
   'downloads',
   'users',

@@ -201,6 +201,17 @@ export class ComicDatabaseDetailsComponent implements OnInit, CanComponentDeacti
           text: comic.year.trim().length > 0 ? comic.year : 'N/A',
         },
         {
+          title: 'Added',
+          type: 'text',
+          text: new Date(comic.createdAt).toLocaleString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+          }),
+        },
+        {
           title: 'Size',
           type: 'text',
           text: comic.size,

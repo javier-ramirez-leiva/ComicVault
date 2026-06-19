@@ -4,5 +4,7 @@ export interface Exception {
   timeStamp: string;
   timeStampFomatted: string;
   message: string;
+  username: string;
+  endpoint: string;
   details: string[];
 }

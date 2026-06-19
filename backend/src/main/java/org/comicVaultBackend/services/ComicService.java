@@ -2,6 +2,7 @@ package org.comicVaultBackend.services;
 
 import org.comicVaultBackend.domain.dto.ComicDTO;
 import org.comicVaultBackend.domain.entities.ComicEntity;
+import org.comicVaultBackend.domain.regular.FilterComics;
 import org.comicVaultBackend.exceptions.EntityWriteException;
 
 import java.util.List;
@@ -12,6 +13,8 @@ public interface ComicService {
     ComicEntity createComic(ComicEntity Comic);
 
     List<ComicEntity> listAll();
+
+    List<ComicEntity> listAllWithFilter(FilterComics filterComics);
 
     List<ComicEntity> listOnGoing();
 

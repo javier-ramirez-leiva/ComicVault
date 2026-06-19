@@ -3,10 +3,11 @@ import { RouterLink } from '@angular/router';
 import { Series } from 'interfaces';
 import { ConfigURLService } from 'services';
 import { PublisherCellComponent } from '../publisher-cell/publisher-cell.component';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-series-table',
-  imports: [RouterLink, PublisherCellComponent],
+  imports: [RouterLink, PublisherCellComponent, CommonModule],
   templateUrl: './series-table.component.html',
 })
 export class SeriesTableComponent {

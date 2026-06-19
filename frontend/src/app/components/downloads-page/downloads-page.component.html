@@ -15,15 +15,6 @@
       }
     }
   }
-  <!-- ng-container *ngIf="localDownloads$ | async as comics">
-  <ng-container *ngIf="comics.length">
-    <h3 class="pl-4 text-2xl font-bold text-generic-text mt-8">Local Downloads</h3>
-    <app-comics-database-download-grid
-      class="pl-4"
-      [localDownloads$]="localDownloads$"
-    ></app-comics-database-download-grid>
-  </ng-container>
-  </ng-container -->
   @if (emptyResult$ | async) {
     <app-no-results></app-no-results>
   }

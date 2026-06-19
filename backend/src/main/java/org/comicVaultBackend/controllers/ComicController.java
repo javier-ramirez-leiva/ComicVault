@@ -12,6 +12,7 @@ import org.comicVaultBackend.domain.dto.*;
 import org.comicVaultBackend.domain.entities.*;
 import org.comicVaultBackend.domain.regular.ComicTitle;
 import org.comicVaultBackend.domain.regular.DeleteReadOptions;
+import org.comicVaultBackend.domain.regular.FilterComics;
 import org.comicVaultBackend.exceptions.*;
 import org.comicVaultBackend.mappers.Mapper;
 import org.comicVaultBackend.services.*;
@@ -117,6 +118,17 @@ public class ComicController {
     public List<ComicDTO> listComics() {
 
         List<ComicEntity> comics = comicService.listAll();
+
+        return comics.stream()
+                .map(comicMapper::mapTo)
+                .collect(Collectors.toList());
+    }
+
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    @PostMapping(path = "comicsAdmin")
+    public List<ComicDTO> listComicsAdmin(@RequestBody FilterComics filterComics) throws Exception {
+
+        List<ComicEntity> comics = comicService.listAllWithFilter(filterComics);
 
         return comics.stream()
                 .map(comicMapper::mapTo)
