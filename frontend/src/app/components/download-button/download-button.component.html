@@ -1,4 +1,11 @@
-<button (click)="downloadDialog($event)" class="button-icon button-download">
+<button
+  (click)="downloadDialog($event)"
+  class="button-icon button-download"
+  [ngClass]="{
+    'border-2': mini,
+    'border-0': !mini,
+  }"
+>
   <!-- svg
         xmlns="http://www.w3.org/2000/svg"
         fill="none"

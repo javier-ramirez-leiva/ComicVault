@@ -106,7 +106,23 @@ export class ComicSearchDetailsComponent implements OnInit {
       this.triggerFetch$.pipe(startWith(undefined)),
       idGc$,
     ]).pipe(
-      switchMap(() => this.comicsService.getComicSearchDetailsLinks(this.idGc ?? '')),
+      switchMap(([_, idGc]) => {
+        if (this.comicSearchDetailsLinks && idGc === this.comicSearchDetailsLinks.idGc) {
+          return this.comicsService
+            .getComicSearchDownloadingStatus(this.comicSearchDetailsLinks.idGc)
+            .pipe(
+              map((downloadingStatus): ComicSearchDetailsLinks => {
+                return {
+                  ...this.comicSearchDetailsLinks!,
+                  downloadingStatus: downloadingStatus.downloadingStatus,
+                  totalBytes: downloadingStatus.totalBytes,
+                  currentBytes: downloadingStatus.currentBytes,
+                };
+              }),
+            );
+        }
+        return this.comicsService.getComicSearchDetailsLinks(this.idGc ?? '');
+      }),
       catchError((catchError) => {
         this.spinner.set(false);
         const error = catchError.error;
@@ -155,6 +171,8 @@ export class ComicSearchDetailsComponent implements OnInit {
             setTimeout(() => {
               this.scrollToIndex$.next(i);
             }, 500);
+          } else {
+            comics[i].highlight = false;
           }
         }
       });

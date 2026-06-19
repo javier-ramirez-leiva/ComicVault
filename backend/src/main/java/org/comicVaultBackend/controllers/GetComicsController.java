@@ -1,9 +1,11 @@
 package org.comicVaultBackend.controllers;
 
 import com.google.common.util.concurrent.RateLimiter;
+import jakarta.servlet.http.HttpServletRequest;
 import org.comicVaultBackend.config.ApiConfig;
 import org.comicVaultBackend.domain.dto.ComicSearchDTO;
 import org.comicVaultBackend.domain.dto.ComicSearchDetailsLinksDTO;
+import org.comicVaultBackend.domain.dto.DownloadingStatusDTO;
 import org.comicVaultBackend.domain.dto.ScrapperResponseDTO;
 import org.comicVaultBackend.domain.entities.ComicEntity;
 import org.comicVaultBackend.domain.entities.ExceptionEntity;
@@ -11,7 +13,10 @@ import org.comicVaultBackend.exceptions.*;
 import org.comicVaultBackend.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
@@ -183,10 +188,24 @@ public class GetComicsController {
                             } catch (ComicScrapperParsingException |
                                      ComicScrapperGatewayException |
                                      ComicScrapperGatewayPageException e) {
+                                String username = SecurityContextHolder.getContext().getAuthentication().getName();
+                                String endpoint = null;
+                                String httpMethod = null;
+
+                                ServletRequestAttributes attributes = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
+
+                                if (attributes != null) {
+                                    HttpServletRequest request = attributes.getRequest();
+                                    endpoint = request.getRequestURI();
+                                    httpMethod = request.getMethod();
+
+                                }
                                 ExceptionEntity exception = ExceptionEntity.builder()
                                         .timeStamp(new Date())
                                         .message(e.getMessage())
                                         .type(e.getClass().getSimpleName())
+                                        .username(username)
+                                        .endpoint(endpoint)
                                         .details(Arrays.stream(e.getStackTrace())
                                                 .map(StackTraceElement::toString)
                                                 .toList())
@@ -283,6 +302,12 @@ public class GetComicsController {
     }
 
     @PreAuthorize("hasAnyAuthority('ADMIN','OWNER', 'CONTRIBUTOR', 'REQUESTER', 'VIEWER')")
+    @GetMapping(path = "/searchs/{idGc}/downloadingStatus")
+    public DownloadingStatusDTO downloadingStatus(@PathVariable String idGc) {
+        return getDownloadingStatus(idGc);
+    }
+
+    @PreAuthorize("hasAnyAuthority('ADMIN','OWNER', 'CONTRIBUTOR', 'REQUESTER', 'VIEWER')")
     @GetMapping(path = "/searchs/search")
     public ComicSearchDTO getComicSearchByIdgc(@RequestParam(name = "idGc", required = true) String idGc) throws EntityNotFoundException {
         ComicSearchDTO comicSearchDto = getComicsScrapperService.getCachedComicSearchByIdgc(idGc);
@@ -293,6 +318,7 @@ public class GetComicsController {
 
     private void setDownloadingStatus(ComicSearchDTO comicSearchDto) {
         Optional<ComicEntity> comicEntity = comicService.getcomicbyidGc(comicSearchDto.getIdGc());
+        comicSearchDto.setDownloadingStatus("not-downloaded");
         //Series are never considered as download. To be improved
         if (comicEntity.isPresent() && (comicEntity.get().getIdGcIssue() == null || comicEntity.get().getIdGcIssue().isBlank())) {
             comicSearchDto.setDownloadingStatus("downloaded");
@@ -302,8 +328,28 @@ public class GetComicsController {
                     comicSearchDto.setDownloadingStatus("downloading");
                     comicSearchDto.setTotalBytes(comic.getTotalBytes());
                     comicSearchDto.setCurrentBytes(comic.getCurrentBytes());
+                    break;
                 }
             }
         }
+    }
+
+    private DownloadingStatusDTO getDownloadingStatus(String idGc) {
+        Optional<ComicEntity> comicEntity = comicService.getcomicbyidGc(idGc);
+        DownloadingStatusDTO downloadingStatusDTO = new DownloadingStatusDTO();
+        downloadingStatusDTO.setDownloadingStatus("not-downloaded");
+        if (comicEntity.isPresent() && (comicEntity.get().getIdGcIssue() == null || comicEntity.get().getIdGcIssue().isBlank())) {
+            downloadingStatusDTO.setDownloadingStatus("downloaded");
+        } else {
+            for (ComicSearchDTO comic : downloadService.getListDownloadingComics()) {
+                if (comic.getIdGc().equals(idGc)) {
+                    downloadingStatusDTO.setDownloadingStatus("downloading");
+                    downloadingStatusDTO.setTotalBytes(comic.getTotalBytes());
+                    downloadingStatusDTO.setCurrentBytes(comic.getCurrentBytes());
+                    break;
+                }
+            }
+        }
+        return downloadingStatusDTO;
     }
 }

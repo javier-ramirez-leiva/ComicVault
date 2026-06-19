@@ -4,18 +4,27 @@
   >
     <ul class="py-2 text-sm">
       <li>
-        <span (click)="markAsRead(true)" class="block px-4 py-2 hover:bg-nav-menu-button-active">
+        <span
+          (click)="markAsRead(true)"
+          class="block px-4 py-2 hover:bg-nav-menu-button-active cursor-pointer"
+        >
           Mark as read
         </span>
       </li>
       <li>
-        <span (click)="markAsRead(false)" class="block px-4 py-2 hover:bg-nav-menu-button-active">
+        <span
+          (click)="markAsRead(false)"
+          class="block px-4 py-2 hover:bg-nav-menu-button-active cursor-pointer"
+        >
           Mark as not read
         </span>
       </li>
     </ul>
     <div class="py-1">
-      <span (click)="download()" class="block px-4 py-2 text-sm hover:bg-nav-menu-button-active">
+      <span
+        (click)="download()"
+        class="block px-4 py-2 text-sm hover:bg-nav-menu-button-active cursor-pointer"
+      >
         Download on device
       </span>
     </div>
@@ -24,7 +33,10 @@
       appHideRoles
       [appHideForRoles]="[Role.Contributor, Role.Requester, Role.Viewer]"
     >
-      <span (click)="delete()" class="block px-4 py-2 text-sm hover:bg-nav-menu-button-active">
+      <span
+        (click)="delete()"
+        class="block px-4 py-2 text-sm hover:bg-nav-menu-button-active cursor-pointer"
+      >
         Delete
       </span>
     </div>

@@ -2,7 +2,7 @@
   <button
     (click)="onButtonClick()"
     type="button"
-    class="flex items-center justify-between w-full p-5 font-medium rtl:text-right bg-settings-menu-background text-settings-menu-button-text border border-settings-menu-border hover:bg-settings-menu-button-active gap-3"
+    class="flex items-center justify-between w-full p-5 font-medium rtl:text-right bg-settings-menu-background text-settings-menu-button-text border border-settings-menu-border hover:bg-settings-menu-button-active gap-3 cursor-pointer"
     [ngClass]="{
       'rounded-t-lg': upperBorder,
       'rounded-b-lg': bottomBorder && !expanded(),

@@ -1,5 +1,5 @@
 <div
-  class="transform scale-105 transition-transform duration-300"
+  class="transform scale-105 transition-transform duration-300 cursor-pointer"
   (click)="onCardClick($event)"
   (mouseleave)="onHover(false)"
   (mouseenter)="onHover(true)"
@@ -71,7 +71,9 @@
     </div>
     @if (imageLoaded) {
       @if (searchOrDatabase && checked) {
-        <div class="cover-card-badge-circle bg-cover-card-download text-cover-card-badge-text">
+        <div
+          class="cover-card-badge-circle bg-cover-card-download border-cover-card-download-border text-cover-card-badge-text"
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -92,12 +94,16 @@
         <div class="cover-card-badge-triangle cover-card-badge-triangle-new"></div>
       }
       @if (numberBadge) {
-        <div class="cover-card-badge bg-cover-card-number-read text-cover-card-badge-text">
+        <div
+          class="cover-card-badge bg-cover-card-number-read text-cover-card-badge-text border-cover-card-number-read-border"
+        >
           {{ numberBadge }}
         </div>
       }
       @if (numberBadge$ | async; as numberBadgeProgress) {
-        <div class="cover-card-badge bg-cover-card-number-download text-cover-card-badge-text">
+        <div
+          class="cover-card-badge bg-cover-card-number-download text-cover-card-badge-text border-cover-card-download-border"
+        >
           {{ numberBadgeProgress }}
         </div>
       }

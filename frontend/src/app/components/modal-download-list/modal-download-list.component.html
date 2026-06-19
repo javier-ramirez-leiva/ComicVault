@@ -13,7 +13,7 @@
           <select
             (change)="onPlatformChange($event, downloadIssue.idGcIssue)"
             id="download-options"
-            class="bg-input-select-background border border-input-select-border text-input-select-text text-sm rounded-lg focus:ring-input-select-focus-ring block w-full p-2.5"
+            class="bg-input-select-background border border-input-select-border text-input-select-text text-sm rounded-lg focus:ring-input-select-focus-ring block w-full p-2.5 cursor-pointer"
           >
             @if (downloadIssue.links.length) {
               <option [value]="0" selected>
