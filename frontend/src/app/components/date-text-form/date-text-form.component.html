@@ -5,6 +5,7 @@
         {{ title }}
       </p>
     }
+
     <div
       class="absolute inset-y-0 start-0 top-9 flex items-center align-middle ps-3.5 pointer-events-none"
     >
@@ -20,18 +21,16 @@
         ></path>
       </svg>
     </div>
+
     <input
-      datepicker
       #input
       [id]="id"
-      autocomplete="off"
-      type="text"
+      type="date"
       class="text-sm rounded-lg block w-full ps-10 p-2.5 bg-input-background border-input-border text-generic-text focus:ring-input-field-focus-ring focus:border-input-button-focus-ring"
-      (change)="onInput($event)"
+      (input)="onInput($event)"
       (blur)="onTouched()"
       [disabled]="isDisabled"
       [value]="value"
-      placeholder="Select Date"
     />
   </div>
 </div>
