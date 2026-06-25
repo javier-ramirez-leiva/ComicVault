@@ -12,6 +12,7 @@ import { RightPanelTitleComponent } from '../right-panel-title/right-panel-title
 import { RightPanelFunnelButtonComponent } from '../right-panel-funnel-button/right-panel-funnel-button.component';
 import { NavigationEnd, Router } from '@angular/router';
 import { ComicSortAttribute, SeriesSortAttribute } from 'src/app/interfaces/comics';
+import { DateTextFormComponent } from '../date-text-form/date-text-form.component';
 
 @UntilDestroy()
 @Component({
@@ -24,6 +25,7 @@ import { ComicSortAttribute, SeriesSortAttribute } from 'src/app/interfaces/comi
     TwoChoicesChipComponent,
     RightPanelTitleComponent,
     RightPanelFunnelButtonComponent,
+    DateTextFormComponent,
   ],
   templateUrl: './funnel-button.component.html',
 })
@@ -83,6 +85,14 @@ export class FunnelButtonComponent {
       from: '',
       to: '',
     },
+    createdAt: {
+      from: '',
+      to: '',
+    },
+    modifiedAt: {
+      from: '',
+      to: '',
+    },
   };
 
   constructor() {
@@ -109,6 +119,14 @@ export class FunnelButtonComponent {
         to: new FormControl(''),
       }),
       issues: this.formBuilder.group({
+        from: new FormControl(''),
+        to: new FormControl(''),
+      }),
+      createdAt: this.formBuilder.group({
+        from: new FormControl(''),
+        to: new FormControl(''),
+      }),
+      modifiedAt: this.formBuilder.group({
         from: new FormControl(''),
         to: new FormControl(''),
       }),
@@ -182,5 +200,13 @@ export type FilterFunnel = {
   issues: {
     from: number | '';
     to: number | '';
+  };
+  createdAt: {
+    from: Date | '';
+    to: Date | '';
+  };
+  modifiedAt: {
+    from: Date | '';
+    to: Date | '';
   };
 };

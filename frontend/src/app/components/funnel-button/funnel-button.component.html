@@ -167,6 +167,41 @@
           </div>
         </div>
       }
+
+      @if (seriesContent === false) {
+        <div class="space-y-2" formGroupName="createdAt">
+          <h6 class="text-base font-medium">Added</h6>
+          <div class="flex items-center justify-between col-span-2 space-x-3">
+            <app-date-text-form
+              id="createdAt-from"
+              title="From"
+              formControlName="from"
+            ></app-date-text-form>
+            <app-date-text-form
+              id="createdAt-to"
+              title="To"
+              formControlName="to"
+            ></app-date-text-form>
+          </div>
+        </div>
+      }
+      @if (seriesContent === true) {
+        <div class="space-y-2" formGroupName="modifiedAt">
+          <h6 class="text-base font-medium">Modified</h6>
+          <div class="flex items-center justify-between col-span-2 space-x-3">
+            <app-date-text-form
+              id="modifiedAt-from"
+              title="From"
+              formControlName="from"
+            ></app-date-text-form>
+            <app-date-text-form
+              id="modifiedAt-to"
+              title="To"
+              formControlName="to"
+            ></app-date-text-form>
+          </div>
+        </div>
+      }
     </div>
   </form>
 </div>
