@@ -151,16 +151,20 @@
         <div class="space-y-2" formGroupName="createdAt">
           <h6 class="text-base font-medium">Added</h6>
           <div class="flex items-center justify-between col-span-2 space-x-3">
-            <app-date-text-form
-              id="createdAt-from"
-              title="From"
-              formControlName="from"
-            ></app-date-text-form>
-            <app-date-text-form
-              id="createdAt-to"
-              title="To"
-              formControlName="to"
-            ></app-date-text-form>
+            <div class="flex-1 min-w-0">
+              <app-date-text-form
+                id="createdAt-from"
+                title="From"
+                formControlName="from"
+              ></app-date-text-form>
+            </div>
+            <div class="flex-1 min-w-0">
+              <app-date-text-form
+                id="createdAt-to"
+                title="To"
+                formControlName="to"
+              ></app-date-text-form>
+            </div>
           </div>
         </div>
       }
