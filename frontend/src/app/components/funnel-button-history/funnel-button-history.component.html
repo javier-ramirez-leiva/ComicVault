@@ -21,20 +21,20 @@
         <app-input-text-form id="comicTitle" formControlName="comicTitle" title="Comic Title">
         </app-input-text-form>
       </div>
-      <div class="mb-4">
-        <app-date-text-form
-          id="date-start"
-          title="Date start"
-          formControlName="dateStart"
-        ></app-date-text-form>
-      </div>
-
-      <div class="mb-4">
-        <app-date-text-form
-          id="date-end"
-          title="Date end"
-          formControlName="dateEnd"
-        ></app-date-text-form>
+      <div class="space-y-2">
+        <h6 class="text-base font-medium">Date</h6>
+        <div class="flex items-center justify-between col-span-2 space-x-3">
+          <app-date-text-form
+            id="date-start"
+            title="From"
+            formControlName="dateStart"
+          ></app-date-text-form>
+          <app-date-text-form
+            id="date-end"
+            title="To"
+            formControlName="dateEnd"
+          ></app-date-text-form>
+        </div>
       </div>
 
       <!-- Read Status -->
