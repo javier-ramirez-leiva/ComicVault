@@ -126,6 +126,8 @@ export interface FilterComics {
   yearEnd: number;
   sizeStart: number;
   sizeEnd: number;
+  createdAtStart: Date;
+  createdAtEnd: Date;
 
   sortAttribute: ComicSortAttribute;
   sortDescendingDirection: boolean;
@@ -140,6 +142,8 @@ export interface FilterSeries {
   yearEnd: number;
   issuesStart: number;
   issuesEnd: number;
+  modifiedAtStart: Date;
+  modifiedAtEnd: Date;
 
   sortAttribute: SeriesSortAttribute;
   sortDescendingDirection: boolean;

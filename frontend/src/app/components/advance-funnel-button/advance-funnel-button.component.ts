@@ -19,6 +19,7 @@ import { DigitInputFormComponent } from '../digit-input-form/digit-input-form.co
 import { CommonModule } from '@angular/common';
 import { UsersService } from 'src/app/services/users.service';
 import { ComicSortAttribute, SeriesSortAttribute } from 'interfaces';
+import { DateTextFormComponent } from '../date-text-form/date-text-form.component';
 
 @UntilDestroy()
 @Component({
@@ -31,6 +32,7 @@ import { ComicSortAttribute, SeriesSortAttribute } from 'interfaces';
     TwoChoicesChipComponent,
     RightPanelTitleComponent,
     RightPanelFunnelButtonComponent,
+    DateTextFormComponent,
   ],
   templateUrl: './advance-funnel-button.component.html',
 })
@@ -87,6 +89,14 @@ export class AdvanceFunnelButtonComponent {
       from: '',
       to: '',
     },
+    createdAt: {
+      from: '',
+      to: '',
+    },
+    modifiedAt: {
+      from: '',
+      to: '',
+    },
   };
 
   constructor() {
@@ -109,6 +119,14 @@ export class AdvanceFunnelButtonComponent {
         to: new FormControl(''),
       }),
       issues: this.formBuilder.group({
+        from: new FormControl(''),
+        to: new FormControl(''),
+      }),
+      createdAt: this.formBuilder.group({
+        from: new FormControl(''),
+        to: new FormControl(''),
+      }),
+      modifiedAt: this.formBuilder.group({
         from: new FormControl(''),
         to: new FormControl(''),
       }),
@@ -206,5 +224,13 @@ export type AdvanceFilterFunnel = {
   issues: {
     from: number | '';
     to: number | '';
+  };
+  createdAt: {
+    from: Date | '';
+    to: Date | '';
+  };
+  modifiedAt: {
+    from: Date | '';
+    to: Date | '';
   };
 };

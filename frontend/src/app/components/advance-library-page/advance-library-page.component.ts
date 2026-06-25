@@ -100,6 +100,8 @@ export class AdvanceLibraryPageComponent {
       yearEnd: filter.year.to || new Date().getFullYear(),
       issuesStart: filter.issues.from || 0,
       issuesEnd: filter.issues.to || Number.MAX_SAFE_INTEGER,
+      modifiedAtStart: filter.modifiedAt.from || new Date(0),
+      modifiedAtEnd: filter.modifiedAt.to || new Date(),
     };
   }
 
@@ -124,6 +126,8 @@ export class AdvanceLibraryPageComponent {
       yearEnd: filter.year.to || new Date().getFullYear(),
       sizeStart: filter.size.from || 0,
       sizeEnd: filter.size.to || Number.MAX_SAFE_INTEGER,
+      createdAtStart: filter.createdAt.from || new Date(0),
+      createdAtEnd: filter.createdAt.to || new Date(),
     };
   }
 }

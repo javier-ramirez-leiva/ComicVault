@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -27,6 +28,8 @@ public class FilterSeries {
     private int yearEnd;
     private int issuesStart;
     private long issuesEnd;
+    private Date modifiedAtStart;
+    private Date modifiedAtEnd;
 
     private SortAttribute sortAttribute;
     private boolean sortDescendingDirection;
