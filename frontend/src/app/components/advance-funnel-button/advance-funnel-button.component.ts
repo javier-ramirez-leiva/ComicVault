@@ -163,10 +163,12 @@ export class AdvanceFunnelButtonComponent {
 
   onOpenDrawer() {
     this.isDrawerOpen$.next(true);
+    this.topBarService.setDrawerOpenState(true);
   }
 
   onCloseDrawer() {
     this.isDrawerOpen$.next(false);
+    this.topBarService.setDrawerOpenState(false);
   }
 
   OnContentTypeSeries(value: boolean) {
