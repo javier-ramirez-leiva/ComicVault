@@ -5,7 +5,7 @@ import { HideRolesDirective, OutsideClickDirective } from 'directives';
 import { CoverCardClickCollectorService } from 'services';
 import { DownloadButtonComponent } from '../download-button/download-button.component';
 import { ComicCard, ComicsDatabase, ComicsSearch, Role } from 'interfaces';
-import { Observable, filter } from 'rxjs';
+import { Observable, filter, tap } from 'rxjs';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 @UntilDestroy()
@@ -72,6 +72,14 @@ export class CoverCardComponent implements ComicCard {
         this.widthStyle = this.progress > 0 ? `width: ${this.progress}%` : null;
       }
     }
+    this.coverCardClickCollectorService.selectAll$.pipe(untilDestroyed(this)).subscribe((value) => {
+      if (value) {
+        this.coverCardClickCollectorService.pushActiveHover(this);
+      } else {
+        this.coverCardClickCollectorService.removeActiveHover(this.id);
+      }
+      this.isHovered = value;
+    });
   }
 
   onCardClick(event: Event): void {

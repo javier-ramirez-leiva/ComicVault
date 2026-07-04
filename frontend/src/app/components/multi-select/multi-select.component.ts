@@ -80,6 +80,10 @@ export class MultiSelectComponent implements OnInit {
     }
   }
 
+  selectAll(value: boolean): void {
+    this.coverCardClickCollectorService.selectAll(value);
+  }
+
   markAsRead(value: boolean): void {
     const comicIDs = this.coverCardClickCollectorService
       .getActiveCards()
