@@ -59,7 +59,11 @@ export class ComicDatabaseTableComponent implements OnInit {
     this.coverCardClickCollector.selectAll$.pipe(untilDestroyed(this)).subscribe((value) => {
       this.rowComics.forEach((rowComic) => {
         rowComic.setHovered(value);
-        this.coverCardClickCollector.pushActiveHover(rowComic);
+        if (value) {
+          this.coverCardClickCollector.pushActiveHover(rowComic);
+        } else {
+          this.coverCardClickCollector.removeActiveHover(rowComic.comic.id);
+        }
       });
     });
   }
