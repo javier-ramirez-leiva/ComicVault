@@ -1,4 +1,4 @@
-import { Component, Input, WritableSignal, inject } from '@angular/core';
+import { Component, ElementRef, Input, WritableSignal, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { HideRolesDirective, OutsideClickDirective } from 'directives';
@@ -43,9 +43,11 @@ export class CoverCardComponent implements ComicCard {
   isTouchDevice: boolean = false;
   Role = Role;
 
-  coverCardClickCollectorService: CoverCardClickCollectorService = inject(
+  private readonly coverCardClickCollectorService: CoverCardClickCollectorService = inject(
     CoverCardClickCollectorService,
   );
+
+  private readonly elementRef: ElementRef<HTMLElement> = inject(ElementRef);
 
   getComic(): ComicsDatabase {
     if (!this.comicsDatabase) {
@@ -73,6 +75,11 @@ export class CoverCardComponent implements ComicCard {
       }
     }
     this.coverCardClickCollectorService.selectAll$.pipe(untilDestroyed(this)).subscribe((value) => {
+      const element = this.elementRef.nativeElement;
+      // False if the element or one of its parents has display: none
+      if (element.offsetParent === null) {
+        return;
+      }
       if (value) {
         this.coverCardClickCollectorService.pushActiveHover(this);
       } else {
