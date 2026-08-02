@@ -27,6 +27,7 @@ import {
   FilterComics,
   FilterSeries,
   DownloadingStatus,
+  HttpResponseError,
 } from 'interfaces';
 import { HttpService } from './http.service';
 import { ModalService } from './modal.service';
@@ -174,15 +175,14 @@ export class ComicsService {
               downloadLink: response[0],
             };
             return this.download(downloadRequest).pipe(
-              catchError((error) => {
-                if (isDevMode()) {
-                  this.notifierService.appendNotification({
-                    id: 0,
-                    title: 'Error',
-                    message: error.message,
-                    type: 'error',
-                  });
-                }
+              catchError((errorResponse) => {
+                const error: HttpResponseError = errorResponse.error;
+                this.notifierService.appendNotification({
+                  id: 0,
+                  title: 'Download error: ',
+                  message: error.message,
+                  type: 'error',
+                });
                 return EMPTY;
               }),
             );

@@ -99,19 +99,17 @@ public class DownloadServiceImpl implements DownloadService {
                     }
 
                     return filePath;
+                } else {
+                    throw new IOException("Content type is not application or content-stream");
                 }
 
             } catch (IOException e) {
                 logger.warn("No downloading file from URL: " + downloadLink.getLink());
+                throw new DownloadException("No downloading file from URL: " + downloadLink.getLink(), e);
             }
         } else {
-            try {
-                return jDownloaderService.downloadFile(downloadRoot, parentFolder, downloadLink, title, comicSearchDto, description, jDownloaderConfiguration);
-            } catch (Exception e) {
-                throw e;
-            }
+            return jDownloaderService.downloadFile(downloadRoot, parentFolder, downloadLink, title, comicSearchDto, description, jDownloaderConfiguration);
         }
-        return null;
     }
 
     @Override

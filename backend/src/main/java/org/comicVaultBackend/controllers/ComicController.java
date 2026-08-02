@@ -814,7 +814,7 @@ public class ComicController {
     @PreAuthorize("hasAnyAuthority('ADMIN','OWNER', 'CONTRIBUTOR')")
     @PostMapping("/download")
     @SkipLoggingResponseBody
-    public void download(@RequestBody DownloadRequestDTO requestBodyDownload) throws EntityAlreadyExistringException, ConfigurationValueException {
+    public void download(@RequestBody DownloadRequestDTO requestBodyDownload) throws Exception {
         boolean comicExists = false;
         if (downloadService.getListDownloadingComics().stream().anyMatch(comic -> comic.getIdGc().equals(requestBodyDownload.getComicSearchDetails().getIdGc()))) {
             comicExists = true;
@@ -836,6 +836,7 @@ public class ComicController {
             jobService.finishJob(jobEntity, JobEntity.Status.COMPLETED);
         } catch (Exception e) {
             jobService.finishJob(jobEntity, JobEntity.Status.ERROR);
+            throw e;
         }
     }
 
@@ -945,8 +946,8 @@ public class ComicController {
         Path downloadRoot = Paths.get(configurationService.getConfiguration().getDownloadRoot());
         downloadedPath = downloadService.downloadFile(downloadRoot, comicParentPath, downloadLinkDTO, comicTitle.getFileName(), comicSearchDetailsDto, comicSearchDetailsDto.getDescription(), configurationService.getConfiguration().getJDownloaderConfiguration());
 
-        if (Files.notExists(downloadedPath)) {
-            throw new DownloadException(downloadIssueRequestDTO.getTitle());
+        if (downloadedPath == null || Files.notExists(downloadedPath)) {
+            throw new DownloadException(comicSearchDetailsDto.getTitle());
         }
 
         List<String> comicExtensions = new ArrayList<>(List.of(".cbr", ".cbz"));
