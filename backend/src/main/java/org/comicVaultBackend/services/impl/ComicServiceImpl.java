@@ -22,6 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.reflect.Field;
 import java.util.Comparator;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -279,6 +280,11 @@ public class ComicServiceImpl implements ComicService {
             }
         } catch (NumberFormatException e) {
             logger.warn("Not a valid size double for \"" + comic.getId() + "\": " + comic.getSize());
+        }
+
+        Date comicCreatedAt = comic.getCreatedAt();
+        if (comicCreatedAt.after(filter.getCreatedAtEnd()) || comicCreatedAt.before(filter.getCreatedAtStart())) {
+            return false;
         }
 
         if (filter.getRemoveCategories().contains(comic.getCategory())) {

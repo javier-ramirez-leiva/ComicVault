@@ -1,8 +1,24 @@
-@if (displayDropdown && displayed) {
+@if (displayDropdown()) {
   <div
     class="z-10 bg-nav-menu-background border-2 border-nav-menu-section-border divide-y divide-nav-menu-section-border rounded-lg shadow-xs w-44 absolute bottom-16 right-2 text-nav-menu-button-text"
   >
     <ul class="py-2 text-sm">
+      <li>
+        <span
+          (click)="selectAll(true)"
+          class="block px-4 py-2 hover:bg-nav-menu-button-active cursor-pointer"
+        >
+          Select all
+        </span>
+      </li>
+      <li>
+        <span
+          (click)="selectAll(false)"
+          class="block px-4 py-2 hover:bg-nav-menu-button-active cursor-pointer"
+        >
+          Deselect all
+        </span>
+      </li>
       <li>
         <span
           (click)="markAsRead(true)"
@@ -42,7 +58,7 @@
     </div>
   </div>
 }
-@if (displayed) {
+@if (displayed$ | async) {
   <button
     type="button"
     (click)="toggleActivation()"

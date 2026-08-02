@@ -238,6 +238,12 @@ export class LibraryPageComponent implements OnInit {
         if (filter.year.to != '' && parseInt(serie.year) > filter.year.to) {
           return false;
         }
+        if (filter.modifiedAt.from != '' && serie.modifiedAt < filter.modifiedAt.from) {
+          return false;
+        }
+        if (filter.modifiedAt.to != '' && serie.modifiedAt > filter.modifiedAt.to) {
+          return false;
+        }
         return true;
       });
   }
@@ -294,6 +300,12 @@ export class LibraryPageComponent implements OnInit {
           return false;
         }
         if (filter.year.to != '' && parseInt(comic.year) > filter.year.to) {
+          return false;
+        }
+        if (filter.createdAt.from != '' && comic.createdAt < filter.createdAt.from) {
+          return false;
+        }
+        if (filter.createdAt.to != '' && comic.createdAt > filter.createdAt.to) {
           return false;
         }
         return true;

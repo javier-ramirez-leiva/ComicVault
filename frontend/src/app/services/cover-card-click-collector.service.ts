@@ -1,6 +1,6 @@
 import { Injectable, inject } from '@angular/core';
 import { CoverCardComponent } from 'components';
-import { BehaviorSubject, filter } from 'rxjs';
+import { BehaviorSubject, filter, Subject } from 'rxjs';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { notNullOrUndefined } from '../utils/rsjx-operators';
@@ -18,6 +18,7 @@ export class CoverCardClickCollectorService {
   private comicCards: ComicCard[] = [];
   private multiSelect: boolean = false;
   public multiSelect$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
+  public selectAll$: Subject<boolean> = new Subject<boolean>();
 
   constructor() {
     this.router.events
@@ -82,5 +83,9 @@ export class CoverCardClickCollectorService {
 
   getActiveCards(): ComicCard[] {
     return this.comicCards;
+  }
+
+  selectAll(value: boolean): void {
+    this.selectAll$.next(value);
   }
 }

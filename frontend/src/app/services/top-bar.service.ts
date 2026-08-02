@@ -1,5 +1,5 @@
 import { Injectable, inject } from '@angular/core';
-import { ReplaySubject, Subject } from 'rxjs';
+import { BehaviorSubject, ReplaySubject, Subject } from 'rxjs';
 import { Category } from 'interfaces';
 import { FilterFunnel } from 'components';
 import { FilterHistory } from 'interfaces';
@@ -24,6 +24,8 @@ export class TopBarService {
   contentChange$: ReplaySubject<boolean> = new ReplaySubject<boolean>();
   searchBarTextModifierLib$: Subject<string> = new Subject<string>();
   searchBarTextModifierSearch$: Subject<string> = new Subject<string>();
+
+  drawerOpen$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   private readonly activePageService = inject(ActivePageService);
 
@@ -71,5 +73,9 @@ export class TopBarService {
 
   setFilterHistoryFormValue(filter: FilterHistory) {
     this.filterHistoryFormEvent$.next(filter);
+  }
+
+  setDrawerOpenState(isOpen: boolean) {
+    this.drawerOpen$.next(isOpen);
   }
 }

@@ -12,6 +12,7 @@ import { RightPanelTitleComponent } from '../right-panel-title/right-panel-title
 import { RightPanelFunnelButtonComponent } from '../right-panel-funnel-button/right-panel-funnel-button.component';
 import { NavigationEnd, Router } from '@angular/router';
 import { ComicSortAttribute, SeriesSortAttribute } from 'src/app/interfaces/comics';
+import { DateTextFormComponent } from '../date-text-form/date-text-form.component';
 
 @UntilDestroy()
 @Component({
@@ -24,6 +25,7 @@ import { ComicSortAttribute, SeriesSortAttribute } from 'src/app/interfaces/comi
     TwoChoicesChipComponent,
     RightPanelTitleComponent,
     RightPanelFunnelButtonComponent,
+    DateTextFormComponent,
   ],
   templateUrl: './funnel-button.component.html',
 })
@@ -83,6 +85,14 @@ export class FunnelButtonComponent {
       from: '',
       to: '',
     },
+    createdAt: {
+      from: '',
+      to: '',
+    },
+    modifiedAt: {
+      from: '',
+      to: '',
+    },
   };
 
   constructor() {
@@ -112,6 +122,14 @@ export class FunnelButtonComponent {
         from: new FormControl(''),
         to: new FormControl(''),
       }),
+      createdAt: this.formBuilder.group({
+        from: new FormControl(''),
+        to: new FormControl(''),
+      }),
+      modifiedAt: this.formBuilder.group({
+        from: new FormControl(''),
+        to: new FormControl(''),
+      }),
     });
 
     this.form.valueChanges.subscribe((value) => {
@@ -138,10 +156,12 @@ export class FunnelButtonComponent {
 
   onOpenDrawer() {
     this.isDrawerOpen$.next(true);
+    this.topBarService.setDrawerOpenState(true);
   }
 
   onCloseDrawer() {
     this.isDrawerOpen$.next(false);
+    this.topBarService.setDrawerOpenState(false);
   }
 
   OnContentTypeSeries(value: boolean) {
@@ -182,5 +202,13 @@ export type FilterFunnel = {
   issues: {
     from: number | '';
     to: number | '';
+  };
+  createdAt: {
+    from: Date | '';
+    to: Date | '';
+  };
+  modifiedAt: {
+    from: Date | '';
+    to: Date | '';
   };
 };

@@ -1,7 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { SearchInputComponent } from '../search-input/search-input.component';
 import { NavigationEnd, Router } from '@angular/router';
-import { TopBarService } from 'services';
+import { AuthService, TopBarService } from 'services';
 import { FilterFunnel, FunnelButtonComponent } from '../funnel-button/funnel-button.component';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
@@ -15,6 +15,8 @@ import {
 } from '../advance-funnel-button/advance-funnel-button.component';
 import { HideRolesDirective } from 'src/app/directives/hide-roles.directive';
 import { Role } from 'src/app/interfaces/users';
+import { map } from 'rxjs';
+import { CommonModule } from '@angular/common';
 
 @UntilDestroy()
 @Component({
@@ -27,7 +29,7 @@ import { Role } from 'src/app/interfaces/users';
     SearchAndCategoryComponent,
     GridButtonComponent,
     AdvanceFunnelButtonComponent,
-    HideRolesDirective,
+    CommonModule,
   ],
   templateUrl: './top-bar.component.html',
 })
@@ -43,7 +45,13 @@ export class TopBarComponent implements OnInit {
   };
 
   private readonly router: Router = inject(Router);
+  private readonly authService = inject(AuthService);
   protected readonly topBarService: TopBarService = inject(TopBarService);
+
+  protected readonly isAdmin$ = this.authService.role$.pipe(
+    untilDestroyed(this),
+    map((role) => role === 'ADMIN'),
+  );
 
   protected readonly Role = Role;
 

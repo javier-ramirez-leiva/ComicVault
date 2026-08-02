@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.Date;
 import java.util.List;
 
 @Data
@@ -30,6 +31,8 @@ public class FilterComics {
     private int yearEnd;
     private long sizeStart;
     private long sizeEnd;
+    private Date createdAtStart;
+    private Date createdAtEnd;
 
     private SortAttribute sortAttribute;
     private boolean sortDescendingDirection;

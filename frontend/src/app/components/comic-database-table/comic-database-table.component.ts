@@ -13,7 +13,9 @@ import {
 } from '@angular/cdk/drag-drop';
 import { StatusCellComponent } from '../status-cell/status-cell.component';
 import { BooleanCheckboxComponent } from '../boolean-checkbox/boolean-checkbox.component';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
+@UntilDestroy()
 @Component({
   selector: 'app-comic-database-table',
   imports: [
@@ -28,7 +30,7 @@ import { BooleanCheckboxComponent } from '../boolean-checkbox/boolean-checkbox.c
   ],
   templateUrl: './comic-database-table.component.html',
 })
-export class ComicDatabaseTableComponent {
+export class ComicDatabaseTableComponent implements OnInit {
   @Input({ required: false }) editStatus = false;
 
   @Output() onComicsChange = new EventEmitter<ComicsDatabase[]>();
@@ -51,6 +53,19 @@ export class ComicDatabaseTableComponent {
 
   get comics(): ComicsDatabase[] {
     return this._comics;
+  }
+
+  ngOnInit(): void {
+    this.coverCardClickCollector.selectAll$.pipe(untilDestroyed(this)).subscribe((value) => {
+      this.rowComics.forEach((rowComic) => {
+        rowComic.setHovered(value);
+        if (value) {
+          this.coverCardClickCollector.pushActiveHover(rowComic);
+        } else {
+          this.coverCardClickCollector.removeActiveHover(rowComic.comic.id);
+        }
+      });
+    });
   }
 
   drop(event: CdkDragDrop<string[]>) {
