@@ -1,6 +1,8 @@
 package org.comicVaultBackend.services.impl;
 
 import org.apache.commons.lang3.StringUtils;
+import org.comicVaultBackend.annotations.CVReadTransaction;
+import org.comicVaultBackend.annotations.CVWriteTransaction;
 import org.comicVaultBackend.domain.dto.ComicDTO;
 import org.comicVaultBackend.domain.entities.ComicEntity;
 import org.comicVaultBackend.domain.entities.ProgressEntity;
@@ -18,7 +20,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.reflect.Field;
 import java.util.Comparator;
@@ -49,6 +50,7 @@ public class ComicServiceImpl implements ComicService {
     }
 
     @Override
+    @CVReadTransaction
     public List<ComicEntity> listAll() {
         return StreamSupport
                 .stream(
@@ -58,6 +60,7 @@ public class ComicServiceImpl implements ComicService {
     }
 
     @Override
+    @CVReadTransaction
     public List<ComicEntity> listAllWithFilter(FilterComics filterComics) {
         return StreamSupport
                 .stream(
@@ -69,6 +72,7 @@ public class ComicServiceImpl implements ComicService {
     }
 
     @Override
+    @CVReadTransaction
     public List<ComicEntity> listOnGoing() {
         return StreamSupport.stream(comicRepository.findAll().spliterator(), false)
                 .filter(comic -> comic.getPageStatus() > 0 && !comic.getReadStatus())
@@ -77,6 +81,7 @@ public class ComicServiceImpl implements ComicService {
     }
 
     @Override
+    @CVWriteTransaction
     public ComicEntity createComic(ComicEntity comic) {
         Optional<ComicEntity> optionalComicEntity = getComicByID(comic.getId());
         logger.info("Comic created '" + comic.getId() + "': " + comic.getTitle());
@@ -84,11 +89,13 @@ public class ComicServiceImpl implements ComicService {
     }
 
     @Override
+    @CVReadTransaction
     public Optional<ComicEntity> getComicByID(String comicID) {
         return comicRepository.findById(comicID);
     }
 
     @Override
+    @CVReadTransaction
     public Optional<ComicEntity> getcomicbyidGc(String comicidGc) {
         List<ComicEntity> listComics = comicRepository.findAllByIdGc(comicidGc);
         if (!listComics.isEmpty()) {
@@ -98,7 +105,7 @@ public class ComicServiceImpl implements ComicService {
     }
 
     @Override
-    @Transactional
+    @CVWriteTransaction
     public void deleteComicById(String comicID) {
         logger.info("Comic deleted '" + comicID);
         comicRepository.deleteById(comicID);
@@ -106,6 +113,7 @@ public class ComicServiceImpl implements ComicService {
 
 
     @Override
+    @CVWriteTransaction
     public void updateNonNullProperties(ComicDTO comicDto, ComicEntity comicEntity) throws IllegalAccessException, EntityWriteException {
         Field[] fields = comicDto.getClass().getDeclaredFields();
 
@@ -149,12 +157,14 @@ public class ComicServiceImpl implements ComicService {
     }
 
     @Override
+    @CVWriteTransaction
     public void save(ComicEntity comicEntity) {
         logger.info("Comic updated '" + comicEntity.getId() + "': " + comicEntity.getTitle());
         comicRepository.save(comicEntity);
     }
 
     @Override
+    @CVWriteTransaction
     public void setPageStatus(ComicEntity comicEntity, int pageStatus) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<ProgressEntity> progressEntity = comicEntity.getProgress().stream()
@@ -173,6 +183,7 @@ public class ComicServiceImpl implements ComicService {
     }
 
     @Override
+    @CVWriteTransaction
     public void setReadStatus(ComicEntity comicEntity, Boolean readStatus) {
         String username = SecurityContextHolder.getContext().getAuthentication().getName();
         Optional<ProgressEntity> progressEntity = comicEntity.getProgress().stream()
@@ -191,6 +202,7 @@ public class ComicServiceImpl implements ComicService {
     }
 
     @Override
+    @CVReadTransaction
     public int fixDoublePageQuery(ComicEntity comicEntity, int page) {
         int fixedDoublePage = -1;
 
@@ -237,6 +249,7 @@ public class ComicServiceImpl implements ComicService {
 
 
     //Safely set issue number making sure it's available on the series
+    @CVWriteTransaction
     private void setIssueSafe(ComicEntity comic, int issue) throws EntityWriteException {
         if (comic.getIssue() == issue) {
             return;
@@ -253,12 +266,13 @@ public class ComicServiceImpl implements ComicService {
 
     }
 
-    //
+    @CVWriteTransaction
     private void setLink(ComicEntity comic, String link) {
         String newLink = link.replace(configurationService.getConfiguration().getGetComicsConfiguration().getBaseUrl(), "");
         comic.setLink(newLink);
     }
 
+    @CVReadTransaction
     private boolean filterComic(ComicEntity comic, FilterComics filter) {
         if (StringUtils.isNotBlank(filter.getComicTitle()) && !comic.getTitle().toLowerCase().contains(filter.getComicTitle().toLowerCase())) {
             return false;

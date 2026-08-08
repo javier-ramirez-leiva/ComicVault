@@ -1,5 +1,7 @@
 package org.comicVaultBackend.services.impl;
 
+import org.comicVaultBackend.annotations.CVReadTransaction;
+import org.comicVaultBackend.annotations.CVWriteTransaction;
 import org.comicVaultBackend.domain.entities.TagEntity;
 import org.comicVaultBackend.repositories.TagRepository;
 import org.comicVaultBackend.services.TagService;
@@ -15,11 +17,13 @@ public class TagServiceImpl implements TagService {
 
 
     @Override
+    @CVReadTransaction
     public Optional<TagEntity> findName(String name) {
         return tagRepository.findByName(name);
     }
 
     @Override
+    @CVWriteTransaction
     public void save(TagEntity tagEntity) {
         tagRepository.save(tagEntity);
     }

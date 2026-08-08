@@ -28,8 +28,6 @@ public class SlackNotifyServiceImpl implements SlackNotifyService {
 
     @Override
     public void sendNotification(String template, Path notificationFile, String slackWebHook, String comicVaultBaseUrl, ComicSearchDetailsDTO comicSearchDetailsDto, ComicEntity comicEntity) throws SlackNotifyException {
-
-
         ObjectMapper objectMapper = new ObjectMapper();
         JsonNode templateJSON;
         try {

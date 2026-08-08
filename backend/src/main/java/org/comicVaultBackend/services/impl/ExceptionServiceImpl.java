@@ -1,5 +1,7 @@
 package org.comicVaultBackend.services.impl;
 
+import org.comicVaultBackend.annotations.CVReadTransaction;
+import org.comicVaultBackend.annotations.CVWriteTransaction;
 import org.comicVaultBackend.domain.entities.ExceptionEntity;
 import org.comicVaultBackend.repositories.ExceptionRepository;
 import org.comicVaultBackend.repositories.ExceptionRepositoryPage;
@@ -24,6 +26,7 @@ public class ExceptionServiceImpl implements ExceptionService {
 
 
     @Override
+    @CVReadTransaction
     public List<ExceptionEntity> listExceptions(int page) {
         Pageable pageable = PageRequest.of(page, 25, Sort.by(Sort.Direction.DESC, "timeStamp"));
         Page<ExceptionEntity> jobs = exceptionRepositoryPage.findAll(pageable);
@@ -31,16 +34,19 @@ public class ExceptionServiceImpl implements ExceptionService {
     }
 
     @Override
+    @CVReadTransaction
     public Optional<ExceptionEntity> getByEntityId(long entityId) {
         return exceptionRepository.findById(entityId);
     }
 
     @Override
+    @CVWriteTransaction
     public void save(ExceptionEntity exceptionEntity) {
         exceptionRepository.save(exceptionEntity);
     }
 
     @Override
+    @CVWriteTransaction
     public void deleteAll() {
         exceptionRepository.deleteAll();
         ;
