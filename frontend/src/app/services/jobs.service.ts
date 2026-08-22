@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpService } from './http.service';
 import { Observable } from 'rxjs';
-import { Job } from 'interfaces';
+import { Job, JobFilter } from 'interfaces';
 
 @Injectable({
   providedIn: 'root',
@@ -9,8 +9,9 @@ import { Job } from 'interfaces';
 export class JobsService {
   private readonly httpService = inject(HttpService);
 
-  getJobs(page: number): Observable<Job[]> {
-    return this.httpService.request<Job[]>('GET', `/jobs?page=${page}`);
+  getJobs(page: number, filter: JobFilter | undefined): Observable<Job[]> {
+    let url = `/jobs?page=${page}`;
+    return this.httpService.request<Job[]>('POST', url, filter);
   }
 
   getJob(jobId: number): Observable<Job> {

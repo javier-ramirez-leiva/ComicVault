@@ -2,6 +2,7 @@ package org.comicVaultBackend.services;
 
 import org.comicVaultBackend.domain.dto.JobDTO;
 import org.comicVaultBackend.domain.entities.JobEntity;
+import org.comicVaultBackend.domain.regular.JobFilter;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,6 +18,8 @@ public interface JobService {
     void setDuration(JobEntity jobEntity);
 
     List<JobEntity> listJobs(int page);
+
+    List<JobEntity> filterJobs(int page, JobFilter jobFilter);
 
     boolean areThereJobs(JobEntity.Type type, JobEntity.Status status);
 

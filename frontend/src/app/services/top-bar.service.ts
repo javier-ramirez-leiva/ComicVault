@@ -1,9 +1,8 @@
 import { Injectable, inject } from '@angular/core';
 import { BehaviorSubject, ReplaySubject, Subject } from 'rxjs';
-import { Category } from 'interfaces';
 import { FilterFunnel } from 'components';
-import { FilterHistory } from 'interfaces';
-import { Router } from '@angular/router';
+import { FilterHistory, JobFilter } from 'interfaces';
+import { NavigationEnd, Router } from '@angular/router';
 import { ActivePageService } from './active-page.service';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { AdvanceFilterFunnel } from '../components/advance-funnel-button/advance-funnel-button.component';
@@ -17,10 +16,12 @@ export class TopBarService {
   filterHistoryFormEvent$: ReplaySubject<FilterHistory> = new ReplaySubject<FilterHistory>();
   resetFilterFunnelFormEvent$: Subject<void> = new Subject<void>();
   resetAdvancedFilterFunnelFormEvent$: Subject<void> = new Subject<void>();
+  resetJobFilterFunnelFormEvent$: Subject<void> = new Subject<void>();
 
   filterEvent$: ReplaySubject<FilterFunnel> = new ReplaySubject<FilterFunnel>();
   advanceFilterEvent$: ReplaySubject<AdvanceFilterFunnel> =
     new ReplaySubject<AdvanceFilterFunnel>();
+  jobFilterEvent$: ReplaySubject<JobFilter> = new ReplaySubject<JobFilter>();
   contentChange$: ReplaySubject<boolean> = new ReplaySubject<boolean>();
   searchBarTextModifierLib$: Subject<string> = new Subject<string>();
   searchBarTextModifierSearch$: Subject<string> = new Subject<string>();
@@ -28,6 +29,7 @@ export class TopBarService {
   drawerOpen$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(false);
 
   private readonly activePageService = inject(ActivePageService);
+  private readonly router = inject(Router);
 
   constructor() {
     this.activePageService.activePage$.pipe(untilDestroyed(this)).subscribe((activePage) => {
@@ -38,6 +40,14 @@ export class TopBarService {
       if (activePage !== 'advanceLibrary') {
         this.setSearchBarTextLib('');
         this.resetAdvancedFilterFunnel();
+      }
+    });
+
+    this.router.events.pipe(untilDestroyed(this)).subscribe((event) => {
+      if (event instanceof NavigationEnd) {
+        if (!event.url.startsWith('/settings/jobs')) {
+          this.resetJobFilterFunnel();
+        }
       }
     });
   }
@@ -52,6 +62,10 @@ export class TopBarService {
 
   emitAdvanceFilterChangeEvent(filter: AdvanceFilterFunnel) {
     this.advanceFilterEvent$.next(filter);
+  }
+
+  emitJobFilterChangeEvent(filter: JobFilter) {
+    this.jobFilterEvent$.next(filter);
   }
 
   emitContentChangeEvent(content: boolean) {
@@ -69,6 +83,10 @@ export class TopBarService {
 
   resetAdvancedFilterFunnel() {
     this.resetAdvancedFilterFunnelFormEvent$.next();
+  }
+
+  resetJobFilterFunnel() {
+    this.resetJobFilterFunnelFormEvent$.next();
   }
 
   setFilterHistoryFormValue(filter: FilterHistory) {

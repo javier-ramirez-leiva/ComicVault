@@ -8,7 +8,6 @@ export function isSeverrity(severity: string): severity is Severity {
 
 export interface Log {
   timeStamp: string;
-  timeStampFomatted: string;
   severity: Severity;
   severityMessage: string;
   message: string;

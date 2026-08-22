@@ -17,7 +17,7 @@ import java.util.List;
 public class JobDTO {
     private Long jobId;
     private Date timeStamp;
-    private String duration;
+    private Long duration;
     private String username;
     private List<Long> logsIds;
     private JobEntity.Type type;

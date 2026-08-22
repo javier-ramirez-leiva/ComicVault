@@ -1,8 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, Input } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
+import { Router } from '@angular/router';
 import { Job, JobStatus, JobType } from 'interfaces';
-import { ModalService } from 'services';
 import { DurationPipe } from 'src/app/pipes/duration.pipe';
 
 @Component({
@@ -14,7 +13,6 @@ export class JobsTableComponent {
   @Input({ required: true }) jobs!: Job[];
   @Input({ required: false }) displayDetails = true;
 
-  private readonly modalService = inject(ModalService);
   private readonly router = inject(Router);
 
   readonly statusLabels: Record<JobStatus, String> = {

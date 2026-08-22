@@ -34,6 +34,15 @@
       (contentChange)="emitContentChange($event)"
     ></app-advance-funnel-button>
   }
+  @if (isAdmin$ | async) {
+    <app-job-funnel-button
+      [class.hidden]="!displaySettings.displayJobsFunnel"
+      div
+      class="ml-auto"
+      (filterChange)="emitJobFilterChange($event)"
+      (contentChange)="emitContentChange($event)"
+    ></app-job-funnel-button>
+  }
 
   @if (displaySettings.displayGridButton) {
     <app-grid-button></app-grid-button>

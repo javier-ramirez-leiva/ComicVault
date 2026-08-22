@@ -5,33 +5,31 @@ import { Pipe, PipeTransform } from '@angular/core';
   standalone: true,
 })
 export class DurationPipe implements PipeTransform {
-  transform(value: string | null | undefined): string {
-    if (!value) {
+  transform(totalSeconds: number | null | undefined): string {
+    if (totalSeconds == null || totalSeconds < 0) {
       return '';
     }
 
-    const parts = value.split(':').map(Number);
+    const hours = Math.floor(totalSeconds / 3600);
 
-    if (parts.length !== 3 || parts.some(isNaN)) {
-      return value;
-    }
+    const minutes = Math.floor((totalSeconds % 3600) / 60);
 
-    const [hours, minutes, seconds] = parts;
+    const seconds = totalSeconds % 60;
 
-    const result: string[] = [];
+    const parts: string[] = [];
 
     if (hours > 0) {
-      result.push(`${hours}h`);
+      parts.push(`${hours}h`);
     }
 
     if (minutes > 0) {
-      result.push(`${minutes}m`);
+      parts.push(`${minutes}m`);
     }
 
-    if (seconds > 0 || result.length === 0) {
-      result.push(`${seconds}s`);
+    if (seconds > 0 || parts.length === 0) {
+      parts.push(`${seconds}s`);
     }
 
-    return result.join(' ');
+    return parts.join(' ');
   }
 }
