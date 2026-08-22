@@ -42,6 +42,13 @@
       (filterChange)="emitJobFilterChange($event)"
       (contentChange)="emitContentChange($event)"
     ></app-job-funnel-button>
+    <app-log-funnel-button
+      [class.hidden]="!displaySettings.displayLogsFunnel"
+      div
+      class="ml-auto"
+      (filterChange)="emitLogFilterChange($event)"
+      (contentChange)="emitContentChange($event)"
+    ></app-log-funnel-button>
   }
 
   @if (displaySettings.displayGridButton) {

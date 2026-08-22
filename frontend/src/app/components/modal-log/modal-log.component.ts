@@ -1,13 +1,10 @@
 import { Component, inject, Input } from '@angular/core';
 import { ModalComponent } from 'interfaces';
-import { Log, isSeverrity } from 'interfaces';
+import { Log } from 'interfaces';
 
 import { Row, TwoColumnsTableComponent } from '../two-columns-table/two-columns-table.component';
 import { formatDate } from '../../utils/dates';
 import { ModalDetailsTopComponent } from '../modal-details-top/modal-details-top.component';
-import { filter, map, Observable } from 'rxjs';
-import { ComicsService } from 'services';
-import { notNullOrUndefined } from 'src/app/utils/rsjx-operators';
 import { Router } from '@angular/router';
 
 @Component({
@@ -32,10 +29,7 @@ export class ModalLogComponent implements ModalComponent<null, { log: Log | unde
           title: 'Severity',
           type: 'chip',
           text: this.data?.log?.severityMessage ?? '',
-          severity:
-            this.data?.log?.severity && isSeverrity(this.data.log.severity)
-              ? this.data.log.severity
-              : 'Desactivated',
+          severity: this.data?.log?.severity ?? 'Info',
         },
         {
           title: 'Message',

@@ -1,10 +1,6 @@
-const Severities = ['Success', 'Error', 'Warning', 'Info', 'Desactivated'] as const;
+const Severities = ['Error', 'Warning', 'Info'] as const;
 
 export type Severity = (typeof Severities)[number];
-
-export function isSeverrity(severity: string): severity is Severity {
-  return ['Success', 'Error', 'Warning', 'Info', 'Desactivated'].includes(severity);
-}
 
 export interface Log {
   timeStamp: string;
@@ -17,4 +13,23 @@ export interface Log {
   comicId: string;
   seriesId: string;
   jobId: number;
+}
+
+export type LogSortAttribute = 'LATEST' | 'SEVERITY' | 'USERNAME';
+
+export interface Severities {
+  info: boolean;
+  error: boolean;
+  warning: boolean;
+}
+
+export interface LogFilter {
+  logSortAttribute: LogSortAttribute;
+  sortDescendingDirection: boolean;
+  username: string | null;
+  messageContains: string | null;
+  detailsContains: string | null;
+  severities: Severities;
+  dateStart: Date | undefined;
+  dateEnd: Date | undefined;
 }

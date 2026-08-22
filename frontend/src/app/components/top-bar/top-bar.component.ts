@@ -17,7 +17,8 @@ import { Role } from 'src/app/interfaces/users';
 import { map } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { JobFunnelButtonComponent } from '../job-funnel-button/job-funnel-button.component';
-import { JobFilter } from 'interfaces';
+import { JobFilter, LogFilter } from 'interfaces';
+import { LogFunnelButtonComponent } from '../log-funnel-button/log-funnel-button.component';
 
 @UntilDestroy()
 @Component({
@@ -32,6 +33,7 @@ import { JobFilter } from 'interfaces';
     AdvanceFunnelButtonComponent,
     CommonModule,
     JobFunnelButtonComponent,
+    LogFunnelButtonComponent,
   ],
   templateUrl: './top-bar.component.html',
 })
@@ -43,6 +45,7 @@ export class TopBarComponent implements OnInit {
     displayFunnel: false,
     displayAdvanceFunnel: false,
     displayJobsFunnel: false,
+    displayLogsFunnel: false,
     displayTrending: false,
     displayGridButton: false,
   };
@@ -82,6 +85,10 @@ export class TopBarComponent implements OnInit {
     this.topBarService.emitJobFilterChangeEvent(filter);
   }
 
+  emitLogFilterChange(filter: LogFilter) {
+    this.topBarService.emitLogFilterChangeEvent(filter);
+  }
+
   emitContentChange(content: boolean) {
     this.topBarService.emitContentChangeEvent(content);
   }
@@ -96,6 +103,7 @@ export class TopBarComponent implements OnInit {
           displayFunnel: false,
           displayAdvanceFunnel: false,
           displayJobsFunnel: false,
+          displayLogsFunnel: false,
           displayTrending: false,
           displayGridButton: false,
         };
@@ -109,6 +117,7 @@ export class TopBarComponent implements OnInit {
           displayFunnel: true,
           displayAdvanceFunnel: false,
           displayJobsFunnel: false,
+          displayLogsFunnel: false,
           displayTrending: false,
           displayGridButton: true,
         };
@@ -122,6 +131,7 @@ export class TopBarComponent implements OnInit {
           displayFunnel: false,
           displayAdvanceFunnel: true,
           displayJobsFunnel: false,
+          displayLogsFunnel: false,
           displayTrending: false,
           displayGridButton: true,
         };
@@ -135,6 +145,7 @@ export class TopBarComponent implements OnInit {
           displayFunnel: false,
           displayAdvanceFunnel: false,
           displayJobsFunnel: false,
+          displayLogsFunnel: false,
           displayTrending: true,
           displayGridButton: true,
         };
@@ -149,6 +160,7 @@ export class TopBarComponent implements OnInit {
           displayFunnel: false,
           displayAdvanceFunnel: false,
           displayJobsFunnel: false,
+          displayLogsFunnel: false,
           displayTrending: true,
           displayGridButton: false,
         };
@@ -162,6 +174,7 @@ export class TopBarComponent implements OnInit {
           displayFunnel: false,
           displayAdvanceFunnel: false,
           displayJobsFunnel: false,
+          displayLogsFunnel: false,
           displayTrending: true,
           displayGridButton: true,
         };
@@ -175,6 +188,7 @@ export class TopBarComponent implements OnInit {
           displayFunnel: false,
           displayAdvanceFunnel: false,
           displayJobsFunnel: false,
+          displayLogsFunnel: false,
           displayTrending: false,
           displayGridButton: true,
         };
@@ -190,6 +204,7 @@ export class TopBarComponent implements OnInit {
           displayFunnel: false,
           displayAdvanceFunnel: false,
           displayJobsFunnel: false,
+          displayLogsFunnel: false,
           displayTrending: false,
           displayGridButton: false,
         };
@@ -203,6 +218,21 @@ export class TopBarComponent implements OnInit {
           displayFunnel: false,
           displayAdvanceFunnel: false,
           displayJobsFunnel: true,
+          displayLogsFunnel: false,
+          displayTrending: true,
+          displayGridButton: false,
+        };
+        break;
+
+      case currentRoute.startsWith('/settings/logs'):
+        this.displaySettings = {
+          displaySearchInputLibrary: false,
+          displaySearchInputSearch: true,
+          displayTitle: false,
+          displayFunnel: false,
+          displayAdvanceFunnel: false,
+          displayJobsFunnel: false,
+          displayLogsFunnel: true,
           displayTrending: true,
           displayGridButton: false,
         };
@@ -216,6 +246,7 @@ export class TopBarComponent implements OnInit {
           displayFunnel: false,
           displayAdvanceFunnel: false,
           displayJobsFunnel: false,
+          displayLogsFunnel: false,
           displayTrending: false,
           displayGridButton: false,
         };
@@ -231,6 +262,7 @@ type DisplaySettings = {
   displayFunnel: boolean;
   displayAdvanceFunnel: boolean;
   displayJobsFunnel: boolean;
+  displayLogsFunnel: boolean;
   displayTrending: boolean;
   displayGridButton: boolean;
 };

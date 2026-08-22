@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { BehaviorSubject, ReplaySubject, Subject } from 'rxjs';
 import { FilterFunnel } from 'components';
-import { FilterHistory, JobFilter } from 'interfaces';
+import { FilterHistory, JobFilter, LogFilter } from 'interfaces';
 import { NavigationEnd, Router } from '@angular/router';
 import { ActivePageService } from './active-page.service';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -17,11 +17,13 @@ export class TopBarService {
   resetFilterFunnelFormEvent$: Subject<void> = new Subject<void>();
   resetAdvancedFilterFunnelFormEvent$: Subject<void> = new Subject<void>();
   resetJobFilterFunnelFormEvent$: Subject<void> = new Subject<void>();
+  resetLogFilterFunnelFormEvent$ = new Subject<void>();
 
   filterEvent$: ReplaySubject<FilterFunnel> = new ReplaySubject<FilterFunnel>();
   advanceFilterEvent$: ReplaySubject<AdvanceFilterFunnel> =
     new ReplaySubject<AdvanceFilterFunnel>();
   jobFilterEvent$: ReplaySubject<JobFilter> = new ReplaySubject<JobFilter>();
+  logFilterEvent$: ReplaySubject<LogFilter> = new ReplaySubject<LogFilter>();
   contentChange$: ReplaySubject<boolean> = new ReplaySubject<boolean>();
   searchBarTextModifierLib$: Subject<string> = new Subject<string>();
   searchBarTextModifierSearch$: Subject<string> = new Subject<string>();
@@ -48,6 +50,9 @@ export class TopBarService {
         if (!event.url.startsWith('/settings/jobs')) {
           this.resetJobFilterFunnel();
         }
+        if (!event.url.startsWith('/settings/logs')) {
+          this.resetLogFilterFunnelFormEvent();
+        }
       }
     });
   }
@@ -66,6 +71,10 @@ export class TopBarService {
 
   emitJobFilterChangeEvent(filter: JobFilter) {
     this.jobFilterEvent$.next(filter);
+  }
+
+  emitLogFilterChangeEvent(filter: LogFilter) {
+    this.logFilterEvent$.next(filter);
   }
 
   emitContentChangeEvent(content: boolean) {
@@ -87,6 +96,10 @@ export class TopBarService {
 
   resetJobFilterFunnel() {
     this.resetJobFilterFunnelFormEvent$.next();
+  }
+
+  resetLogFilterFunnelFormEvent() {
+    this.resetLogFilterFunnelFormEvent$.next();
   }
 
   setFilterHistoryFormValue(filter: FilterHistory) {
