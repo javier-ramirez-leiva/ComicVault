@@ -1,13 +1,13 @@
 package org.comicVaultBackend.services.impl;
 
+import org.comicVaultBackend.annotations.CVReadTransaction;
+import org.comicVaultBackend.annotations.CVWriteTransaction;
 import org.comicVaultBackend.domain.dto.JobDTO;
 import org.comicVaultBackend.domain.entities.JobEntity;
 import org.comicVaultBackend.mappers.Mapper;
 import org.comicVaultBackend.repositories.JobRepository;
 import org.comicVaultBackend.repositories.JobRepositoryPage;
 import org.comicVaultBackend.services.JobService;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -22,29 +22,22 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 @Service
 public class JobServiceImpl implements JobService {
-    // Executor with max 5 concurrent jobs
-    private final ExecutorService executor = Executors.newFixedThreadPool(5);
 
-    private final JobRepository jobRepository;
+    @Autowired
+    private JobRepository jobRepository;
 
-    private final JobRepositoryPage jobRepositoryPage;
+    @Autowired
+    private JobRepositoryPage jobRepositoryPage;
 
     @Autowired
     private Mapper<JobEntity, JobDTO> jobMapper;
 
-    private static final Logger logger = LoggerFactory.getLogger(SchedulerServiceImpl.class);
-
-    public JobServiceImpl(JobRepository jobRepository, JobRepositoryPage jobRepositoryPage) {
-        this.jobRepository = jobRepository;
-        this.jobRepositoryPage = jobRepositoryPage;
-    }
 
     @Override
+    @CVWriteTransaction
     public JobEntity createJob(JobDTO job) {
         JobEntity jobEntity = jobMapper.mapFrom(job);
         jobEntity.setLogsIds(new ArrayList<>());
@@ -53,11 +46,13 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
+    @CVWriteTransaction
     public void save(JobEntity jobEntity) {
         jobRepository.save(jobEntity);
     }
 
     @Override
+    @CVWriteTransaction
     public void finishJob(JobEntity jobEntity, JobEntity.Status status) {
         jobEntity.setStatus(status);
         setDuration(jobEntity);
@@ -66,6 +61,7 @@ public class JobServiceImpl implements JobService {
 
 
     @Override
+    @CVWriteTransaction
     public void setDuration(JobEntity jobEntity) {
         Date now = new Date(); // now
 
@@ -85,6 +81,7 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
+    @CVReadTransaction
     public List<JobEntity> listJobs(int page) {
         Pageable pageable = PageRequest.of(page, 25, Sort.by(Sort.Direction.DESC, "timeStamp"));
         Page<JobEntity> jobs = jobRepositoryPage.findAll(pageable);
@@ -92,11 +89,13 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
+    @CVReadTransaction
     public boolean areThereJobs(JobEntity.Type type, JobEntity.Status status) {
         return !jobRepository.findAllByTypeAndStatus(type, status).isEmpty();
     }
 
     @Override
+    @CVReadTransaction
     public Optional<JobEntity> getJobById(Long jobId) {
         List<JobEntity> listJobs = jobRepository.findAllByJobId(jobId);
         if (!listJobs.isEmpty()) {
@@ -106,6 +105,7 @@ public class JobServiceImpl implements JobService {
     }
 
     @Override
+    @CVWriteTransaction
     public void cleanOnGoingJobs() {
         for (JobEntity jobEntity : jobRepository.findAllByStatus(JobEntity.Status.ON_GOING)) {
             jobEntity.setStatus(JobEntity.Status.INTERRUPTED);

@@ -1,5 +1,6 @@
 package org.comicVaultBackend.services.impl;
 
+import org.comicVaultBackend.annotations.CVReadTransaction;
 import org.comicVaultBackend.domain.entities.UserEntity;
 import org.comicVaultBackend.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +18,7 @@ public class UserDetailsServiceImpl implements UserDetailsService {
     private UserRepository userRepository;
 
     @Override
+    @CVReadTransaction
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         UserEntity user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found: " + username));

@@ -1,5 +1,7 @@
 package org.comicVaultBackend.services.impl;
 
+import org.comicVaultBackend.annotations.CVReadTransaction;
+import org.comicVaultBackend.annotations.CVWriteTransaction;
 import org.comicVaultBackend.domain.dto.UserDTO;
 import org.comicVaultBackend.domain.entities.ProgressEntity;
 import org.comicVaultBackend.domain.entities.UserEntity;
@@ -13,7 +15,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -37,6 +38,7 @@ public class UserServiceImpl implements UserService {
     private static final Logger logger = LoggerFactory.getLogger(UserServiceImpl.class);
 
     @Override
+    @CVWriteTransaction
     public void createUser(UserEntity user) {
         logger.info("Created user : {}, {}, {}", user.getUsername(), user.getRole(), user.getColor());
         userRepository.save(user);
@@ -59,12 +61,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @CVReadTransaction
     public List<UserEntity> listAll() {
         return new ArrayList<>(userRepository.findAllByOrderByCreatedAtDesc());
     }
 
 
     @Override
+    @CVReadTransaction
     public boolean adminUserExists() {
         Optional<UserEntity> adminuser = userRepository.findFirstByRole(Role.ADMIN);
 
@@ -72,6 +76,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @CVReadTransaction
     public int howManyAdmins() {
         List<UserEntity> adminUsers = userRepository.findAllByRole(Role.ADMIN);
         return adminUsers.size();
@@ -79,18 +84,20 @@ public class UserServiceImpl implements UserService {
 
 
     @Override
+    @CVReadTransaction
     public Optional<UserEntity> findByUsername(String username) {
         return userRepository.findByUsername(username);
     }
 
     @Override
+    @CVWriteTransaction
     public void save(UserEntity user) {
         userRepository.save(user);
         logger.info("Saved user : {}, {}, {}", user.getUsername(), user.getRole(), user.getColor());
     }
 
     @Override
-    @Transactional
+    @CVWriteTransaction
     public void delete(UserEntity user) {
         String username = user.getUsername();
         List<ProgressEntity> progressEntityList = user.getProgress();

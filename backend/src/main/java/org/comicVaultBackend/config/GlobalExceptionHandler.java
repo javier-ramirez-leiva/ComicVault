@@ -21,6 +21,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import static org.comicVaultBackend.exceptions.EntityNotFoundException.Entity.REFRESH_TOKEN;
 
@@ -61,9 +62,10 @@ public class GlobalExceptionHandler {
                 .timeStamp(new Date())
                 .message(ex.getMessage())
                 .type(ex.getClass().getSimpleName())
-                .details(Arrays.stream(ex.getStackTrace())
-                        .map(StackTraceElement::toString)
-                        .toList())
+//                .details(Arrays.stream(ex.getStackTrace()[0])
+//                        .map(StackTraceElement::toString)
+//                        .toList())
+                .details(List.of(ex.getStackTrace()[0].toString()))
                 .username(username)
                 .endpoint(endpoint)
                 .build();

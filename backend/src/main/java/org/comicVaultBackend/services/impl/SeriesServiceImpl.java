@@ -2,6 +2,8 @@ package org.comicVaultBackend.services.impl;
 
 
 import org.apache.commons.lang3.StringUtils;
+import org.comicVaultBackend.annotations.CVReadTransaction;
+import org.comicVaultBackend.annotations.CVWriteTransaction;
 import org.comicVaultBackend.domain.dto.ComicDTO;
 import org.comicVaultBackend.domain.dto.SeriesDTO;
 import org.comicVaultBackend.domain.entities.ComicEntity;
@@ -14,7 +16,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.lang.reflect.Field;
 import java.util.*;
@@ -24,22 +25,21 @@ import java.util.stream.StreamSupport;
 @Service
 public class SeriesServiceImpl implements SeriesService {
 
-    private final SeriesRepository seriesRepository;
-
-    private static final Logger logger = LoggerFactory.getLogger(SeriesServiceImpl.class);
+    @Autowired
+    private SeriesRepository seriesRepository;
     @Autowired
     private Mapper<ComicEntity, ComicDTO> comicMapper;
 
-    public SeriesServiceImpl(SeriesRepository seriesRepository) {
-        this.seriesRepository = seriesRepository;
-    }
+    private static final Logger logger = LoggerFactory.getLogger(SeriesServiceImpl.class);
 
     @Override
+    @CVReadTransaction
     public List<SeriesEntity> listAll() {
         return new ArrayList<>(seriesRepository.findAllByOrderByModifiedAtDesc());
     }
 
     @Override
+    @CVReadTransaction
     public List<SeriesEntity> listAllWithFilter(FilterSeries filterSeries) {
         return StreamSupport
                 .stream(
@@ -51,6 +51,7 @@ public class SeriesServiceImpl implements SeriesService {
     }
 
     @Override
+    @CVReadTransaction
     public List<SeriesEntity> listOnGoingSeries() {
         return StreamSupport.stream(seriesRepository.findAll().spliterator(), false)
                 .filter(series -> series.getComics().stream().anyMatch(comic -> !comic.getReadStatus()))
@@ -61,30 +62,34 @@ public class SeriesServiceImpl implements SeriesService {
 
 
     @Override
+    @CVWriteTransaction
     public SeriesEntity createSeries(SeriesEntity series) {
         logger.info("Series created '" + series.getSeriesID() + "': " + series.getTitle());
         return seriesRepository.save(series);
     }
 
     @Override
+    @CVReadTransaction
     public Optional<SeriesEntity> getSeriesByID(String seriesID) {
         return seriesRepository.findById(seriesID);
     }
 
     @Override
-    @Transactional
+    @CVWriteTransaction
     public void deleteSeriesById(String seriesID) {
         logger.info("Series deleted '" + seriesID);
         seriesRepository.deleteById(seriesID);
     }
 
     @Override
+    @CVWriteTransaction
     public void save(SeriesEntity seriesEntity) {
         logger.info("Series updated '" + seriesEntity.getSeriesID() + "': " + seriesEntity.getTitle());
         seriesRepository.save(seriesEntity);
     }
 
     @Override
+    @CVReadTransaction
     public ComicEntity getCurrentComicForSeries(SeriesEntity seriesEntity) {
         for (ComicEntity comicEntity : seriesEntity.getComics()) {
             ComicDTO comicDto = comicMapper.mapTo(comicEntity);
@@ -96,6 +101,7 @@ public class SeriesServiceImpl implements SeriesService {
     }
 
     @Override
+    @CVWriteTransaction
     public void updateNonNullProperties(SeriesDTO seriesDTO, SeriesEntity seriesEntity) throws IllegalAccessException {
         Field[] fields = seriesDTO.getClass().getDeclaredFields();
 
@@ -195,6 +201,4 @@ public class SeriesServiceImpl implements SeriesService {
                 ? comparator.reversed()
                 : comparator;
     }
-
-
 }

@@ -18,16 +18,13 @@ import java.util.Optional;
 @Service
 public class RefreshTokenServiceImpl implements RefreshTokenService {
 
-    private final RefreshTokenRepository refreshTokenRepository;
+    @Autowired
+    private RefreshTokenRepository refreshTokenRepository;
 
     @Autowired
     private JwtUtil jwtUtil;
 
     private static final Logger logger = LoggerFactory.getLogger(RefreshTokenServiceImpl.class);
-
-    public RefreshTokenServiceImpl(RefreshTokenRepository refreshTokenRepository) {
-        this.refreshTokenRepository = refreshTokenRepository;
-    }
 
     @Override
     public List<RefreshTokenEntity> listAll() {
