@@ -104,8 +104,12 @@ public class DownloadServiceImpl implements DownloadService {
                 }
 
             } catch (IOException e) {
-                logger.warn("No downloading file from URL: " + downloadLink.getLink());
-                throw new DownloadException("No downloading file from URL: " + downloadLink.getLink(), e);
+                String message = "No downloading file from URL: " + downloadLink.getLink();
+                if (message.length() > 250) {
+                    message = message.substring(0, 247) + "...";
+                }
+                logger.warn(message);
+                throw new DownloadException(message, e);
             }
         } else {
             return jDownloaderService.downloadFile(downloadRoot, parentFolder, downloadLink, title, comicSearchDto, description, jDownloaderConfiguration);
