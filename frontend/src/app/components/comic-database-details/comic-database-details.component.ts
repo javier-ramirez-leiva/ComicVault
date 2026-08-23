@@ -304,6 +304,7 @@ export class ComicDatabaseDetailsComponent implements OnInit, CanComponentDeacti
   }
 
   onComicVine(issueInfo: ComicVineIssueInfo | null) {
+    console.log('onComicVine', issueInfo);
     if (issueInfo === null) {
       this.notifierService.appendNotification({
         id: 0,
@@ -314,18 +315,16 @@ export class ComicDatabaseDetailsComponent implements OnInit, CanComponentDeacti
       return;
     }
     const description = issueInfo.description?.replace(/<[^>]*>/g, '').trim();
-    if (description?.length > 0 || issueInfo.year === 0) {
-      this.form.patchValue({
-        description: description,
-        table: { year: issueInfo.year },
-      });
-      this.notifierService.appendNotification({
-        id: 0,
-        title: 'Autofilled metadata from ComicVine ',
-        message: `Description and Year for issue "${this.comic?.title}"`,
-        type: 'info',
-      });
-    }
+    this.form.patchValue({
+      description: description,
+      table: { year: issueInfo.year },
+    });
+    this.notifierService.appendNotification({
+      id: 0,
+      title: 'Autofilled metadata from ComicVine ',
+      message: `Description and Year for issue "${this.comic?.title}"`,
+      type: 'info',
+    });
   }
 
   toggleSeen(): void {
