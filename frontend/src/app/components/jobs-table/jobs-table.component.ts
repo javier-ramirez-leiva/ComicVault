@@ -1,21 +1,18 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, Input } from '@angular/core';
-import { Router, RouterModule } from '@angular/router';
+import { Router } from '@angular/router';
 import { Job, JobStatus, JobType } from 'interfaces';
-import { ModalService } from 'services';
-import { RouterService } from 'src/app/services/router.service';
-import { CdkDropList } from '@angular/cdk/drag-drop';
+import { DurationPipe } from 'src/app/pipes/duration.pipe';
 
 @Component({
   selector: 'app-jobs-table',
-  imports: [CommonModule],
+  imports: [CommonModule, DurationPipe],
   templateUrl: './jobs-table.component.html',
 })
 export class JobsTableComponent {
   @Input({ required: true }) jobs!: Job[];
   @Input({ required: false }) displayDetails = true;
 
-  private readonly modalService = inject(ModalService);
   private readonly router = inject(Router);
 
   readonly statusLabels: Record<JobStatus, String> = {

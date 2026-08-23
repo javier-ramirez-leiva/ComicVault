@@ -4,6 +4,7 @@ import org.comicVaultBackend.annotations.CVReadTransaction;
 import org.comicVaultBackend.annotations.CVWriteTransaction;
 import org.comicVaultBackend.domain.dto.JobDTO;
 import org.comicVaultBackend.domain.entities.JobEntity;
+import org.comicVaultBackend.domain.regular.JobFilter;
 import org.comicVaultBackend.mappers.Mapper;
 import org.comicVaultBackend.repositories.JobRepository;
 import org.comicVaultBackend.repositories.JobRepositoryPage;
@@ -13,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import java.time.Duration;
@@ -73,11 +75,7 @@ public class JobServiceImpl implements JobService {
         // Calculate duration
         Duration duration = Duration.between(start, end);
 
-        long hours = duration.toHours();
-        long minutes = duration.toMinutes() % 60;
-        long seconds = duration.getSeconds() % 60;
-
-        jobEntity.setDuration(String.format("%d:%d:%d", hours, minutes, seconds));
+        jobEntity.setDuration(duration.getSeconds());
     }
 
     @Override
@@ -87,6 +85,21 @@ public class JobServiceImpl implements JobService {
         Page<JobEntity> jobs = jobRepositoryPage.findAll(pageable);
         return jobs.getContent();
     }
+
+    @Override
+    @CVReadTransaction
+    public List<JobEntity> filterJobs(int page, JobFilter jobFilter) {
+        Specification<JobEntity> specification = buildSpecification(jobFilter);
+        Sort sort = buildSort(jobFilter);
+        Pageable pageable = PageRequest.of(
+                page,
+                25,
+                sort
+        );
+        Page<JobEntity> jobs = jobRepositoryPage.findAll(specification, pageable);
+        return jobs.getContent();
+    }
+
 
     @Override
     @CVReadTransaction
@@ -111,5 +124,138 @@ public class JobServiceImpl implements JobService {
             jobEntity.setStatus(JobEntity.Status.INTERRUPTED);
             jobRepository.save(jobEntity);
         }
+    }
+
+    private Specification<JobEntity> buildSpecification(JobFilter filter) {
+        if (filter == null) {
+            return Specification.where(null);
+        }
+        Specification<JobEntity> specification = Specification.where(null);
+        // Types
+        Specification<JobEntity> typeSpecification = null;
+        if (filter.getTypes() != null) {
+            if (filter.getTypes().isDownload()) {
+                typeSpecification = addOr(typeSpecification,
+                        (root, query, cb) ->
+                                cb.equal(root.get("type"), JobEntity.Type.DOWNLOAD));
+            }
+            if (filter.getTypes().isDownloadList()) {
+                typeSpecification = addOr(typeSpecification,
+                        (root, query, cb) ->
+                                cb.equal(root.get("type"), JobEntity.Type.DOWNLOAD_LIST));
+            }
+            if (filter.getTypes().isDelete()) {
+                typeSpecification = addOr(typeSpecification,
+                        (root, query, cb) ->
+                                cb.equal(root.get("type"), JobEntity.Type.DELETE));
+            }
+            if (filter.getTypes().isScanLib()) {
+                typeSpecification = addOr(typeSpecification,
+                        (root, query, cb) ->
+                                cb.equal(root.get("type"), JobEntity.Type.SCAN_LIB));
+            }
+            if (filter.getTypes().isCleanLib()) {
+                typeSpecification = addOr(typeSpecification,
+                        (root, query, cb) ->
+                                cb.equal(root.get("type"), JobEntity.Type.CLEAN_LIB));
+            }
+            if (filter.getTypes().isDeleteLib()) {
+                typeSpecification = addOr(typeSpecification,
+                        (root, query, cb) ->
+                                cb.equal(root.get("type"), JobEntity.Type.DELETE_LIB));
+            }
+        }
+        if (typeSpecification != null) {
+            specification = specification.and(typeSpecification);
+        }
+
+        // Status
+        Specification<JobEntity> statusSpecification = null;
+        if (filter.getStatus() != null) {
+            if (filter.getStatus().isOnGoing()) {
+                statusSpecification = addOr(statusSpecification,
+                        (root, query, cb) ->
+                                cb.equal(root.get("status"), JobEntity.Status.ON_GOING));
+            }
+            if (filter.getStatus().isCompleted()) {
+                statusSpecification = addOr(statusSpecification,
+                        (root, query, cb) ->
+                                cb.equal(root.get("status"), JobEntity.Status.COMPLETED));
+            }
+            if (filter.getStatus().isError()) {
+                statusSpecification = addOr(statusSpecification,
+                        (root, query, cb) ->
+                                cb.equal(root.get("status"), JobEntity.Status.ERROR));
+            }
+            if (filter.getStatus().isInterrupted()) {
+                statusSpecification = addOr(statusSpecification,
+                        (root, query, cb) ->
+                                cb.equal(root.get("status"), JobEntity.Status.INTERRUPTED));
+            }
+        }
+        if (statusSpecification != null) {
+            specification = specification.and(statusSpecification);
+        }
+
+        // Username
+        if (filter.getUsername() != null && !filter.getUsername().isBlank()) {
+            specification = specification.and(
+                    (root, query, cb) ->
+                            cb.equal(root.get("username"), filter.getUsername())
+            );
+        }
+
+        // Date start
+        if (filter.getDateStart() != null) {
+            specification = specification.and(
+                    (root, query, cb) ->
+                            cb.greaterThanOrEqualTo(
+                                    root.get("timeStamp"),
+                                    filter.getDateStart()
+                            )
+            );
+        }
+        // Date end
+        if (filter.getDateEnd() != null) {
+            specification = specification.and(
+                    (root, query, cb) ->
+                            cb.lessThanOrEqualTo(
+                                    root.get("timeStamp"),
+                                    filter.getDateEnd()
+                            )
+            );
+        }
+        return specification;
+    }
+
+    private Specification<JobEntity> addOr(
+            Specification<JobEntity> existing,
+            Specification<JobEntity> additional) {
+        if (existing == null) {
+            return additional;
+        }
+        return existing.or(additional);
+    }
+
+    private Sort buildSort(JobFilter filter) {
+        String property = "timeStamp";
+        if (filter != null && filter.getJobSortAttribute() != null) {
+            property = switch (filter.getJobSortAttribute()) {
+                case LATEST -> "timeStamp";
+                case STATUS -> "status";
+                case TYPE -> "type";
+                case DURATION -> "duration";
+                case USERNAME -> "username";
+            };
+        }
+        Sort.Direction direction =
+                filter != null && filter.isSortDescendingDirection()
+                        ? Sort.Direction.DESC
+                        : Sort.Direction.ASC;
+        //Invert sorting for timestamp
+        if (filter.getJobSortAttribute() == JobFilter.JobSortAttribute.LATEST) {
+            direction = direction == Sort.Direction.DESC ? Sort.Direction.ASC : Sort.Direction.DESC;
+        }
+        return Sort.by(direction, property);
     }
 }

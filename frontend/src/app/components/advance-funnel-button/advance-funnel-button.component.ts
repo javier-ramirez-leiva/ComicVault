@@ -132,7 +132,7 @@ export class AdvanceFunnelButtonComponent {
       }),
     });
 
-    this.form.valueChanges.subscribe((value) => {
+    this.form.valueChanges.pipe(untilDestroyed(this)).subscribe((value) => {
       this.filterChange.emit(value);
     });
   }

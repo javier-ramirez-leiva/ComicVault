@@ -41,7 +41,7 @@ public class JobEntity {
     @Column(nullable = false)
     private Date timeStamp;
 
-    private String duration;
+    private Long duration;
 
     @Column(nullable = false)
     private String username;

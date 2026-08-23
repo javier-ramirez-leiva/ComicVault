@@ -15,6 +15,14 @@ import java.util.Date;
 @Entity
 @Table(name = "log")
 public class LogEntity {
+
+    public enum LogSeverity {
+        Error,
+        Info,
+        Warning,
+    }
+
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long logId;
@@ -24,7 +32,7 @@ public class LogEntity {
     private Date timeStamp;
 
     @Column(nullable = false)
-    private String severity;
+    private LogSeverity severity;
 
     @Column(nullable = false)
     private String severityMessage;

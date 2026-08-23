@@ -188,7 +188,7 @@ public class ComicController {
                     comicFileService.extract(archiveFile, configurationService.getConfiguration().isDeleteArchives());
                 } catch (Exception e) {
                     logger.error("Error extracting archive '{}': {}", archiveFile.toString(), e.getMessage());
-                    LogDTO logDTO = LogDTO.builder().timeStamp(new Date()).severity("Error").severityMessage("Extract Error").username(jobEntity.getUsername()).message(archiveFile.toString()).details(e.getMessage()).build();
+                    LogDTO logDTO = LogDTO.builder().timeStamp(new Date()).severity(LogEntity.LogSeverity.Error).severityMessage("Extract Error").username(jobEntity.getUsername()).message(archiveFile.toString()).details(e.getMessage()).build();
                     addLog(logDTO, jobEntity);
                 }
             }
@@ -236,7 +236,7 @@ public class ComicController {
                 //TEMP FIX
             } catch (Exception e) {
                 logger.error("Error adding comic to database '{}': {}", file.toString(), e.getMessage());
-                LogDTO logDTO = LogDTO.builder().timeStamp(new Date()).severity("Error").severityMessage("Add Error").username(jobEntity.getUsername()).message(file.toString()).details(e.getMessage()).build();
+                LogDTO logDTO = LogDTO.builder().timeStamp(new Date()).severity(LogEntity.LogSeverity.Error).severityMessage("Add Error").username(jobEntity.getUsername()).message(file.toString()).details(e.getMessage()).build();
                 addLog(logDTO, jobEntity);
             }
         }
@@ -689,13 +689,13 @@ public class ComicController {
 
 
         this.logService.removeComicIdFromLog(comicId);
-        LogDTO logDTO = LogDTO.builder().timeStamp(new Date()).severity("Warning").severityMessage("Delete Comic").username(jobEntity.getUsername()).message(comicEntity.getTitle()).build();
+        LogDTO logDTO = LogDTO.builder().timeStamp(new Date()).severity(LogEntity.LogSeverity.Warning).severityMessage("Delete Comic").username(jobEntity.getUsername()).message(comicEntity.getTitle()).build();
         addLog(logDTO, jobEntity);
 
         if (seriesEntity.getComics().isEmpty()) {
             seriesService.deleteSeriesById(seriesEntity.getSeriesID());
             this.logService.removeSeriesIdFromLog(seriesId);
-            LogDTO logDTOSeries = LogDTO.builder().timeStamp(new Date()).severity("Warning").severityMessage("Delete Series").username(jobEntity.getUsername()).message(seriesEntity.getTitle()).build();
+            LogDTO logDTOSeries = LogDTO.builder().timeStamp(new Date()).severity(LogEntity.LogSeverity.Warning).severityMessage("Delete Series").username(jobEntity.getUsername()).message(seriesEntity.getTitle()).build();
             addLog(logDTOSeries, jobEntity);
             if (deleteFiles) {
                 try {
@@ -819,7 +819,8 @@ public class ComicController {
         if (downloadService.getListDownloadingComics().stream().anyMatch(comic -> comic.getIdGc().equals(requestBodyDownload.getComicSearchDetails().getIdGc()))) {
             comicExists = true;
         } else {
-            comicExists = comicService.getcomicbyidGc(requestBodyDownload.getComicSearchDetails().getIdGc()).isPresent();
+            Optional<ComicEntity> optionalComicEntity = comicService.getcomicbyidGc(requestBodyDownload.getComicSearchDetails().getIdGc());
+            comicExists = optionalComicEntity.isPresent();
         }
         if (comicExists) {
             throw new EntityAlreadyExistringException(requestBodyDownload.getComicSearchDetails().getIdGc(), EntityNotFoundException.Entity.COMIC);
@@ -853,7 +854,7 @@ public class ComicController {
             slackNotify(requestBodyDownload.getComicSearchDetails(), newComic, success);
         } catch (Exception e) {
             logger.error(e.getMessage());
-            LogDTO logDTO = LogDTO.builder().timeStamp(new Date()).severity("Error").severityMessage("Download Error").username(jobEntity.getUsername()).message(requestBodyDownload.getComicSearchDetails().getLink()).messageHref(true).details(e.getMessage()).build();
+            LogDTO logDTO = LogDTO.builder().timeStamp(new Date()).severity(LogEntity.LogSeverity.Error).severityMessage("Download Error").username(jobEntity.getUsername()).message(requestBodyDownload.getComicSearchDetails().getLink()).messageHref(true).details(e.getMessage()).build();
             addLog(logDTO, jobEntity);
             success = false;
             downloadService.removeComicFromDownloadList(requestBodyDownload.getComicSearchDetails());
@@ -907,7 +908,7 @@ public class ComicController {
                 }
             } catch (Exception e) {
                 logger.error(e.getMessage());
-                LogDTO logDTO = LogDTO.builder().timeStamp(new Date()).severity("Error").severityMessage("Download Error").username(jobEntity.getUsername()).message(downloadRequestListDTO.getComicSearchDetails().getLink()).messageHref(true).details(e.getMessage()).build();
+                LogDTO logDTO = LogDTO.builder().timeStamp(new Date()).severity(LogEntity.LogSeverity.Error).severityMessage("Download Error").username(jobEntity.getUsername()).message(downloadRequestListDTO.getComicSearchDetails().getLink()).messageHref(true).details(e.getMessage()).build();
                 addLog(logDTO, jobEntity);
                 success = false;
             }
@@ -966,7 +967,7 @@ public class ComicController {
                     }
                 } catch (Exception e) {
                     logger.error(e.getMessage());
-                    LogDTO logDTO = LogDTO.builder().timeStamp(new Date()).severity("Error").severityMessage("Add Comic Error").username(jobEntity.getUsername()).message(comicFile.toString()).messageHref(false).details(e.getMessage()).build();
+                    LogDTO logDTO = LogDTO.builder().timeStamp(new Date()).severity(LogEntity.LogSeverity.Error).severityMessage("Add Comic Error").username(jobEntity.getUsername()).message(comicFile.toString()).messageHref(false).details(e.getMessage()).build();
                     addLog(logDTO, jobEntity);
                 }
             }
@@ -1090,7 +1091,7 @@ public class ComicController {
             SeriesDTO seriesDto = comicMetaDataService.getSeriesMetaData(comicDto);
             seriesEntity = seriesMapper.mapFrom(seriesDto);
             seriesService.createSeries(seriesEntity);
-            LogDTO logDTO = LogDTO.builder().timeStamp(new Date()).severity("Info").severityMessage("New Series").username(jobEntity.getUsername()).message(seriesEntity.getTitle()).seriesId(seriesEntity.getSeriesID()).build();
+            LogDTO logDTO = LogDTO.builder().timeStamp(new Date()).severity(LogEntity.LogSeverity.Info).severityMessage("New Series").username(jobEntity.getUsername()).message(seriesEntity.getTitle()).seriesId(seriesEntity.getSeriesID()).build();
             addLog(logDTO, jobEntity);
         } else {
             seriesEntity = seriesService.getSeriesByID(comicDto.getSeriesID()).get();
@@ -1110,7 +1111,7 @@ public class ComicController {
             seriesEntity.addComic(comicEntity);
         }
         seriesEntity.setModifiedAt(new Date());
-        LogDTO logDTO = LogDTO.builder().timeStamp(new Date()).severity("Info").severityMessage("New Comic").username(jobEntity.getUsername()).message(comicEntity.getTitle()).comicId(comicEntity.getId()).build();
+        LogDTO logDTO = LogDTO.builder().timeStamp(new Date()).severity(LogEntity.LogSeverity.Info).severityMessage("New Comic").username(jobEntity.getUsername()).message(comicEntity.getTitle()).comicId(comicEntity.getId()).build();
         addLog(logDTO, jobEntity);
         seriesService.save(seriesEntity);
 
