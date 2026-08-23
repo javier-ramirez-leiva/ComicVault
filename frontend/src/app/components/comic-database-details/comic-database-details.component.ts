@@ -303,7 +303,16 @@ export class ComicDatabaseDetailsComponent implements OnInit, CanComponentDeacti
     this.tempPageCover$.next('');
   }
 
-  onComicVine(issueInfo: ComicVineIssueInfo) {
+  onComicVine(issueInfo: ComicVineIssueInfo | null) {
+    if (issueInfo === null) {
+      this.notifierService.appendNotification({
+        id: 0,
+        title: 'No metadata found from ComicVine ',
+        message: `No description or year found for issue "${this.comic?.title}"`,
+        type: 'warning',
+      });
+      return;
+    }
     const description = issueInfo.description?.replace(/<[^>]*>/g, '').trim();
     if (description?.length > 0 || issueInfo.year === 0) {
       this.form.patchValue({
@@ -315,13 +324,6 @@ export class ComicDatabaseDetailsComponent implements OnInit, CanComponentDeacti
         title: 'Autofilled metadata from ComicVine ',
         message: `Description and Year for issue "${this.comic?.title}"`,
         type: 'info',
-      });
-    } else {
-      this.notifierService.appendNotification({
-        id: 0,
-        title: 'No metadata found from ComicVine ',
-        message: `No description or year found for issue "${this.comic?.title}"`,
-        type: 'warning',
       });
     }
   }

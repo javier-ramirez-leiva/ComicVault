@@ -9,8 +9,8 @@ import { HttpService } from './http.service';
 export class ComicVineService {
   private readonly httpService = inject(HttpService);
 
-  searchIssue(issue: string): Observable<ComicVineIssueInfo> {
-    return this.httpService.request<ComicVineIssueInfo>(
+  searchIssue(issue: string): Observable<ComicVineIssueInfo | null> {
+    return this.httpService.request<ComicVineIssueInfo | null>(
       'GET',
       `/comicVine/search?issue=${encodeURIComponent(issue)}`,
     );

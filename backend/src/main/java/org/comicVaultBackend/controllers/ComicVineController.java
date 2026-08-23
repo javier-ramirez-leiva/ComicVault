@@ -25,7 +25,6 @@ public class ComicVineController {
     @PreAuthorize("hasAnyAuthority('ADMIN','OWNER', 'CONTRIBUTOR', 'REQUESTER', 'VIEWER')")
     @GetMapping(path = "/comicVine/search")
     public Optional<ComicVineServiceImpl.ComicVineIssueInfo> searchIssue(@RequestParam(name = "issue", required = true) String issue) {
-        //"0ef0971704c5f7c2501dec9ba0f2338244d820df"
         return this.comicVineService.searchIssue(issue, this.configurationService.getConfiguration().getComicVineAPIKey());
     }
 

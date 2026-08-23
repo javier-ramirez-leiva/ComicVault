@@ -15,7 +15,7 @@ export class EditMetadataButtonComponent {
   @Output() onEdit = new EventEmitter<void>();
   @Output() onSave = new EventEmitter<void>();
   @Output() onCancel = new EventEmitter<void>();
-  @Output() onComicVine = new EventEmitter<ComicVineIssueInfo>();
+  @Output() onComicVine = new EventEmitter<ComicVineIssueInfo | null>();
 
   private readonly comicVineService = inject(ComicVineService);
 
