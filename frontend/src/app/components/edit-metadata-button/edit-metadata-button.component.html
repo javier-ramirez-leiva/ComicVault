@@ -20,6 +20,11 @@
   </button>
 } @else {
   <div class="flex gap-4 w-full">
+    @if (issueTitle) {
+      <button class="button-icon button-primary" style="padding: 0px" (click)="comicVine()">
+        <img src="assets/comic-vine-logo.png" class="size-14 object-contain" />
+      </button>
+    }
     <button class="button-icon button-edit-ok" (click)="ok()">
       <svg
         class="w-6 h-6"
@@ -27,6 +32,7 @@
         xmlns="http://www.w3.org/2000/svg"
         width="24"
         height="24"
+        sty
         fill="none"
         viewBox="0 0 24 24"
       >

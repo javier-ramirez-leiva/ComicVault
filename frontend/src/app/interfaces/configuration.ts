@@ -26,7 +26,7 @@ export interface ComicsConfiguration {
   deleteArchives: boolean;
   generateNavigationThumbnails: boolean;
   slackConfiguration: SlackConfiguration;
-  comicVine_apiKey: string;
+  comicVineAPIKey: string;
   jdownloaderConfiguration: JDownloaderConfiguration;
   getComicsConfiguration: GetComicsConfiguration;
 }

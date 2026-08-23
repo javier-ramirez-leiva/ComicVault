@@ -208,6 +208,32 @@
     <app-expander-button
       appHideRoles
       [appHideForRoles]="[Role.Owner, Role.Contributor, Role.Requester, Role.Viewer]"
+      title="ComicVine"
+      (buttonClicked)="toggleShowComicVine()"
+    ></app-expander-button>
+    <div [ngClass]="{ hidden: !showComicVine }">
+      <div class="flex flex-col p-5 border border-settings-menu-border">
+        <div class="my-5">
+          <app-input-text
+            [(value)]="comicVineAPIKey"
+            (valueChange)="resetComicVineStatus$.next()"
+            title="ComicVine api key"
+            id="comicVineApiKey"
+            helpMessage="Set your ComicVine API key to enable ComicVine metadata fetching. You can obtain an API key from the ComicVine website"
+          ></app-input-text>
+        </div>
+        <div class="flex justify-end">
+          <app-test-button
+            test="comicvine"
+            [payload]="comicVineAPIKey"
+            [resetStatus$]="resetComicVineStatus$"
+          ></app-test-button>
+        </div>
+      </div>
+    </div>
+    <app-expander-button
+      appHideRoles
+      [appHideForRoles]="[Role.Owner, Role.Contributor, Role.Requester, Role.Viewer]"
       title="JDownloader"
       (buttonClicked)="toggleJDownloader()"
     ></app-expander-button>

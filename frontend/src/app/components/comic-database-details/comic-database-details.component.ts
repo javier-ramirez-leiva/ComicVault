@@ -40,6 +40,8 @@ import { ModalMiniPagesComponent } from '../modal-mini-pages/modal-mini-pages.co
 import { CanComponentDeactivate } from 'src/app/guard/unsaved-changes-guard.guard';
 import { ExpanderButtonComponent } from '../expander-button/expander-button.component';
 import { HistoryTableComponent } from '../history-table/history-table.component';
+import { ComicVineIssueInfo } from 'src/app/interfaces/comicVine';
+import { ComicVineService } from 'src/app/services/comic-vine.service';
 
 @Component({
   selector: 'app-comic-database-details',
@@ -299,6 +301,20 @@ export class ComicDatabaseDetailsComponent implements OnInit, CanComponentDeacti
     this.editStatus = false;
     //trigger get of the original value
     this.tempPageCover$.next('');
+  }
+
+  onComicVine(issueInfo: ComicVineIssueInfo) {
+    const description = issueInfo.description?.replace(/<[^>]*>/g, '').trim();
+    this.form.patchValue({
+      description: description,
+      table: { year: issueInfo.year },
+    });
+    this.notifierService.appendNotification({
+      id: 0,
+      title: 'Autofilled metadata from ComicVine ',
+      message: `Description and Year for issue "${this.comic?.title}"`,
+      type: 'info',
+    });
   }
 
   toggleSeen(): void {

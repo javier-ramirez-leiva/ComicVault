@@ -81,6 +81,7 @@ export class SettingsPageComponent {
 
   resetStorageStatus$ = new Subject<void>();
   resetSlackStatus$ = new Subject<void>();
+  resetComicVineStatus$ = new Subject<void>();
   resetJdownloaderStatus$ = new Subject<void>();
 
   protected readonly notifierService: NotifierService = inject(NotifierService);
@@ -109,7 +110,7 @@ export class SettingsPageComponent {
         this.slackConfiguration = comicConfig.slackConfiguration;
         this.jdownloaderConfiguration = comicConfig.jdownloaderConfiguration;
         this.getcomicsBaseUrl = comicConfig.getComicsConfiguration.baseUrl;
-        this.comicVineAPIKey = comicConfig.comicVine_apiKey;
+        this.comicVineAPIKey = comicConfig.comicVineAPIKey;
         this.scanArchives = comicConfig.scanArchives;
         this.deleteArchives = comicConfig.deleteArchives;
         this.generateNavigationThumbnails = comicConfig.generateNavigationThumbnails;
@@ -169,6 +170,7 @@ export class SettingsPageComponent {
   toggleAdvanced() {
     this.showAdvanced = !this.showAdvanced;
   }
+
   toggleJDownloader() {
     this.showJDownloader = !this.showJDownloader;
   }
