@@ -19,6 +19,13 @@
             [page]="page"
             (pageChange)="onPageChange($event)"
           ></app-page-navigator>
+        } @else if (page > 1) {
+          <app-page-navigator
+            class="mt-auto pb-4 md:pb-0"
+            [page]="page"
+            (pageChange)="onPageChange($event)"
+            [onlyBack]="true"
+          ></app-page-navigator>
         }
       </div>
     } @else {

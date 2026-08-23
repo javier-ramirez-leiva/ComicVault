@@ -35,30 +35,32 @@
     </div>
   </div>
   <!-- Next Button -->
-  <button
-    type="button"
-    class="absolute right-0 top-1/2 transform -translate-y-1/2 flex items-center justify-center h-10 w-10 rounded-full focus:outline-hidden group"
-    (click)="nextPage()"
-  >
-    <span
-      class="inline-flex items-center justify-center w-10 h-10 bg-paginator-background group-hover:bg-paginator-hover group-focus:ring-4 group-focus:ring-paginator-focus-ring rounded-full"
+  @if (!onlyBack) {
+    <button
+      type="button"
+      class="absolute right-0 top-1/2 transform -translate-y-1/2 flex items-center justify-center h-10 w-10 rounded-full focus:outline-hidden group"
+      (click)="nextPage()"
     >
-      <svg
-        class="w-4 h-4 text-paginator-text"
-        aria-hidden="true"
-        xmlns="http://www.w3.org/2000/svg"
-        fill="none"
-        viewBox="0 0 6 10"
+      <span
+        class="inline-flex items-center justify-center w-10 h-10 bg-paginator-background group-hover:bg-paginator-hover group-focus:ring-4 group-focus:ring-paginator-focus-ring rounded-full"
       >
-        <path
-          stroke="currentColor"
-          stroke-linecap="round"
-          stroke-linejoin="round"
-          stroke-width="2"
-          d="m1 9 4-4-4-4"
-        ></path>
-      </svg>
-      <span class="sr-only">Next</span>
-    </span>
-  </button>
+        <svg
+          class="w-4 h-4 text-paginator-text"
+          aria-hidden="true"
+          xmlns="http://www.w3.org/2000/svg"
+          fill="none"
+          viewBox="0 0 6 10"
+        >
+          <path
+            stroke="currentColor"
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="m1 9 4-4-4-4"
+          ></path>
+        </svg>
+        <span class="sr-only">Next</span>
+      </span>
+    </button>
+  }
 </div>
