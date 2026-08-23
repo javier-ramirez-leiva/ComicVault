@@ -819,7 +819,8 @@ public class ComicController {
         if (downloadService.getListDownloadingComics().stream().anyMatch(comic -> comic.getIdGc().equals(requestBodyDownload.getComicSearchDetails().getIdGc()))) {
             comicExists = true;
         } else {
-            comicExists = comicService.getcomicbyidGc(requestBodyDownload.getComicSearchDetails().getIdGc()).isPresent();
+            Optional<ComicEntity> optionalComicEntity = comicService.getcomicbyidGc(requestBodyDownload.getComicSearchDetails().getIdGc());
+            comicExists = optionalComicEntity.isPresent();
         }
         if (comicExists) {
             throw new EntityAlreadyExistringException(requestBodyDownload.getComicSearchDetails().getIdGc(), EntityNotFoundException.Entity.COMIC);
