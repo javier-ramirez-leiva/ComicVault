@@ -305,16 +305,25 @@ export class ComicDatabaseDetailsComponent implements OnInit, CanComponentDeacti
 
   onComicVine(issueInfo: ComicVineIssueInfo) {
     const description = issueInfo.description?.replace(/<[^>]*>/g, '').trim();
-    this.form.patchValue({
-      description: description,
-      table: { year: issueInfo.year },
-    });
-    this.notifierService.appendNotification({
-      id: 0,
-      title: 'Autofilled metadata from ComicVine ',
-      message: `Description and Year for issue "${this.comic?.title}"`,
-      type: 'info',
-    });
+    if (description?.length > 0 || issueInfo.year === 0) {
+      this.form.patchValue({
+        description: description,
+        table: { year: issueInfo.year },
+      });
+      this.notifierService.appendNotification({
+        id: 0,
+        title: 'Autofilled metadata from ComicVine ',
+        message: `Description and Year for issue "${this.comic?.title}"`,
+        type: 'info',
+      });
+    } else {
+      this.notifierService.appendNotification({
+        id: 0,
+        title: 'No metadata found from ComicVine ',
+        message: `No description or year found for issue "${this.comic?.title}"`,
+        type: 'warning',
+      });
+    }
   }
 
   toggleSeen(): void {
