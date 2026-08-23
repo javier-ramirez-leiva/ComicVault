@@ -120,3 +120,6 @@ export * from './exception-page/exception-page.component';
 export * from './carousel-screenshots/carousel-screenshots.component';
 export * from './offline-page/offline-page.component';
 export * from './advance-library-page/advance-library-page.component';
+export * from './advance-funnel-button/advance-funnel-button.component';
+export * from './job-funnel-button/job-funnel-button.component';
+export * from './log-funnel-button/log-funnel-button.component';

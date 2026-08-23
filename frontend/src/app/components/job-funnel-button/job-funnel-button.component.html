@@ -1,0 +1,147 @@
+<app-right-panel-funnel-button
+  (funnelButtonClicked)="onOpenDrawer()"
+></app-right-panel-funnel-button>
+<div
+  class="right-panel-mask"
+  [ngClass]="{ hidden: !(isDrawerOpen$ | async) }"
+  (click)="onCloseDrawer()"
+></div>
+<div
+  class="right-panel-container bg-right-panel-background"
+  [ngClass]="{
+    'translate-x-full': !(isDrawerOpen$ | async),
+    '-translate-x-0': (isDrawerOpen$ | async),
+  }"
+>
+  <app-right-panel-title title="Filters" (onCloseClick)="onCloseDrawer()"></app-right-panel-title>
+
+  <form
+    [formGroup]="form"
+    class="flex flex-col justify-between flex-1 pb-24 md:pb-0 overflow-x-hidden"
+  >
+    <div class="space-y-6 text-right-panel-text">
+      <!-- Sort -->
+      <div class="space-y-2">
+        <h6 class="text-base font-medium">Sort</h6>
+        <div>
+          <select
+            id="jobSortAttribute"
+            formControlName="jobSortAttribute"
+            class="w-full pr-8 mt-2 mb-4 cursor-pointer"
+          >
+            @for (sortAttribute of jobSortAttributes; track $index) {
+              <option
+                [value]="sortAttribute"
+                [selected]="sortAttribute === form.get('jobSortAttribute')?.value"
+              >
+                {{ sortAttribute | titlecase }}
+              </option>
+            }
+          </select>
+          <app-boolean-slider-form
+            formControlName="sortDescendingDirection"
+            label="Sorting descending"
+          ></app-boolean-slider-form>
+        </div>
+      </div>
+      <!-- Username -->
+      <div class="space-y-2">
+        <h6 class="text-base font-medium">Users</h6>
+        <select id="username" formControlName="username" class="w-full mr-8 cursor-pointer">
+          <option [value]="''" [selected]="form.get('username')?.value === ''">All</option>
+          @for (user of users; track $index) {
+            <option [value]="user" [selected]="user === form.get('username')?.value">
+              {{ user }}
+            </option>
+          }
+        </select>
+      </div>
+
+      <!-- Types -->
+      <div class="space-y-2" formGroupName="types">
+        <h6 class="text-base font-medium">Types</h6>
+        <div class="flex items-center">
+          <app-boolean-slider-form
+            formControlName="download"
+            label="Download"
+          ></app-boolean-slider-form>
+        </div>
+        <div class="flex items-center">
+          <app-boolean-slider-form
+            formControlName="downloadList"
+            label="Download List"
+          ></app-boolean-slider-form>
+        </div>
+        <div class="flex items-center">
+          <app-boolean-slider-form
+            formControlName="delete"
+            label="Delete"
+          ></app-boolean-slider-form>
+        </div>
+        <div class="flex items-center">
+          <app-boolean-slider-form
+            formControlName="scanLib"
+            label="Scan Library"
+          ></app-boolean-slider-form>
+        </div>
+        <div class="flex items-center">
+          <app-boolean-slider-form
+            formControlName="cleanLib"
+            label="Clean Library"
+          ></app-boolean-slider-form>
+        </div>
+        <div class="flex items-center">
+          <app-boolean-slider-form
+            formControlName="deleteLib"
+            label="Delete Library"
+          ></app-boolean-slider-form>
+        </div>
+      </div>
+
+      <!-- Status -->
+      <div class="space-y-2" formGroupName="status">
+        <h6 class="text-base font-medium">Status</h6>
+        <div class="flex items-center">
+          <app-boolean-slider-form
+            formControlName="onGoing"
+            label="On Going"
+          ></app-boolean-slider-form>
+        </div>
+        <div class="flex items-center">
+          <app-boolean-slider-form
+            formControlName="completed"
+            label="Completed"
+          ></app-boolean-slider-form>
+        </div>
+        <div class="flex items-center">
+          <app-boolean-slider-form formControlName="error" label="Error"></app-boolean-slider-form>
+        </div>
+        <div class="flex items-center">
+          <app-boolean-slider-form
+            formControlName="interrupted"
+            label="Interrupted"
+          ></app-boolean-slider-form>
+        </div>
+      </div>
+
+      <!-- Date -->
+      <div class="space-y-2">
+        <h6 class="text-base font-medium">Date</h6>
+        <div class="flex-1 min-w-0 pr-14">
+          <app-date-text-form
+            id="date-start"
+            title="From"
+            formControlName="dateStart"
+          ></app-date-text-form>
+        </div>
+        <div class="flex-1 min-w-0 pr-14">
+          <app-date-text-form
+            id="date-end"
+            title="To"
+            formControlName="dateEnd"
+          ></app-date-text-form>
+        </div>
+      </div>
+    </div>
+  </form>
+</div>

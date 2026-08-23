@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.comicVaultBackend.domain.entities.LogEntity;
 
 import java.util.Date;
 
@@ -15,7 +16,7 @@ import java.util.Date;
 public class LogDTO {
     private Long logId;
     private Date timeStamp;
-    private String severity;
+    private LogEntity.LogSeverity severity;
     private String severityMessage;
     private String message;
     private String details;

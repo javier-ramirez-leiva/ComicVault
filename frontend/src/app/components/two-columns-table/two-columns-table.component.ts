@@ -54,7 +54,7 @@ export type Row =
       title: string;
       type: 'chip';
       text: string;
-      severity: Severity;
+      severity: Severity | 'Success';
     }
   | {
       title: string;

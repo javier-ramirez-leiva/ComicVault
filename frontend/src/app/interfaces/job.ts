@@ -7,14 +7,39 @@ export type JobType =
   | 'DELETE_LIB';
 
 export type JobStatus = 'ON_GOING' | 'COMPLETED' | 'ERROR' | 'INTERRUPTED';
-
 export interface Job {
   jobId: string;
   timeStamp: string;
-  timeStampFomatted: string;
-  duration: string;
+  duration: number;
   username: string;
   logsIds: number[];
   type: JobType;
   status: JobStatus;
+}
+
+export type JobSortAttribute = 'LATEST' | 'STATUS' | 'TYPE' | 'DURATION' | 'USERNAME';
+export interface JobFilterTypes {
+  download: boolean;
+  downloadList: boolean;
+  delete: boolean;
+  scanLib: boolean;
+  cleanLib: boolean;
+  deleteLib: boolean;
+}
+
+export interface JobFilterStatus {
+  onGoing: boolean;
+  completed: boolean;
+  error: boolean;
+  interrupted: boolean;
+}
+
+export interface JobFilter {
+  jobSortAttribute: JobSortAttribute;
+  sortDescendingDirection: boolean;
+  username: string | null;
+  types: JobFilterTypes;
+  status: JobFilterStatus;
+  dateStart: Date | undefined;
+  dateEnd: Date | undefined;
 }

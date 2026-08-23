@@ -8,6 +8,7 @@ import { Component, EventEmitter, Input, Output, input } from '@angular/core';
 export class PageNavigatorComponent {
   @Output() pageChange = new EventEmitter<number>();
   @Input() page: number = 1;
+  @Input() onlyBack: boolean = false;
 
   previousPage() {
     if (this.page > 1) this.page--;

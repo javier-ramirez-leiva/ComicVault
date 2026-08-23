@@ -19,11 +19,9 @@
             <th scope="row" class="px-6 py-4 font-medium whitespace-nowrap">
               <span
                 class="chip"
-                [class.chip-success]="log.severity == 'Success'"
                 [class.chip-error]="log.severity == 'Error'"
                 [class.chip-info]="log.severity == 'Info'"
                 [class.chip-warning]="log.severity == 'Warning'"
-                [class.chip-desactivated]="log.severity == 'Desactivated'"
               >
                 {{ log.severityMessage }}
               </span>
