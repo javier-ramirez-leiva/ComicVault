@@ -21,15 +21,15 @@
 } @else {
   <div class="flex gap-4 w-full">
     @if (issueTitle) {
-      <button class="button-icon button-primary gap-2" (click)="comicVine()">
-        <span class="text-sm"> Autofill</span>
+      <button type="button" (click)="comicVine()" class="relative button-text-icon button-primary">
+        Autofill
         <svg
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
           viewBox="0 0 24 24"
           stroke-width="1.5"
           stroke="currentColor"
-          class="size-6"
+          class="w-6 h-6"
         >
           <path
             stroke-linecap="round"
