@@ -1,33 +1,50 @@
 # Stage 1: Build the application
-FROM maven:3.8.5-openjdk-17-slim AS build
+FROM maven:3.9-eclipse-temurin-17 AS build
 
 WORKDIR /app
 
-RUN apt-get update && apt-get install -y unrar-free unzip
+# Install tools required by the application/build
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        unrar-free \
+        unzip \
+    && rm -rf /var/lib/apt/lists/*
 
+# Copy Maven configuration first to maximize Docker layer caching
 COPY backend/pom.xml ./pom.xml
+
+# Download dependencies
 RUN mvn dependency:go-offline
 
-# Copy source code AND .git
+# Copy Git metadata because git-commit-id-plugin requires it
 COPY .git .git
+
+# Copy source code
 COPY backend/src ./src
 
+# Build the application
 RUN mvn package -DskipTests
 
+
 # Stage 2: Run the application
-FROM maven:3.8.5-openjdk-17-slim
+FROM eclipse-temurin:17-jre
 
 WORKDIR /app
 
 # Copy the JAR from the build stage
 COPY --from=build /app/target/*.jar app.jar
+
+# Copy default Slack notification configuration
 COPY backend/src/main/resources/notify_slack.json ./default_notify.json
 
-RUN echo '#!/bin/sh\n' \
-    'mkdir -p /data\n' \
-    '[ ! -f /data/notify_slack.json ] && cp /app/default_notify.json /data/notify_slack.json\n' \
-    'exec java -jar app.jar\n' \
-    > /app/entrypoint.sh && chmod +x /app/entrypoint.sh
+# Create entrypoint
+RUN printf '%s\n' \
+    '#!/bin/sh' \
+    'mkdir -p /data' \
+    '[ -f /data/notify_slack.json ] || cp /app/default_notify.json /data/notify_slack.json' \
+    'exec java -jar /app/app.jar' \
+    > /app/entrypoint.sh \
+    && chmod +x /app/entrypoint.sh
 
 VOLUME /data
 
