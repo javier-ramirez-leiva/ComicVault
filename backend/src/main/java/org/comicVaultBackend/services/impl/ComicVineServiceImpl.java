@@ -10,6 +10,7 @@ import org.springframework.web.client.RestClient;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Supplier;
 import java.util.regex.Pattern;
 
 @Service
@@ -67,70 +68,98 @@ public class ComicVineServiceImpl implements ComicVineService {
     }
 
     @Override
-    public Optional<ComicVineIssueInfo> searchIssue(String issueName, String apiKey) {
+    public Optional<ComicVineIssueInfo> searchIssue(String issueName, String apiKey) throws ComicVineException {
+
         if (issueName == null || issueName.isBlank()) {
             return Optional.empty();
         }
-        this.apiKey = apiKey;
-        ParsedIssue parsed = parseIssueName(issueName);
-        // Normal case: "Title #number"
-        if (parsed != null) {
-            Optional<IssueSummary> issue = findIssueByVolume(
-                    parsed
+
+        if (apiKey == null || apiKey.isBlank()) {
+            throw new ComicVineException(
+                    "ComicVine API key cannot be null or blank"
             );
-            if (issue.isPresent()) {
-                return getIssueDetails(issue.get().id());
-            }
         }
-        // Fallback: let ComicVine search the complete title.
-        return searchIssueByTitle(issueName)
-                .flatMap(issue -> getIssueDetails(issue.id()));
+
+        try {
+            this.apiKey = apiKey;
+            ParsedIssue parsed = parseIssueName(issueName);
+
+            // Normal case: "Title #number"
+            if (parsed != null) {
+                Optional<IssueSummary> issue = findIssueByVolume(parsed);
+                if (issue.isPresent()) {
+                    return getIssueDetails(issue.get().id());
+                }
+            }
+            // Fallback: let ComicVine search the complete title.
+            return searchIssueByTitle(issueName)
+                    .flatMap(issue -> getIssueDetails(issue.id()));
+        } catch (ComicVineException e) {
+            // Don't wrap our own exception again.
+            throw e;
+        } catch (Exception e) {
+            throw new ComicVineException(
+                    "Unable to search ComicVine for issue: " + issueName,
+                    e
+            );
+        }
     }
 
-    private Optional<IssueSummary> findIssueByVolume(ParsedIssue parsed) {
-        ComicVineResponse<List<Volume>> volumes = restClient.get()
-                .uri(uriBuilder -> uriBuilder
-                        .path("/volumes/")
-                        .queryParam("api_key", this.apiKey)
-                        .queryParam("format", "json")
-                        .queryParam("limit", 10)
-                        .queryParam("filter", "name:" + parsed.seriesName() + " " + parsed.issueNumber())
-                        .build())
-                .retrieve()
-                .body(new ParameterizedTypeReference<>() {
-                });
-        if (volumes == null || volumes.results() == null) {
+    private Optional<IssueSummary> findIssueByVolume(ParsedIssue parsed) throws ComicVineException {
+        ComicVineResponse<List<Volume>> volumes = executeResponse(
+                () -> restClient.get()
+                        .uri(uriBuilder -> uriBuilder
+                                .path("/volumes/")
+                                .queryParam("api_key", this.apiKey)
+                                .queryParam("format", "json")
+                                .queryParam("limit", 10)
+                                .queryParam(
+                                        "filter",
+                                        "name:" + parsed.seriesName()
+                                                + " " + parsed.issueNumber()
+                                )
+                                .build())
+                        .retrieve()
+                        .body(new ParameterizedTypeReference<>() {
+                        }),
+                "searching for volume " + parsed.seriesName()
+        );
+
+        if (volumes.results() == null) {
             return Optional.empty();
         }
 
-        // Prefer an exact volume name match.
         Volume volume = volumes.results()
                 .stream()
                 .filter(v -> v.name() != null)
                 .filter(v -> v.name().equalsIgnoreCase(parsed.seriesName()))
                 .findFirst()
-                .orElseGet(() -> volumes.results().stream().findFirst().orElse(null));
+                .orElseGet(() ->
+                        volumes.results().stream().findFirst().orElse(null)
+                );
         if (volume == null) {
             return Optional.empty();
         }
-
-        ComicVineResponse<List<IssueSummary>> issues = restClient.get()
-                .uri(uriBuilder -> uriBuilder
-                        .path("/issues/")
-                        .queryParam("api_key", this.apiKey)
-                        .queryParam("format", "json")
-                        .queryParam("limit", 10)
-                        .queryParam(
-                                "filter",
-                                "volume:" + volume.id()
-                                        + ",issue_number:" + parsed.issueNumber()
-                        )
-                        .build())
-                .retrieve()
-                .body(new ParameterizedTypeReference<>() {
-                });
-
-        if (issues == null || issues.results() == null) {
+        ComicVineResponse<List<IssueSummary>> issues = executeResponse(
+                () -> restClient.get()
+                        .uri(uriBuilder -> uriBuilder
+                                .path("/issues/")
+                                .queryParam("api_key", this.apiKey)
+                                .queryParam("format", "json")
+                                .queryParam("limit", 10)
+                                .queryParam(
+                                        "filter",
+                                        "volume:" + volume.id()
+                                                + ",issue_number:" + parsed.issueNumber()
+                                )
+                                .build())
+                        .retrieve()
+                        .body(new ParameterizedTypeReference<>() {
+                        }),
+                "searching for issue " + parsed.seriesName()
+                        + " #" + parsed.issueNumber()
+        );
+        if (issues.results() == null) {
             return Optional.empty();
         }
         return issues.results()
@@ -173,24 +202,19 @@ public class ComicVineServiceImpl implements ComicVineService {
                 .retrieve()
                 .body(new ParameterizedTypeReference<>() {
                 });
-
         if (details == null || details.results() == null) {
             return Optional.empty();
         }
-
         IssueDetails result = details.results();
         String series = null;
-
         if (result.volume() != null) {
             series = result.volume().name();
         }
-
         String category = getCategory(
                 result.publisher() != null
                         ? result.publisher().name()
                         : null
         );
-
         return Optional.of(
                 new ComicVineIssueInfo(
                         result.description(),
@@ -236,6 +260,32 @@ public class ComicVineServiceImpl implements ComicVineService {
                 matcher.group(1).trim(),
                 matcher.group(2)
         );
+    }
+
+    private <T> ComicVineResponse<T> executeResponse(Supplier<ComicVineResponse<T>> request, String operation) throws ComicVineException {
+        try {
+            ComicVineResponse<T> response = request.get();
+            if (response == null) {
+                throw new ComicVineException(
+                        "ComicVine returned an empty response while " + operation
+                );
+            }
+            if (response.statusCode() != 1) {
+                throw new ComicVineException(
+                        "ComicVine API error while " + operation
+                                + ": " + response.error()
+                                + " (status code: " + response.statusCode() + ")"
+                );
+            }
+            return response;
+        } catch (ComicVineException e) {
+            throw e;
+        } catch (Exception e) {
+            throw new ComicVineException(
+                    "Unable to communicate with ComicVine while " + operation,
+                    e
+            );
+        }
     }
 
     private record ParsedIssue(

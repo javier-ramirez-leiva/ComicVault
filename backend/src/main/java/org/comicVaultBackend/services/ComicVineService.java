@@ -8,5 +8,5 @@ import java.util.Optional;
 public interface ComicVineService {
     boolean test(String apiKey) throws ComicVineException;
 
-    Optional<ComicVineServiceImpl.ComicVineIssueInfo> searchIssue(String issueName, String apiKey);
+    Optional<ComicVineServiceImpl.ComicVineIssueInfo> searchIssue(String issueName, String apiKey) throws ComicVineException;
 }

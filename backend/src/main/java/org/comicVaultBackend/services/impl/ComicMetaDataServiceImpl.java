@@ -6,6 +6,7 @@ import org.comicVaultBackend.domain.dto.*;
 import org.comicVaultBackend.domain.regular.ComicTitle;
 import org.comicVaultBackend.exceptions.ComicFileException;
 import org.comicVaultBackend.exceptions.ComicMetaDataException;
+import org.comicVaultBackend.exceptions.ComicVineException;
 import org.comicVaultBackend.services.*;
 import org.jsoup.Jsoup;
 import org.slf4j.Logger;
@@ -168,43 +169,49 @@ public class ComicMetaDataServiceImpl implements ComicMetaDataService {
         } else if (useComicVine) {
             String fileName = file.getFileName().toString();
             String issueName = fileName.replaceFirst("\\.[^.]+$", "");
-            Optional<ComicVineServiceImpl.ComicVineIssueInfo> optionalComicVineIssueInfo = comicVineService.searchIssue(issueName, configurationService.getConfiguration().getComicVineAPIKey());
-            if (optionalComicVineIssueInfo.isPresent()) {
-                ComicSearchDetailsDTO comicSearchDetailsDTO = new ComicSearchDetailsDTO();
-                //Try to retrieve information from file path
-                boolean pathMetaFound = false;
-                Path categoryFolder = comicFolder.getParent();
+            try {
+                Optional<ComicVineServiceImpl.ComicVineIssueInfo> optionalComicVineIssueInfo = comicVineService.searchIssue(issueName, configurationService.getConfiguration().getComicVineAPIKey());
+                if (optionalComicVineIssueInfo.isPresent()) {
+                    ComicSearchDetailsDTO comicSearchDetailsDTO = new ComicSearchDetailsDTO();
+                    //Try to retrieve information from file path
+                    boolean pathMetaFound = false;
+                    Path categoryFolder = comicFolder.getParent();
 
-                if (categoryFolder != null
-                        && Files.isDirectory(categoryFolder)
-                        && Set.of("marvel", "dc", "other-comics")
-                        .contains(categoryFolder.getFileName().toString().toLowerCase())) {
-                    pathMetaFound = true;
-                    comicSearchDetailsDTO.setCategory(categoryFolder.getFileName().toString().toLowerCase());
-                    comicSearchDetailsDTO.setSeries(comicFolder.getFileName().toString());
-                }
+                    if (categoryFolder != null
+                            && Files.isDirectory(categoryFolder)
+                            && Set.of("marvel", "dc", "other-comics")
+                            .contains(categoryFolder.getFileName().toString().toLowerCase())) {
+                        pathMetaFound = true;
+                        comicSearchDetailsDTO.setCategory(categoryFolder.getFileName().toString().toLowerCase());
+                        comicSearchDetailsDTO.setSeries(comicFolder.getFileName().toString());
+                    }
 
-                ComicVineServiceImpl.ComicVineIssueInfo comicVineIssueInfo = optionalComicVineIssueInfo.get();
-                if (!pathMetaFound && StringUtils.isNotBlank(comicVineIssueInfo.category())) {
-                    comicSearchDetailsDTO.setCategory(comicVineIssueInfo.category());
+                    ComicVineServiceImpl.ComicVineIssueInfo comicVineIssueInfo = optionalComicVineIssueInfo.get();
+                    if (!pathMetaFound && StringUtils.isNotBlank(comicVineIssueInfo.category())) {
+                        comicSearchDetailsDTO.setCategory(comicVineIssueInfo.category());
+                    }
+                    if (StringUtils.isNotBlank(comicVineIssueInfo.description())) {
+                        String description = Jsoup.parse(comicVineIssueInfo.description()).text();
+                        comicSearchDetailsDTO.setDescription(description);
+                    }
+                    if (!pathMetaFound && StringUtils.isNotBlank(comicVineIssueInfo.series())) {
+                        comicSearchDetailsDTO.setSeries(comicVineIssueInfo.series());
+                    }
+                    if (comicVineIssueInfo.year() != null) {
+                        comicSearchDetailsDTO.setYear((comicVineIssueInfo.year().toString()));
+                    }
+                    return comicSearchDetailsDTO;
+                } else {
+                    //Generate a ComicSearchDetailsDto with only the ID
+                    String message = "No ComicVine metadata for file: " + file.toString();
+                    logger.info(message);
+                    throw new ComicMetaDataException(message);
                 }
-                if (StringUtils.isNotBlank(comicVineIssueInfo.description())) {
-                    String description = Jsoup.parse(comicVineIssueInfo.description()).text();
-                    comicSearchDetailsDTO.setDescription(description);
-                }
-                if (!pathMetaFound && StringUtils.isNotBlank(comicVineIssueInfo.series())) {
-                    comicSearchDetailsDTO.setSeries(comicVineIssueInfo.series());
-                }
-                if (comicVineIssueInfo.year() != null) {
-                    comicSearchDetailsDTO.setYear((comicVineIssueInfo.year().toString()));
-                }
-                return comicSearchDetailsDTO;
-            } else {
-                //Generate a ComicSearchDetailsDto with only the ID
-                String message = "No ComicVine metadata for file: " + file.toString();
-                logger.info(message);
-                throw new ComicMetaDataException(message);
+            } catch (ComicVineException e) {
+                logger.error(e.getMessage());
+                throw new ComicMetaDataException(e.getMessage());
             }
+
         } else {
             //Generate a ComicSearchDetailsDto with only the ID
             String message = "No comic.gdc or ComicVine metadata for file: " + file.toString();

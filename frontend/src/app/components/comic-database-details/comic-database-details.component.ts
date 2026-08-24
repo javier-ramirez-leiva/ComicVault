@@ -41,7 +41,6 @@ import { CanComponentDeactivate } from 'src/app/guard/unsaved-changes-guard.guar
 import { ExpanderButtonComponent } from '../expander-button/expander-button.component';
 import { HistoryTableComponent } from '../history-table/history-table.component';
 import { ComicVineIssueInfo } from 'src/app/interfaces/comicVine';
-import { ComicVineService } from 'src/app/services/comic-vine.service';
 
 @Component({
   selector: 'app-comic-database-details',

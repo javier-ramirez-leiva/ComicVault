@@ -16,6 +16,7 @@ const ERROR_CODES = [
   'RESOURCE_FILE_NOT_FOUND',
   'USER_DETAILS_NOT_FOUND',
   'INTERNAL_ERROR',
+  'COMIC_VINE_ERROR',
 ];
 
 export type HttpResponseErrorCode = (typeof ERROR_CODES)[number];

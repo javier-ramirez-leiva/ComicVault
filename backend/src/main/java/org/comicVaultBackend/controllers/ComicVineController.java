@@ -1,5 +1,6 @@
 package org.comicVaultBackend.controllers;
 
+import org.comicVaultBackend.exceptions.ComicVineException;
 import org.comicVaultBackend.services.ComicVineService;
 import org.comicVaultBackend.services.ConfigurationService;
 import org.comicVaultBackend.services.impl.ComicVineServiceImpl;
@@ -24,7 +25,7 @@ public class ComicVineController {
 
     @PreAuthorize("hasAnyAuthority('ADMIN','OWNER', 'CONTRIBUTOR', 'REQUESTER', 'VIEWER')")
     @GetMapping(path = "/comicVine/search")
-    public Optional<ComicVineServiceImpl.ComicVineIssueInfo> searchIssue(@RequestParam(name = "issue", required = true) String issue) {
+    public Optional<ComicVineServiceImpl.ComicVineIssueInfo> searchIssue(@RequestParam(name = "issue", required = true) String issue) throws ComicVineException {
         return this.comicVineService.searchIssue(issue, this.configurationService.getConfiguration().getComicVineAPIKey());
     }
 
