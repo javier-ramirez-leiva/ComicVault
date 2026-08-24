@@ -24,7 +24,7 @@ public interface ConfigurationService {
 
     void setSlackNotify(Boolean slackNotify) throws ConfigurationArgumentException;
 
-    void setComicVineAPIKey(String comicVineAPIKey) throws ConfigurationArgumentException;
+    void setComicVineAPIKey(String comicVineAPIKey) throws ConfigurationArgumentException, ComicVineException;
 
     void setJDownloaderConfiguration(JDownloaderConfigurationDTO jDownloaderConfiguration) throws ConfigurationArgumentException;
 

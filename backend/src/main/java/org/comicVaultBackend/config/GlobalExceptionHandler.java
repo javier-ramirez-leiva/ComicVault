@@ -265,6 +265,14 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(status).body(error);
     }
 
+    @ExceptionHandler(ComicVineException.class)
+    public ResponseEntity<ResponseErrorDTO> handleComicVineException(ComicVineException ex) {
+        printAndStoreException(ex);
+        HttpStatus status = HttpStatus.INTERNAL_SERVER_ERROR;
+        ResponseErrorDTO error = new ResponseErrorDTO(ex.getMessage(), "COMIC_VINE_ERROR", status.value());
+        return ResponseEntity.status(status).body(error);
+    }
+
     @ExceptionHandler({IOException.class, Exception.class})
     public ResponseEntity<ResponseErrorDTO> handleInternalServerException(Exception ex) {
         printAndStoreException(ex);

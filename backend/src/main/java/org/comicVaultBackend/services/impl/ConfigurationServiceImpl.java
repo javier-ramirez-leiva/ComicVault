@@ -7,10 +7,7 @@ import org.comicVaultBackend.domain.dto.GetComicsConfigurationDTO;
 import org.comicVaultBackend.domain.dto.JDownloaderConfigurationDTO;
 import org.comicVaultBackend.domain.dto.SlackConfigurationDTO;
 import org.comicVaultBackend.exceptions.*;
-import org.comicVaultBackend.services.ConfigurationService;
-import org.comicVaultBackend.services.GetComicsScrapperService;
-import org.comicVaultBackend.services.SlackNotifyService;
-import org.comicVaultBackend.services.URLBuilderService;
+import org.comicVaultBackend.services.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +34,8 @@ public class ConfigurationServiceImpl implements ConfigurationService {
     private URLBuilderService urlBuilderService;
     @Autowired
     private GetComicsScrapperService getComicsScrapperService;
+    @Autowired
+    private ComicVineService comicVineService;
 
     private static final Logger logger = LoggerFactory.getLogger(ConfigurationServiceImpl.class);
 
@@ -157,7 +156,8 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
 
     @Override
-    public void setComicVineAPIKey(String comicVineAPIKey) throws ConfigurationArgumentException {
+    public void setComicVineAPIKey(String comicVineAPIKey) throws ConfigurationArgumentException, ComicVineException {
+        comicVineService.test(comicVineAPIKey);
         configurationDto.setComicVineAPIKey(comicVineAPIKey);
         updateConfigurationFile();
         logger.info("Configuration value `comicVineAPIKey` updated: {}", comicVineAPIKey);

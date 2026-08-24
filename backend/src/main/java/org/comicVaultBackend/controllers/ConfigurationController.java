@@ -61,7 +61,7 @@ public class ConfigurationController {
 
     @PreAuthorize("hasAnyAuthority('ADMIN')")
     @PostMapping(path = "/comicVine_apiKey")
-    public void setComicVine_apiKey(@RequestBody String comicVine_apiKey) throws ConfigurationArgumentException {
+    public void setComicVine_apiKey(@RequestBody String comicVine_apiKey) throws ConfigurationArgumentException, ComicVineException {
         configurationService.setComicVineAPIKey(comicVine_apiKey);
     }
 

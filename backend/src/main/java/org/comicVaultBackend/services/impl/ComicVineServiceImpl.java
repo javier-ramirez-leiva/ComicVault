@@ -1,6 +1,7 @@
 package org.comicVaultBackend.services.impl;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.comicVaultBackend.exceptions.ComicVineException;
 import org.comicVaultBackend.services.ComicVineService;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Service;
@@ -23,6 +24,46 @@ public class ComicVineServiceImpl implements ComicVineService {
         this.restClient = restClientBuilder
                 .baseUrl("https://comicvine.gamespot.com/api")
                 .build();
+    }
+
+    @Override
+    public boolean test(String apiKey) throws ComicVineException {
+        if (apiKey == null || apiKey.isBlank()) {
+            throw new ComicVineException("ComicVine API key cannot be null or blank");
+        }
+        try {
+            ComicVineResponse<List<Volume>> response = restClient.get()
+                    .uri(uriBuilder -> uriBuilder
+                            .path("/volumes/")
+                            .queryParam("api_key", apiKey)
+                            .queryParam("format", "json")
+                            .queryParam("limit", 1)
+                            .build())
+                    .retrieve()
+                    .body(new ParameterizedTypeReference<>() {
+                    });
+            if (response == null) {
+                throw new ComicVineException("ComicVine returned an empty response");
+            }
+            // ComicVine uses status_code == 1 for a successful request.
+            if (response.statusCode() != 1) {
+                throw new ComicVineException(
+                        "Invalid ComicVine API key or API error: "
+                                + response.error()
+                                + " (status code: " + response.statusCode() + ")"
+                );
+            }
+            return true;
+        } catch (Exception e) {
+            if (e instanceof IllegalArgumentException
+                    || e instanceof IllegalStateException) {
+                throw e;
+            }
+            throw new ComicVineException(
+                    "Unable to validate ComicVine API key",
+                    e
+            );
+        }
     }
 
     @Override
