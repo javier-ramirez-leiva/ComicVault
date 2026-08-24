@@ -88,4 +88,10 @@ public class ConfigurationController {
     public void setGenerateNavigationThumbnails(@RequestBody Boolean generateThumbnails) throws ConfigurationArgumentException {
         configurationService.setGenerateNavigationThumbnails(generateThumbnails);
     }
+
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    @PostMapping(path = "/autoMetadata")
+    public void setAutoMetadata(@RequestBody Boolean autoMetadata) throws ConfigurationArgumentException {
+        configurationService.setAutoMedata(autoMetadata);
+    }
 }

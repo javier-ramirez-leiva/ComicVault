@@ -33,4 +33,6 @@ public interface ConfigurationService {
     void setDeleteArchives(Boolean deleteArchives) throws ConfigurationArgumentException;
 
     void setGenerateNavigationThumbnails(Boolean generateNavigationThumbnails) throws ConfigurationArgumentException;
+
+    void setAutoMedata(Boolean autoMedata) throws ConfigurationArgumentException;
 }

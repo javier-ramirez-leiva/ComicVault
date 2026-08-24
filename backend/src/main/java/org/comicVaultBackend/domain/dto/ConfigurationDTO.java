@@ -11,6 +11,7 @@ public class ConfigurationDTO {
     String downloadRoot;
     boolean scanArchives;
     boolean deleteArchives;
+    boolean autoMetadata;
     boolean generateNavigationThumbnails;
     SlackConfigurationDTO slackConfiguration;
     String comicVineAPIKey;

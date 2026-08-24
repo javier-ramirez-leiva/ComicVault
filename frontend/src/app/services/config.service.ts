@@ -42,6 +42,10 @@ export class ConfigService {
     );
   }
 
+  setAutoMetadata(value: boolean): Observable<any> {
+    return this.httpService.request<any>('POST', `/configuration/autoMetadata`, value);
+  }
+
   setEnableSlackNotifications(value: boolean): Observable<any> {
     return this.httpService.request<any>('POST', `/configuration/slackNotify`, value);
   }

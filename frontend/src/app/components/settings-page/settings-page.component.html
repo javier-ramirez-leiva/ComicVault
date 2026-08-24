@@ -72,6 +72,22 @@
           <app-boolean-slider
             class="mb-5"
             type="ngModel"
+            [(value)]="autoMetadata"
+            (valueChange)="sendAutoMetadata()"
+            label="Autofill metadata from ComicVine"
+          ></app-boolean-slider>
+          <app-help-button
+            message="When scanning a comic, automatically fetch metadata from ComicVine"
+          ></app-help-button>
+        </div>
+        <div
+          appHideRoles
+          [appHideForRoles]="[Role.Owner, Role.Contributor, Role.Requester, Role.Viewer]"
+          class="flex gap-4"
+        >
+          <app-boolean-slider
+            class="mb-5"
+            type="ngModel"
             [(value)]="generateNavigationThumbnails"
             (valueChange)="sendGenerateNavigationThumbnails()"
             label="Generate navigation thumbnails for comics"

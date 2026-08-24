@@ -73,7 +73,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
                     .getComicsConfiguration(GetComicsConfigurationDTO.builder().baseUrl(getComicsBaseUrl).requestsPerSecond(getComicsRequestPerSecond).build())
                     .slackConfiguration(SlackConfigurationDTO.builder().enableNotifications(false).slackWebHook("").comicVaultBaseUrl("").build())
                     .jDownloaderConfiguration(JDownloaderConfigurationDTO.builder().jDownloaderOutputPath("").jDownloaderCrawljobPath("").build()).
-                    deleteArchives(true).scanArchives(true).generateNavigationThumbnails(true).build();
+                    deleteArchives(true).scanArchives(true).generateNavigationThumbnails(true).autoMetadata(false).build();
             updateConfigurationFile();
         }
         urlBuilderService.setBaseURL(this.configurationDto.getGetComicsConfiguration().getBaseUrl());
@@ -201,6 +201,13 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         configurationDto.setGenerateNavigationThumbnails(generateNavigationThumbnails);
         updateConfigurationFile();
         logger.info("Configuration value `generateNavigationThumbnails` updated: {}", generateNavigationThumbnails);
+    }
+
+    @Override
+    public void setAutoMedata(Boolean autoMetadata) throws ConfigurationArgumentException {
+        configurationDto.setAutoMetadata(autoMetadata);
+        updateConfigurationFile();
+        logger.info("Configuration value `autoMetadata` updated: {}", autoMetadata);
     }
 
     private void updateConfigurationFile() throws ConfigurationArgumentException {

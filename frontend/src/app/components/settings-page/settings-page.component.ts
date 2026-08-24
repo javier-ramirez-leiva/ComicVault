@@ -74,6 +74,7 @@ export class SettingsPageComponent {
   scanArchives: boolean = false;
   deleteArchives: boolean = false;
   generateNavigationThumbnails: boolean = false;
+  autoMetadata = false;
   darkMode: boolean = false;
   paginationRatio: number = 1;
   getComicsRequestsPerSecond: number = 0;
@@ -114,6 +115,7 @@ export class SettingsPageComponent {
         this.scanArchives = comicConfig.scanArchives;
         this.deleteArchives = comicConfig.deleteArchives;
         this.generateNavigationThumbnails = comicConfig.generateNavigationThumbnails;
+        this.autoMetadata = comicConfig.autoMetadata;
         this.getComicsRequestsPerSecond = comicConfig.getComicsConfiguration.requestsPerSecond;
       });
   }
@@ -145,6 +147,10 @@ export class SettingsPageComponent {
       .setGenerateNavigationThumbnails(this.generateNavigationThumbnails)
       .pipe(untilDestroyed(this))
       .subscribe();
+  }
+
+  sendAutoMetadata() {
+    this.configService.setAutoMetadata(this.autoMetadata).pipe(untilDestroyed(this)).subscribe();
   }
 
   toggleShowServer() {

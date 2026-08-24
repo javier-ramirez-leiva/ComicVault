@@ -126,23 +126,52 @@ public class ComicVineServiceImpl implements ComicVineService {
                         .queryParam("format", "json")
                         .queryParam(
                                 "field_list",
-                                "id,name,description,cover_date"
+                                "id,name,description,cover_date,volume,publisher"
                         )
                         .build())
                 .retrieve()
                 .body(new ParameterizedTypeReference<>() {
                 });
+
         if (details == null || details.results() == null) {
             return Optional.empty();
         }
+
         IssueDetails result = details.results();
+        String series = null;
+
+        if (result.volume() != null) {
+            series = result.volume().name();
+        }
+
+        String category = getCategory(
+                result.publisher() != null
+                        ? result.publisher().name()
+                        : null
+        );
+
         return Optional.of(
                 new ComicVineIssueInfo(
                         result.description(),
-                        getYear(result.coverDate())
+                        getYear(result.coverDate()),
+                        category,
+                        series
                 )
         );
+    }
 
+    private String getCategory(String publisher) {
+        if (publisher == null || publisher.isBlank()) {
+            return "other-comics";
+        }
+        String normalized = publisher.toLowerCase();
+        if (normalized.contains("marvel")) {
+            return "marvel";
+        }
+        if (normalized.contains("dc")) {
+            return "dc";
+        }
+        return "other-comics";
     }
 
     private Integer getYear(String date) {
@@ -177,7 +206,9 @@ public class ComicVineServiceImpl implements ComicVineService {
 
     public record ComicVineIssueInfo(
             String description,
-            Integer year
+            Integer year,
+            String category,
+            String series
     ) {
     }
 
@@ -214,8 +245,22 @@ public class ComicVineServiceImpl implements ComicVineService {
             String name,
             String description,
             @JsonProperty("cover_date")
-            String coverDate
+            String coverDate,
+            VolumeInfo volume,
+            Publisher publisher
 
+    ) {
+    }
+
+    public record VolumeInfo(
+            int id,
+            String name
+    ) {
+    }
+
+    public record Publisher(
+            int id,
+            String name
     ) {
     }
 }
