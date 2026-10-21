@@ -7,10 +7,7 @@ import org.comicVaultBackend.domain.dto.GetComicsConfigurationDTO;
 import org.comicVaultBackend.domain.dto.JDownloaderConfigurationDTO;
 import org.comicVaultBackend.domain.dto.SlackConfigurationDTO;
 import org.comicVaultBackend.exceptions.*;
-import org.comicVaultBackend.services.ConfigurationService;
-import org.comicVaultBackend.services.GetComicsScrapperService;
-import org.comicVaultBackend.services.SlackNotifyService;
-import org.comicVaultBackend.services.URLBuilderService;
+import org.comicVaultBackend.services.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,6 +34,8 @@ public class ConfigurationServiceImpl implements ConfigurationService {
     private URLBuilderService urlBuilderService;
     @Autowired
     private GetComicsScrapperService getComicsScrapperService;
+    @Autowired
+    private ComicVineService comicVineService;
 
     private static final Logger logger = LoggerFactory.getLogger(ConfigurationServiceImpl.class);
 
@@ -73,7 +72,7 @@ public class ConfigurationServiceImpl implements ConfigurationService {
                     .getComicsConfiguration(GetComicsConfigurationDTO.builder().baseUrl(getComicsBaseUrl).requestsPerSecond(getComicsRequestPerSecond).build())
                     .slackConfiguration(SlackConfigurationDTO.builder().enableNotifications(false).slackWebHook("").comicVaultBaseUrl("").build())
                     .jDownloaderConfiguration(JDownloaderConfigurationDTO.builder().jDownloaderOutputPath("").jDownloaderCrawljobPath("").build()).
-                    deleteArchives(true).scanArchives(true).generateNavigationThumbnails(true).build();
+                    deleteArchives(true).scanArchives(true).generateNavigationThumbnails(true).autoMetadata(false).build();
             updateConfigurationFile();
         }
         urlBuilderService.setBaseURL(this.configurationDto.getGetComicsConfiguration().getBaseUrl());
@@ -157,7 +156,8 @@ public class ConfigurationServiceImpl implements ConfigurationService {
 
 
     @Override
-    public void setComicVineAPIKey(String comicVineAPIKey) throws ConfigurationArgumentException {
+    public void setComicVineAPIKey(String comicVineAPIKey) throws ConfigurationArgumentException, ComicVineException {
+        comicVineService.test(comicVineAPIKey);
         configurationDto.setComicVineAPIKey(comicVineAPIKey);
         updateConfigurationFile();
         logger.info("Configuration value `comicVineAPIKey` updated: {}", comicVineAPIKey);
@@ -201,6 +201,13 @@ public class ConfigurationServiceImpl implements ConfigurationService {
         configurationDto.setGenerateNavigationThumbnails(generateNavigationThumbnails);
         updateConfigurationFile();
         logger.info("Configuration value `generateNavigationThumbnails` updated: {}", generateNavigationThumbnails);
+    }
+
+    @Override
+    public void setAutoMedata(Boolean autoMetadata) throws ConfigurationArgumentException {
+        configurationDto.setAutoMetadata(autoMetadata);
+        updateConfigurationFile();
+        logger.info("Configuration value `autoMetadata` updated: {}", autoMetadata);
     }
 
     private void updateConfigurationFile() throws ConfigurationArgumentException {

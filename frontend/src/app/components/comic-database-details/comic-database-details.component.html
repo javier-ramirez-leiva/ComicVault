@@ -96,12 +96,14 @@
               <app-edit-metadata-button
                 appHideRoles
                 [appHideForRoles]="[Role.Requester, Role.Viewer]"
+                [issueTitle]="comic.title"
                 class="relative"
                 [class.w-64]="!editStatus"
                 [class.w-128]="editStatus"
                 (onEdit)="onEdit()"
                 (onSave)="onSave()"
                 (onCancel)="onCancel()"
+                (onComicVine)="onComicVine($event)"
               ></app-edit-metadata-button>
               @if (!editStatus) {
                 <app-delete-button
@@ -135,12 +137,14 @@
         <app-edit-metadata-button
           appHideRoles
           [appHideForRoles]="[Role.Requester, Role.Viewer]"
+          [issueTitle]="comic.title"
           class="relative"
           [class.w-36]="!editStatus"
           [class.w-72]="editStatus"
           (onEdit)="onEdit()"
           (onSave)="onSave()"
           (onCancel)="onCancel()"
+          (onComicVine)="onComicVine($event)"
         ></app-edit-metadata-button>
         @if (!editStatus) {
           <app-delete-button

@@ -74,6 +74,7 @@ export class SettingsPageComponent {
   scanArchives: boolean = false;
   deleteArchives: boolean = false;
   generateNavigationThumbnails: boolean = false;
+  autoMetadata = false;
   darkMode: boolean = false;
   paginationRatio: number = 1;
   getComicsRequestsPerSecond: number = 0;
@@ -81,6 +82,7 @@ export class SettingsPageComponent {
 
   resetStorageStatus$ = new Subject<void>();
   resetSlackStatus$ = new Subject<void>();
+  resetComicVineStatus$ = new Subject<void>();
   resetJdownloaderStatus$ = new Subject<void>();
 
   protected readonly notifierService: NotifierService = inject(NotifierService);
@@ -109,10 +111,11 @@ export class SettingsPageComponent {
         this.slackConfiguration = comicConfig.slackConfiguration;
         this.jdownloaderConfiguration = comicConfig.jdownloaderConfiguration;
         this.getcomicsBaseUrl = comicConfig.getComicsConfiguration.baseUrl;
-        this.comicVineAPIKey = comicConfig.comicVine_apiKey;
+        this.comicVineAPIKey = comicConfig.comicVineAPIKey;
         this.scanArchives = comicConfig.scanArchives;
         this.deleteArchives = comicConfig.deleteArchives;
         this.generateNavigationThumbnails = comicConfig.generateNavigationThumbnails;
+        this.autoMetadata = comicConfig.autoMetadata;
         this.getComicsRequestsPerSecond = comicConfig.getComicsConfiguration.requestsPerSecond;
       });
   }
@@ -146,6 +149,10 @@ export class SettingsPageComponent {
       .subscribe();
   }
 
+  sendAutoMetadata() {
+    this.configService.setAutoMetadata(this.autoMetadata).pipe(untilDestroyed(this)).subscribe();
+  }
+
   toggleShowServer() {
     this.showServer = !this.showServer;
   }
@@ -169,6 +176,7 @@ export class SettingsPageComponent {
   toggleAdvanced() {
     this.showAdvanced = !this.showAdvanced;
   }
+
   toggleJDownloader() {
     this.showJDownloader = !this.showJDownloader;
   }

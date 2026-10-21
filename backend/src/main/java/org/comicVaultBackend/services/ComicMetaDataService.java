@@ -15,5 +15,5 @@ public interface ComicMetaDataService {
 
     SeriesDTO getSeriesMetaData(ComicDTO comicDto) throws ComicMetaDataException;
 
-    ComicSearchDetailsDTO getMetadataFromComicPath(Path file) throws ComicMetaDataException;
+    ComicSearchDetailsDTO getMetadataFromComicPath(Path file, boolean useComicVine) throws ComicMetaDataException;
 }

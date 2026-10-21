@@ -204,7 +204,7 @@ public class ComicController {
                 if (comicService.getComicByID(id).isEmpty()) {
                     ComicSearchDetailsDTO comicSearchDetailsDto;
                     try {
-                        comicSearchDetailsDto = comicMetaDataService.getMetadataFromComicPath(file);
+                        comicSearchDetailsDto = comicMetaDataService.getMetadataFromComicPath(file, configurationService.getConfiguration().isAutoMetadata());
                     } catch (ComicMetaDataException e) {
                         //Normally from this part, we check nullity of the comicSearchDetailsDto
                         comicSearchDetailsDto = null;

@@ -61,7 +61,7 @@ public class ConfigurationController {
 
     @PreAuthorize("hasAnyAuthority('ADMIN')")
     @PostMapping(path = "/comicVine_apiKey")
-    public void setComicVine_apiKey(@RequestBody String comicVine_apiKey) throws ConfigurationArgumentException {
+    public void setComicVine_apiKey(@RequestBody String comicVine_apiKey) throws ConfigurationArgumentException, ComicVineException {
         configurationService.setComicVineAPIKey(comicVine_apiKey);
     }
 
@@ -87,5 +87,11 @@ public class ConfigurationController {
     @PostMapping(path = "/generateNavigationThumbnails")
     public void setGenerateNavigationThumbnails(@RequestBody Boolean generateThumbnails) throws ConfigurationArgumentException {
         configurationService.setGenerateNavigationThumbnails(generateThumbnails);
+    }
+
+    @PreAuthorize("hasAnyAuthority('ADMIN')")
+    @PostMapping(path = "/autoMetadata")
+    public void setAutoMetadata(@RequestBody Boolean autoMetadata) throws ConfigurationArgumentException {
+        configurationService.setAutoMedata(autoMetadata);
     }
 }

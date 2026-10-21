@@ -72,6 +72,22 @@
           <app-boolean-slider
             class="mb-5"
             type="ngModel"
+            [(value)]="autoMetadata"
+            (valueChange)="sendAutoMetadata()"
+            label="Autofill metadata from ComicVine"
+          ></app-boolean-slider>
+          <app-help-button
+            message="When scanning a comic, automatically fetch metadata from ComicVine"
+          ></app-help-button>
+        </div>
+        <div
+          appHideRoles
+          [appHideForRoles]="[Role.Owner, Role.Contributor, Role.Requester, Role.Viewer]"
+          class="flex gap-4"
+        >
+          <app-boolean-slider
+            class="mb-5"
+            type="ngModel"
             [(value)]="generateNavigationThumbnails"
             (valueChange)="sendGenerateNavigationThumbnails()"
             label="Generate navigation thumbnails for comics"
@@ -202,6 +218,32 @@
               ></app-test-button>
             </div>
           </div>
+        </div>
+      </div>
+    </div>
+    <app-expander-button
+      appHideRoles
+      [appHideForRoles]="[Role.Owner, Role.Contributor, Role.Requester, Role.Viewer]"
+      title="ComicVine"
+      (buttonClicked)="toggleShowComicVine()"
+    ></app-expander-button>
+    <div [ngClass]="{ hidden: !showComicVine }">
+      <div class="flex flex-col p-5 border border-settings-menu-border">
+        <div class="my-5">
+          <app-input-text
+            [(value)]="comicVineAPIKey"
+            (valueChange)="resetComicVineStatus$.next()"
+            title="ComicVine api key"
+            id="comicVineApiKey"
+            helpMessage="Set your ComicVine API key to enable ComicVine metadata fetching. You can obtain an API key from the ComicVine website"
+          ></app-input-text>
+        </div>
+        <div class="flex justify-end">
+          <app-test-button
+            test="comicvine"
+            [payload]="comicVineAPIKey"
+            [resetStatus$]="resetComicVineStatus$"
+          ></app-test-button>
         </div>
       </div>
     </div>
