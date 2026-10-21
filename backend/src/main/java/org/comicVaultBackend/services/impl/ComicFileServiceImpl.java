@@ -3,7 +3,6 @@ package org.comicVaultBackend.services.impl;
 import com.github.junrar.Archive;
 import com.github.junrar.exception.RarException;
 import com.github.junrar.rarfile.FileHeader;
-import com.luciad.imageio.webp.WebPReadParam;
 import net.coobird.thumbnailator.Thumbnails;
 import net.sf.sevenzipjbinding.ExtractOperationResult;
 import net.sf.sevenzipjbinding.IInArchive;
@@ -19,8 +18,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import javax.imageio.ImageIO;
-import javax.imageio.ImageReader;
-import javax.imageio.stream.FileImageInputStream;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.*;
@@ -833,11 +830,6 @@ public class ComicFileServiceImpl implements ComicFileService {
 
     private BufferedImage readImage(InputStream inputStream) throws ComicFileException {
         String genericErrorMessage = "Unsupported image format or corrupted image";
-        // try {
-        //     testWebp(inputStream);
-        // } catch (Exception ex) {
-        //     ex.printStackTrace();
-        // }
         try {
             BufferedImage image = ImageIO.read(inputStream);
             if (image == null) {
@@ -852,12 +844,6 @@ public class ComicFileServiceImpl implements ComicFileService {
 
     private BufferedImage readImage(File file) throws ComicFileException {
         String genericErrorMessage = "Unsupported image format or corrupted image: " + file;
-        // try {
-        //     testWebp(file);
-        // } catch (Exception ex) {
-
-        // }
-
         try {
             BufferedImage image = ImageIO.read(file);
             if (image == null) {
@@ -868,38 +854,4 @@ public class ComicFileServiceImpl implements ComicFileService {
             throw new ComicFileException(genericErrorMessage);
         }
     }
-
-//     public void testWebp(InputStream inputStream) throws IOException {
-
-//         // Obtain a WebP ImageReader instance
-//         ImageReader reader = ImageIO.getImageReadersByMIMEType("image/webp").next();
-
-// // Configure decoding parameters
-//         WebPReadParam readParam = new WebPReadParam();
-//         readParam.setBypassFiltering(true);
-
-// // Configure the input on the ImageReader
-//         reader.setInput(new FileImageInputStream(new File("input.webp")));
-
-// // Decode the image
-//         BufferedImage image = reader.read(0, readParam);
-
-
-//     }
-
-    // public void testWebp(File file) throws Exception {
-    //     System.out.println("File exists: " + file.exists());
-    //     System.out.println("File size: " + file.length());
-    //     Iterator<ImageReader> readers =
-    //             ImageIO.getImageReadersByMIMEType("image/webp");
-    //     System.out.println("WebP reader available: " + readers.hasNext());
-    //     while (readers.hasNext()) {
-    //         System.out.println("Reader: " + readers.next().getClass().getName());
-    //     }
-    //     var image = ImageIO.read(file);
-    //     System.out.println(
-    //             "Decoded image: " +
-    //                     (image == null ? "null" : image.getWidth() + "x" + image.getHeight())
-    //     );
-    // }
 }
