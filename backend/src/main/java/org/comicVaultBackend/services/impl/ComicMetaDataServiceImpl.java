@@ -109,6 +109,11 @@ public class ComicMetaDataServiceImpl implements ComicMetaDataService {
         List<TagDTO> tags = (comicSearchDetailsDto != null) ? comicSearchDetailsDto.getTags() : null;
 
         Integer pages = comicFileService.getPages(filePath);
+        if (pages <= 0) {
+            String message = "Pages could not be counted: " + filePath.toString();
+            logger.error(message);
+            throw new ComicMetaDataException(message);
+        }
         List<Integer> doublePages = comicFileService.listDoublePages(filePath);
         String idgcIssue = (comicSearchDetailsDto == null || comicSearchDetailsDto.getIdGcIssue() == null || comicSearchDetailsDto.getIdGcIssue().isBlank()) ? null : comicSearchDetailsDto.getIdGcIssue();
 
