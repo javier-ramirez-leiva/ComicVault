@@ -301,6 +301,10 @@ export class ComicsService {
     return this.httpService.request<any>('POST', `/comicList/delete`, IDs);
   }
 
+  deleteSeries(id: string): Observable<any> {
+    return this.httpService.request<any>('DELETE', `/series/${id}`);
+  }
+
   setCover(id: string, page: number) {
     return this.httpService.request<any>('POST', `/comics/${id}/setCover`, page);
   }
