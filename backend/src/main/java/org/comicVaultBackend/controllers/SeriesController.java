@@ -4,23 +4,26 @@ import org.comicVaultBackend.annotations.SkipLogging;
 import org.comicVaultBackend.annotations.WithSeriesLock;
 import org.comicVaultBackend.config.ApiConfig;
 import org.comicVaultBackend.domain.dto.ComicDTO;
+import org.comicVaultBackend.domain.dto.JobDTO;
+import org.comicVaultBackend.domain.dto.LogDTO;
 import org.comicVaultBackend.domain.dto.SeriesDTO;
 import org.comicVaultBackend.domain.entities.ComicEntity;
+import org.comicVaultBackend.domain.entities.JobEntity;
+import org.comicVaultBackend.domain.entities.LogEntity;
 import org.comicVaultBackend.domain.entities.SeriesEntity;
 import org.comicVaultBackend.domain.regular.FilterSeries;
 import org.comicVaultBackend.exceptions.EmptySeriesException;
 import org.comicVaultBackend.exceptions.EntityNotFoundException;
 import org.comicVaultBackend.exceptions.FileManagerException;
 import org.comicVaultBackend.mappers.Mapper;
-import org.comicVaultBackend.services.ConfigurationService;
-import org.comicVaultBackend.services.FileManagerService;
-import org.comicVaultBackend.services.SeriesService;
+import org.comicVaultBackend.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,6 +32,7 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -53,6 +57,18 @@ public class SeriesController {
 
     @Autowired
     private FileManagerService fileManagerService;
+
+    @Autowired
+    private JobService jobService;
+
+    @Autowired
+    private Mapper<LogEntity, LogDTO> logMapper;
+
+    @Autowired
+    private LogService logService;
+
+    @Autowired
+    private ComicCleanerService comicCleanerService;
 
 
     @PreAuthorize("hasAnyAuthority('ADMIN','OWNER', 'CONTRIBUTOR', 'REQUESTER', 'VIEWER')")
@@ -190,6 +206,21 @@ public class SeriesController {
             throw new EntityNotFoundException(seriesID, EntityNotFoundException.Entity.COMIC);
         }
         seriesService.updateNonNullProperties(requestBodySeries, seriesEntityOptional.get());
+    }
+
+    @WithSeriesLock
+    @PreAuthorize("hasAnyAuthority('ADMIN','OWNER')")
+    @DeleteMapping(path = "/{seriesID}")
+    public void deleteSeries(@PathVariable String seriesID) throws EntityNotFoundException, FileManagerException {
+        Optional<SeriesEntity> seriesEntityOptional = seriesService.getSeriesByID(seriesID);
+        if (seriesEntityOptional.isEmpty()) {
+            throw new EntityNotFoundException(seriesID, EntityNotFoundException.Entity.COMIC);
+        }
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        JobDTO jobDTO = JobDTO.builder().username(username).timeStamp(new Date()).type(JobEntity.Type.DELETE).status(JobEntity.Status.ON_GOING).build();
+        JobEntity jobEntity = jobService.createJob(jobDTO);
+        comicCleanerService.deleteSeries(seriesEntityOptional.get(), true, jobEntity);
+        jobService.finishJob(jobEntity, JobEntity.Status.COMPLETED);
     }
 
 }

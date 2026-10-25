@@ -74,7 +74,7 @@ public class ComicFileServiceImpl implements ComicFileService {
             ByteArrayOutputStream bytes = getPage(comicFilePath, i);
 
             try {
-                BufferedImage img = ImageIO.read(new ByteArrayInputStream(bytes.toByteArray()));
+                BufferedImage img = readImage(new ByteArrayInputStream(bytes.toByteArray()));
                 // --- Detect if img1 is already a double page ---
                 double ratio = (double) img.getWidth() / img.getHeight();
                 if (ratio > 1) {
@@ -181,7 +181,7 @@ public class ComicFileServiceImpl implements ComicFileService {
         try {
             // Get the first page as image
             ByteArrayOutputStream baos1 = getPage(comicFilePath, page);
-            BufferedImage img1 = ImageIO.read(new ByteArrayInputStream(baos1.toByteArray()));
+            BufferedImage img1 = readImage(new ByteArrayInputStream(baos1.toByteArray()));
 
             if (img1 == null) {
                 throw new ComicFileException("Could not read image for page " + page);
@@ -195,7 +195,7 @@ public class ComicFileServiceImpl implements ComicFileService {
 
             // Get the second page (next one) as image
             ByteArrayOutputStream baos2 = getPage(comicFilePath, page + 1);
-            BufferedImage img2 = ImageIO.read(new ByteArrayInputStream(baos2.toByteArray()));
+            BufferedImage img2 = readImage(new ByteArrayInputStream(baos2.toByteArray()));
 
             if (img1 == null || img2 == null) {
                 throw new ComicFileException("Could not read images for pages " + page + " and " + (page + 1));
@@ -270,7 +270,7 @@ public class ComicFileServiceImpl implements ComicFileService {
         return pageCount;
     }
 
-    private void _savePageToFileCBZ(String filePath, Path storeFilePath, Integer page, int targetWidth) throws IOException {
+    private void _savePageToFileCBZ(String filePath, Path storeFilePath, Integer page, int targetWidth) throws IOException, ComicFileException {
         int pageCount = 0;
         ZipFile zipFile = new ZipFile(new File(filePath));
         Enumeration<? extends ZipEntry> entriesEnum = zipFile.entries();
@@ -288,7 +288,7 @@ public class ComicFileServiceImpl implements ComicFileService {
             if (_isImageFile(entry.getName())) {
                 if (pageCount == page) {
                     try (InputStream is = zipFile.getInputStream(entry)) {
-                        BufferedImage image = ImageIO.read(is);
+                        BufferedImage image = readImage(is);
                         if (targetWidth > 0) {
                             BufferedImage resizedImage = Thumbnails.of(image).width(targetWidth).keepAspectRatio(true).asBufferedImage();
                             ImageIO.write(resizedImage, "jpg", new File(storeFilePath.toString()));
@@ -305,7 +305,7 @@ public class ComicFileServiceImpl implements ComicFileService {
         zipFile.close();
     }
 
-    private void _savePagesToFolderCBZ(String filePath, Path storeFolderPath, int targetWidth) throws IOException {
+    private void _savePagesToFolderCBZ(String filePath, Path storeFolderPath, int targetWidth) throws IOException, ComicFileException {
         int pageCount = 0;
         ZipFile zipFile = new ZipFile(new File(filePath));
         Enumeration<? extends ZipEntry> entriesEnum = zipFile.entries();
@@ -323,7 +323,7 @@ public class ComicFileServiceImpl implements ComicFileService {
             if (_isImageFile(entry.getName())) {
                 Path pageFile = Paths.get(storeFolderPath.toString(), String.valueOf(pageCount) + ".jpg");
                 try (InputStream is = zipFile.getInputStream(entry)) {
-                    BufferedImage image = ImageIO.read(is);
+                    BufferedImage image = readImage(is);
                     if (targetWidth > 0) {
                         BufferedImage resizedImage = Thumbnails.of(image).width(targetWidth).keepAspectRatio(true).asBufferedImage();
                         ImageIO.write(resizedImage, "jpg", new File(pageFile.toString()));
@@ -492,7 +492,7 @@ public class ComicFileServiceImpl implements ComicFileService {
         return outputStream;
     }
 
-    private void _savePageToFileCBR(String filePath, Path storeFilePath, Integer page, int targetWidth) throws IOException, RarException {
+    private void _savePageToFileCBR(String filePath, Path storeFilePath, Integer page, int targetWidth) throws IOException, RarException, ComicFileException {
         int pageCount = 0;
         Archive archive = new Archive(new File(filePath));
         List<FileHeader> fileHeaders = archive.getFileHeaders();
@@ -507,7 +507,7 @@ public class ComicFileServiceImpl implements ComicFileService {
                     try (FileOutputStream fos = new FileOutputStream(storeFilePath.toFile())) {
                         archive.extractFile(fileHeader, fos);
                         if (targetWidth > 0) {
-                            BufferedImage image = ImageIO.read(storeFilePath.toFile());
+                            BufferedImage image = readImage(storeFilePath.toFile());
                             BufferedImage resizedImage = Thumbnails.of(image).width(targetWidth).keepAspectRatio(true).asBufferedImage();
                             // Delete previous image for the resized one
                             storeFilePath.toFile().delete();
@@ -521,7 +521,7 @@ public class ComicFileServiceImpl implements ComicFileService {
         }
     }
 
-    private void _savePagesToFolderCBR(String filePath, Path storeFolderPath, int targetWidth) throws IOException, RarException {
+    private void _savePagesToFolderCBR(String filePath, Path storeFolderPath, int targetWidth) throws IOException, RarException, ComicFileException {
         int pageCount = 0;
         Archive archive = new Archive(new File(filePath));
         List<FileHeader> fileHeaders = archive.getFileHeaders();
@@ -536,7 +536,7 @@ public class ComicFileServiceImpl implements ComicFileService {
                 try (FileOutputStream fos = new FileOutputStream(pageFile.toFile())) {
                     archive.extractFile(fileHeader, fos);
                     if (targetWidth > 0) {
-                        BufferedImage image = ImageIO.read(pageFile.toFile());
+                        BufferedImage image = readImage(pageFile.toFile());
                         BufferedImage resizedImage = Thumbnails.of(image).width(targetWidth).keepAspectRatio(true).asBufferedImage();
                         // Delete previous image for the resized one
                         pageFile.toFile().delete();
@@ -548,7 +548,7 @@ public class ComicFileServiceImpl implements ComicFileService {
         }
     }
 
-    private void _savePageToFileLib(String filePath, Path storeFilePath, Integer page, int targetWidth) throws IOException {
+    private void _savePageToFileLib(String filePath, Path storeFilePath, Integer page, int targetWidth) throws IOException, ComicFileException {
         int pageCount = 0;
         RandomAccessFile randomAccessFile = null;
         IInArchive inArchive = null;
@@ -586,7 +586,7 @@ public class ComicFileServiceImpl implements ComicFileService {
 
                         // Resize if needed
                         if (targetWidth > 0) {
-                            BufferedImage image = ImageIO.read(new ByteArrayInputStream(imageBytes));
+                            BufferedImage image = readImage(new ByteArrayInputStream(imageBytes));
                             BufferedImage resized = Thumbnails.of(image)
                                     .width(targetWidth)
                                     .keepAspectRatio(true)
@@ -615,7 +615,7 @@ public class ComicFileServiceImpl implements ComicFileService {
         }
     }
 
-    private void _savePagesToFolderLib(String filePath, Path storeFolderPath, int targetWidth) throws IOException {
+    private void _savePagesToFolderLib(String filePath, Path storeFolderPath, int targetWidth) throws IOException, ComicFileException {
         int pageCount = 0;
         RandomAccessFile randomAccessFile = null;
         IInArchive inArchive = null;
@@ -653,7 +653,7 @@ public class ComicFileServiceImpl implements ComicFileService {
 
                     // Resize if needed
                     if (targetWidth > 0) {
-                        BufferedImage image = ImageIO.read(new ByteArrayInputStream(imageBytes));
+                        BufferedImage image = readImage(new ByteArrayInputStream(imageBytes));
                         BufferedImage resized = Thumbnails.of(image)
                                 .width(targetWidth)
                                 .keepAspectRatio(true)
@@ -825,6 +825,33 @@ public class ComicFileServiceImpl implements ComicFileService {
         String lowerCaseName = fileName.toLowerCase();
         return lowerCaseName.endsWith(".jpg") || lowerCaseName.endsWith(".jpeg") ||
                 lowerCaseName.endsWith(".png") || lowerCaseName.endsWith(".gif") ||
-                lowerCaseName.endsWith(".bmp");
+                lowerCaseName.endsWith(".bmp") || lowerCaseName.endsWith(".webp");
+    }
+
+    private BufferedImage readImage(InputStream inputStream) throws ComicFileException {
+        String genericErrorMessage = "Unsupported image format or corrupted image";
+        try {
+            BufferedImage image = ImageIO.read(inputStream);
+            if (image == null) {
+                throw new ComicFileException(genericErrorMessage);
+            }
+            return image;
+        } catch (Exception ex) {
+            throw new ComicFileException(genericErrorMessage);
+        }
+
+    }
+
+    private BufferedImage readImage(File file) throws ComicFileException {
+        String genericErrorMessage = "Unsupported image format or corrupted image: " + file;
+        try {
+            BufferedImage image = ImageIO.read(file);
+            if (image == null) {
+                throw new ComicFileException(genericErrorMessage);
+            }
+            return image;
+        } catch (Exception ex) {
+            throw new ComicFileException(genericErrorMessage);
+        }
     }
 }

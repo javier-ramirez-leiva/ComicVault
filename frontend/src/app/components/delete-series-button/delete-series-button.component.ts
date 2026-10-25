@@ -33,9 +33,7 @@ export class DeleteSeriesButtonComponent {
       .pipe(
         filter((response) => response === true),
         switchMap((_) => {
-          return this.comicsService.deleteComicList(
-            this.series!.comics.map((comic: ComicsDatabase) => comic.id),
-          );
+          return this.comicsService.deleteSeries(this.series!.id);
         }),
         untilDestroyed(this),
       )
