@@ -182,7 +182,7 @@ export class ComicSearchDetailsComponent implements OnInit {
         filter(
           (comicSearchDetailsLinks) => comicSearchDetailsLinks?.downloadingStatus === 'downloading',
         ),
-        switchMap(() => this.comicsService.downloads()),
+        switchMap(() => this.comicsService.downloadingList$),
         map((downloads) => downloads.find((download) => download.idGc === this.idGc)),
         filter(notNullOrUndefined()),
         untilDestroyed(this),
