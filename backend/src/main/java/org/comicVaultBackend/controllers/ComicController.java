@@ -31,6 +31,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.method.annotation.StreamingResponseBody;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -962,7 +963,7 @@ public class ComicController {
     // Post method as the list of urls could overflow the url max length
     @PreAuthorize("hasAnyAuthority('ADMIN','OWNER', 'CONTRIBUTOR', 'REQUESTER', 'VIEWER')")
     @PostMapping(path = "/comicList/download")
-    public ResponseEntity<Resource> downloadListComics(@RequestBody List<String> comicIDs) throws EntityNotFoundException, FileManagerException, DownloadToDeviceException {
+    public ResponseEntity<StreamingResponseBody> downloadListComics(@RequestBody List<String> comicIDs) throws EntityNotFoundException, FileManagerException, DownloadToDeviceException {
         List<ComicEntity> listComics = new ArrayList<>();
         for (String comicID : comicIDs) {
             Optional<ComicEntity> comicEntityOptional = comicService.getComicByID(comicID);
@@ -976,21 +977,15 @@ public class ComicController {
         List<String> pathFiles = listComics.stream()
                 .map(ComicEntity::getPath)
                 .collect(Collectors.toList());
-        // Create a temporary ZIP file
-        Path zipPath = fileManagerService.createZip(pathFiles);
-        try {
-            InputStreamResource resource = new InputStreamResource(Files.newInputStream(zipPath));
+        StreamingResponseBody zipStream = outputStream -> fileManagerService.writeZip(pathFiles, outputStream);
 
-            HttpHeaders headers = new HttpHeaders();
-            headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=comics.zip");
-            headers.add(HttpHeaders.CONTENT_TYPE, "application/zip");
+        HttpHeaders headers = new HttpHeaders();
+        headers.add(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=comics.zip");
+        headers.add(HttpHeaders.CONTENT_TYPE, "application/zip");
 
-            return ResponseEntity.ok()
-                    .headers(headers)
-                    .body(resource);
-        } catch (Exception e) {
-            throw new DownloadToDeviceException("Could not download on device: " + zipPath.toString());
-        }
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(zipStream);
     }
 
     @Transactional

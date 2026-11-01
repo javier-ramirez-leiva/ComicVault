@@ -31,6 +31,20 @@ public class RequestResponseLoggingFilter implements Filter {
             throws IOException, ServletException {
 
         CachedBodyHttpServletRequest cachedRequest = new CachedBodyHttpServletRequest((HttpServletRequest) request);
+
+        // Do not buffer every response unless response logging is explicitly enabled.
+        // Buffering prevents large downloads from streaming and can exhaust heap memory.
+        if (!loggingInterceptor.isResponseLoggingEnabled() || isStreamingDownloadRequest((HttpServletRequest) request)) {
+            chain.doFilter(cachedRequest, response);
+
+            if (!loggingInterceptor.isSkipLogginRequest()) {
+                logRequest(cachedRequest, !loggingInterceptor.isSkipLogginRequestBody());
+            }
+
+            loggingInterceptor.cleanThread();
+            return;
+        }
+
         CachedBodyHttpServletResponse cachedResponse = new CachedBodyHttpServletResponse((HttpServletResponse) response);
         chain.doFilter(cachedRequest, cachedResponse);
 
@@ -45,6 +59,10 @@ public class RequestResponseLoggingFilter implements Filter {
         loggingInterceptor.cleanThread();
 
         cachedResponse.copyBodyToResponse(); // Important: restore body to actual response
+    }
+
+    private boolean isStreamingDownloadRequest(HttpServletRequest request) {
+        return request.getRequestURI().endsWith("/comicList/download");
     }
 
     private void logRequest(HttpServletRequest request, boolean includeBody) throws IOException {
