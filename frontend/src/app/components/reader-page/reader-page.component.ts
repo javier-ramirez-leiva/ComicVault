@@ -1,4 +1,4 @@
-import { Component, HostListener, inject, OnDestroy } from '@angular/core';
+import { Component, HostListener, inject, OnDestroy, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ComicsDatabase } from 'interfaces';
 import {
@@ -11,7 +11,7 @@ import {
 } from 'services';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { combineLatest, EMPTY, forkJoin, Observable, of, Subject } from 'rxjs';
+import { combineLatest, EMPTY, forkJoin, Observable, of, Subject, Subscription } from 'rxjs';
 import {
   debounceTime,
   delay,
@@ -33,6 +33,7 @@ import {
 } from '../minipages-carousel/minipages-carousel.component';
 import { ReaderSettingsButtonComponent } from '../reader-settings-button/reader-settings-button.component';
 import { RouterService } from 'src/app/services/router.service';
+import { LoadingSpinnerPageComponent } from '../loading-spinner-page/loading-spinner-page.component';
 
 @UntilDestroy()
 @Component({
@@ -44,6 +45,7 @@ import { RouterService } from 'src/app/services/router.service';
     SwipeDirective,
     MinipagesCarouselComponent,
     ReaderSettingsButtonComponent,
+    LoadingSpinnerPageComponent,
   ],
   templateUrl: './reader-page.component.html',
 })
@@ -62,6 +64,7 @@ export class ReaderPageComponent implements OnDestroy {
   protected readonly comic$: Observable<ComicsDatabase>;
   comic: ComicsDatabase | null = null;
   navigationDisplay: boolean = false;
+  protected isPageLoading = signal(true);
   private debouncer: Subject<number> = new Subject();
   previousPageBlob: DoublePageBlob = undefined;
   nextPageBlob: DoublePageBlob = undefined;
@@ -73,6 +76,10 @@ export class ReaderPageComponent implements OnDestroy {
   readonly doublePage$: Observable<'single' | 'double'>;
 
   private rangePages: number[][] = [];
+  private imageLoadId = 0;
+  private pageLoadId = 0;
+  private imagePreparationSubscription?: Subscription;
+  private imageUrl?: string;
 
   constructor() {
     this.route.url.subscribe((segments) => {
@@ -146,54 +153,90 @@ export class ReaderPageComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
+    this.imagePreparationSubscription?.unsubscribe();
+    if (this.imageUrl) {
+      URL.revokeObjectURL(this.imageUrl);
+    }
     this.zoomService.setZoomEnabled(false);
   }
 
   setPageImage() {
-    if (this.currentPageBlob) {
-      if (!this.currentPageBlob[1]) {
-        const imageUrl = URL.createObjectURL(this.currentPageBlob[0]);
-        const imgElement = document.getElementById('comicImage') as HTMLImageElement;
-        imgElement.src = imageUrl;
-      } else {
-        // double page
-        forkJoin([
-          this.blobToImage$(this.currentPageBlob[0]),
-          this.blobToImage$(this.currentPageBlob[1]),
-        ])
-          .pipe(
-            switchMap(([leftImg, rightImg]) => {
-              const width = leftImg.width + rightImg.width;
-              const height = Math.max(leftImg.height, rightImg.height);
+    const imageLoadId = ++this.imageLoadId;
+    this.isPageLoading.set(true);
+    this.imagePreparationSubscription?.unsubscribe();
 
-              const canvas = document.createElement('canvas');
-              canvas.width = width;
-              canvas.height = height;
-              const ctx = canvas.getContext('2d')!;
-
-              ctx.drawImage(leftImg, 0, 0);
-              ctx.drawImage(rightImg, leftImg.width, 0);
-
-              // wrap toBlob in an observable
-              return new Observable<Blob>((observer) => {
-                canvas.toBlob((blob) => {
-                  if (blob) {
-                    observer.next(blob);
-                    observer.complete();
-                  } else {
-                    observer.error('Canvas toBlob failed');
-                  }
-                }, 'image/png');
-              });
-            }),
-          )
-          .subscribe((blob: Blob) => {
-            const imageUrl = URL.createObjectURL(blob);
-            const imgElement = document.getElementById('comicImage') as HTMLImageElement;
-            imgElement.src = imageUrl;
-          });
-      }
+    if (!this.currentPageBlob) {
+      return;
     }
+
+    if (!this.currentPageBlob[1]) {
+      this.setImageSource(this.currentPageBlob[0], imageLoadId);
+      return;
+    }
+
+    // Double page
+    this.imagePreparationSubscription = forkJoin([
+      this.blobToImage$(this.currentPageBlob[0]),
+      this.blobToImage$(this.currentPageBlob[1]),
+    ])
+      .pipe(
+        switchMap(([leftImg, rightImg]) => {
+          const width = leftImg.width + rightImg.width;
+          const height = Math.max(leftImg.height, rightImg.height);
+
+          const canvas = document.createElement('canvas');
+          canvas.width = width;
+          canvas.height = height;
+          const ctx = canvas.getContext('2d')!;
+
+          ctx.drawImage(leftImg, 0, 0);
+          ctx.drawImage(rightImg, leftImg.width, 0);
+
+          return new Observable<Blob>((observer) => {
+            canvas.toBlob((blob) => {
+              if (blob) {
+                observer.next(blob);
+                observer.complete();
+              } else {
+                observer.error('Canvas toBlob failed');
+              }
+            }, 'image/png');
+          });
+        }),
+      )
+      .subscribe({
+        next: (blob) => this.setImageSource(blob, imageLoadId),
+        error: () => {
+          if (imageLoadId === this.imageLoadId) {
+            this.isPageLoading.set(false);
+          }
+        },
+      });
+  }
+
+  private setImageSource(blob: Blob, imageLoadId: number) {
+    if (imageLoadId !== this.imageLoadId) {
+      return;
+    }
+
+    const imageUrl = URL.createObjectURL(blob);
+    const imgElement = document.getElementById('comicImage') as HTMLImageElement;
+    const finishLoading = () => {
+      if (imageLoadId !== this.imageLoadId || imgElement.src !== imageUrl) {
+        URL.revokeObjectURL(imageUrl);
+        return;
+      }
+
+      if (this.imageUrl) {
+        URL.revokeObjectURL(this.imageUrl);
+      }
+      this.imageUrl = imageUrl;
+      this.isPageLoading.set(false);
+    };
+
+    imgElement.onload = finishLoading;
+    imgElement.onerror = finishLoading;
+    imgElement.src = imageUrl;
   }
 
   private blobToImage$(blob: Blob): Observable<HTMLImageElement> {
@@ -227,14 +270,26 @@ export class ReaderPageComponent implements OnDestroy {
 
   loadPage() {
     if (this.comicId && this.page != null) {
+      const pageLoadId = ++this.pageLoadId;
+      this.isPageLoading.set(true);
       this.previousPageBlob = undefined;
       this.nextPageBlob = undefined;
       this.setComicPage();
       this.getComicPage(this.page)
         .pipe(untilDestroyed(this))
-        .subscribe((response) => {
-          this.currentPageBlob = response;
-          this.setPageImage();
+        .subscribe({
+          next: (response) => {
+            if (pageLoadId !== this.pageLoadId) {
+              return;
+            }
+            this.currentPageBlob = response;
+            this.setPageImage();
+          },
+          error: () => {
+            if (pageLoadId === this.pageLoadId) {
+              this.isPageLoading.set(false);
+            }
+          },
         });
       this.storeNextPage();
       this.storePreviousPage();
@@ -274,6 +329,7 @@ export class ReaderPageComponent implements OnDestroy {
 
   loadNextPage() {
     if (this.comicId && this.page != null) {
+      this.pageLoadId++;
       this.setComicPage();
       this.previousPageBlob = this.currentPageBlob;
       this.currentPageBlob = this.nextPageBlob;
@@ -284,6 +340,7 @@ export class ReaderPageComponent implements OnDestroy {
 
   loadPreviousPage() {
     if (this.comicId && this.page != null) {
+      this.pageLoadId++;
       this.setComicPage();
       this.nextPageBlob = this.currentPageBlob;
       this.currentPageBlob = this.previousPageBlob;
@@ -368,6 +425,7 @@ export class ReaderPageComponent implements OnDestroy {
   }
 
   onStepChange(event: number) {
+    this.isPageLoading.set(true);
     this.debouncer.next(event);
   }
 
