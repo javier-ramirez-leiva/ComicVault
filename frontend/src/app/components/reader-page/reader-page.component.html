@@ -16,7 +16,7 @@
         id="comicImage"
         class="relative h-full w-full object-contain group pointer-events-auto"
       />
-      @if (isPageLoading()) {
+      @if (displayLoader$ | async; as isLoading) {
         <app-loading-spinner-page
           class="absolute inset-0 z-30 pointer-events-none"
         ></app-loading-spinner-page>

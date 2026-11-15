@@ -1,4 +1,4 @@
-import { Component, HostListener, inject, OnDestroy, signal } from '@angular/core';
+import { Component, HostListener, inject, OnDestroy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ComicsDatabase } from 'interfaces';
 import {
@@ -11,7 +11,17 @@ import {
 } from 'services';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { combineLatest, EMPTY, forkJoin, Observable, of, Subject, Subscription } from 'rxjs';
+import {
+  BehaviorSubject,
+  combineLatest,
+  EMPTY,
+  forkJoin,
+  Observable,
+  of,
+  Subject,
+  Subscription,
+  timer,
+} from 'rxjs';
 import {
   debounceTime,
   delay,
@@ -64,7 +74,12 @@ export class ReaderPageComponent implements OnDestroy {
   protected readonly comic$: Observable<ComicsDatabase>;
   comic: ComicsDatabase | null = null;
   navigationDisplay: boolean = false;
-  protected isPageLoading = signal(true);
+  protected _isPageLoading$ = new BehaviorSubject(true);
+  protected displayLoader$ = this._isPageLoading$.asObservable().pipe(
+    distinctUntilChanged(),
+    switchMap((isLoading) => timer(300).pipe(map(() => isLoading))),
+    untilDestroyed(this),
+  );
   private debouncer: Subject<number> = new Subject();
   previousPageBlob: DoublePageBlob = undefined;
   nextPageBlob: DoublePageBlob = undefined;
@@ -76,9 +91,6 @@ export class ReaderPageComponent implements OnDestroy {
   readonly doublePage$: Observable<'single' | 'double'>;
 
   private rangePages: number[][] = [];
-  private imageLoadId = 0;
-  private pageLoadId = 0;
-  private imagePreparationSubscription?: Subscription;
   private imageUrl?: string;
 
   constructor() {
@@ -153,7 +165,6 @@ export class ReaderPageComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.imagePreparationSubscription?.unsubscribe();
     if (this.imageUrl) {
       URL.revokeObjectURL(this.imageUrl);
     }
@@ -161,21 +172,19 @@ export class ReaderPageComponent implements OnDestroy {
   }
 
   setPageImage() {
-    const imageLoadId = ++this.imageLoadId;
-    this.isPageLoading.set(true);
-    this.imagePreparationSubscription?.unsubscribe();
+    this._isPageLoading$.next(true);
 
     if (!this.currentPageBlob) {
       return;
     }
 
     if (!this.currentPageBlob[1]) {
-      this.setImageSource(this.currentPageBlob[0], imageLoadId);
+      this.setImageSource(this.currentPageBlob[0]);
       return;
     }
 
     // Double page
-    this.imagePreparationSubscription = forkJoin([
+    forkJoin([
       this.blobToImage$(this.currentPageBlob[0]),
       this.blobToImage$(this.currentPageBlob[1]),
     ])
@@ -203,26 +212,16 @@ export class ReaderPageComponent implements OnDestroy {
             }, 'image/png');
           });
         }),
+        untilDestroyed(this),
       )
-      .subscribe({
-        next: (blob) => this.setImageSource(blob, imageLoadId),
-        error: () => {
-          if (imageLoadId === this.imageLoadId) {
-            this.isPageLoading.set(false);
-          }
-        },
-      });
+      .subscribe((blob) => this.setImageSource(blob));
   }
 
-  private setImageSource(blob: Blob, imageLoadId: number) {
-    if (imageLoadId !== this.imageLoadId) {
-      return;
-    }
-
+  private setImageSource(blob: Blob) {
     const imageUrl = URL.createObjectURL(blob);
     const imgElement = document.getElementById('comicImage') as HTMLImageElement;
     const finishLoading = () => {
-      if (imageLoadId !== this.imageLoadId || imgElement.src !== imageUrl) {
+      if (imgElement.src !== imageUrl) {
         URL.revokeObjectURL(imageUrl);
         return;
       }
@@ -231,7 +230,7 @@ export class ReaderPageComponent implements OnDestroy {
         URL.revokeObjectURL(this.imageUrl);
       }
       this.imageUrl = imageUrl;
-      this.isPageLoading.set(false);
+      this._isPageLoading$.next(false);
     };
 
     imgElement.onload = finishLoading;
@@ -270,26 +269,14 @@ export class ReaderPageComponent implements OnDestroy {
 
   loadPage() {
     if (this.comicId && this.page != null) {
-      const pageLoadId = ++this.pageLoadId;
-      this.isPageLoading.set(true);
       this.previousPageBlob = undefined;
       this.nextPageBlob = undefined;
       this.setComicPage();
       this.getComicPage(this.page)
         .pipe(untilDestroyed(this))
-        .subscribe({
-          next: (response) => {
-            if (pageLoadId !== this.pageLoadId) {
-              return;
-            }
-            this.currentPageBlob = response;
-            this.setPageImage();
-          },
-          error: () => {
-            if (pageLoadId === this.pageLoadId) {
-              this.isPageLoading.set(false);
-            }
-          },
+        .subscribe((response) => {
+          this.currentPageBlob = response;
+          this.setPageImage();
         });
       this.storeNextPage();
       this.storePreviousPage();
@@ -329,7 +316,6 @@ export class ReaderPageComponent implements OnDestroy {
 
   loadNextPage() {
     if (this.comicId && this.page != null) {
-      this.pageLoadId++;
       this.setComicPage();
       this.previousPageBlob = this.currentPageBlob;
       this.currentPageBlob = this.nextPageBlob;
@@ -340,7 +326,6 @@ export class ReaderPageComponent implements OnDestroy {
 
   loadPreviousPage() {
     if (this.comicId && this.page != null) {
-      this.pageLoadId++;
       this.setComicPage();
       this.nextPageBlob = this.currentPageBlob;
       this.currentPageBlob = this.previousPageBlob;
@@ -425,7 +410,6 @@ export class ReaderPageComponent implements OnDestroy {
   }
 
   onStepChange(event: number) {
-    this.isPageLoading.set(true);
     this.debouncer.next(event);
   }
 
