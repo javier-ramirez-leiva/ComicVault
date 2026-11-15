@@ -77,7 +77,7 @@ export class ReaderPageComponent implements OnDestroy {
   protected _isPageLoading$ = new BehaviorSubject(true);
   protected displayLoader$ = this._isPageLoading$.asObservable().pipe(
     distinctUntilChanged(),
-    switchMap((isLoading) => timer(300).pipe(map(() => isLoading))),
+    switchMap((isLoading) => timer(0).pipe(map(() => isLoading))),
     untilDestroyed(this),
   );
   private debouncer: Subject<number> = new Subject();
@@ -273,10 +273,19 @@ export class ReaderPageComponent implements OnDestroy {
       this.nextPageBlob = undefined;
       this.setComicPage();
       this.getComicPage(this.page)
-        .pipe(untilDestroyed(this))
-        .subscribe((response) => {
-          this.currentPageBlob = response;
-          this.setPageImage();
+        .pipe(
+          tap(() => console.log('toto')),
+          tap(() => this._isPageLoading$.next(true)),
+          untilDestroyed(this),
+        )
+        .subscribe({
+          next: (response) => {
+            this.currentPageBlob = response;
+            this.setPageImage();
+          },
+          error: (err) => {
+            this._isPageLoading$.next(false);
+          },
         });
       this.storeNextPage();
       this.storePreviousPage();
@@ -348,28 +357,28 @@ export class ReaderPageComponent implements OnDestroy {
   }
 
   nextPage(force: Boolean) {
-    if (!this.lockNextPrevious) {
-      if (force || (!this.windowService.isZoomed() && !this.navigationDisplay)) {
-        if (this.comic?.pages === this.page + 1) {
-          if (this.comic) {
-            this.comic.readStatus = true;
-          }
+    //if (!this.lockNextPrevious) {
+    if (force || (!this.windowService.isZoomed() && !this.navigationDisplay)) {
+      if (this.comic?.pages === this.page + 1) {
+        if (this.comic) {
           this.comic.readStatus = true;
-          if (!this.incognito) {
-            this.comicsService
-              .setComicListReadStatus([this.comic.id], true)
-              .pipe(untilDestroyed(this))
-              .subscribe(() => this.backToDetails());
-          } else {
-            this.backToDetails();
-          }
-        } else {
-          this.page = this.increasePage(this.page);
-          this.loadNextPage();
         }
-        resetRouteCache();
+        this.comic.readStatus = true;
+        if (!this.incognito) {
+          this.comicsService
+            .setComicListReadStatus([this.comic.id], true)
+            .pipe(untilDestroyed(this))
+            .subscribe(() => this.backToDetails());
+        } else {
+          this.backToDetails();
+        }
+      } else {
+        this.page = this.increasePage(this.page);
+        this.loadNextPage();
       }
+      resetRouteCache();
     }
+    //}
   }
 
   decreasePage(page: number): number {
@@ -386,15 +395,15 @@ export class ReaderPageComponent implements OnDestroy {
   }
 
   previousPage(force: Boolean) {
-    if (!this.lockNextPrevious) {
-      if (force || (!this.windowService.isZoomed() && !this.navigationDisplay)) {
-        if (this.page >= 1) {
-          this.page = this.decreasePage(this.page);
-          this.loadPreviousPage();
-        }
-        resetRouteCache();
+    //if (!this.lockNextPrevious) {
+    if (force || (!this.windowService.isZoomed() && !this.navigationDisplay)) {
+      if (this.page >= 1) {
+        this.page = this.decreasePage(this.page);
+        this.loadPreviousPage();
       }
+      resetRouteCache();
     }
+    //}
   }
 
   toggleNavigation() {
