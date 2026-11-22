@@ -85,6 +85,10 @@ public class LoggingInterceptor implements HandlerInterceptor {
         return Boolean.TRUE.equals(skipLoggingResponse.get());
     }
 
+    public boolean isResponseLoggingEnabled() {
+        return logResponse;
+    }
+
     public OptionalLong getElapsedTime() {
         StopWatch stopWatch = callStopWatch.get();
         callStopWatch.remove();

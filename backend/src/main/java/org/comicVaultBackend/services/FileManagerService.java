@@ -2,11 +2,15 @@ package org.comicVaultBackend.services;
 
 import org.comicVaultBackend.exceptions.FileManagerException;
 
+import java.io.IOException;
+import java.io.OutputStream;
 import java.nio.file.Path;
 import java.util.List;
 
 public interface FileManagerService {
     Path createZip(List<String> filePaths) throws FileManagerException;
+
+    void writeZip(List<String> filePaths, OutputStream outputStream) throws IOException;
 
     List<Path> findFilesWithExtensions(Path rootDirectory, String... extensions) throws FileManagerException;
 

@@ -3,14 +3,12 @@ import {
   BehaviorSubject,
   EMPTY,
   Observable,
-  ReplaySubject,
   catchError,
-  distinctUntilChanged,
   filter,
-  interval,
   map,
-  startWith,
+  shareReplay,
   switchMap,
+  timer,
 } from 'rxjs';
 import {
   ComicsDatabase,
@@ -34,42 +32,25 @@ import { ModalService } from './modal.service';
 import { ModalDownloadComponent } from '../components/modal-download/modal-download.component';
 import { NotifierService } from './notifier.service';
 import { ModalDownloadListComponent } from '../components/modal-download-list/modal-download-list.component';
-import { ActivePageService } from './active-page.service';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 @Injectable({
   providedIn: 'root',
 })
-@UntilDestroy()
 export class ComicsService {
   private readonly updateNotification: BehaviorSubject<null> = new BehaviorSubject<null>(null);
-  readonly downloadingList$: ReplaySubject<ComicsSearch[]> = new ReplaySubject<ComicsSearch[]>(1);
+  /**
+   * Polls only while at least one consumer is subscribed. Every consumer uses
+   * the same timer and request; the latest result is replayed so views created
+   * by a result (such as download-table rows) do not miss it.
+   */
+  readonly downloadingList$: Observable<ComicsSearch[]> = timer(500, 500).pipe(
+    switchMap(() => this.downloads()),
+    shareReplay({ bufferSize: 1, refCount: true }),
+  );
 
   private readonly httpService = inject(HttpService);
   private readonly modalService = inject(ModalService);
   private readonly notifierService = inject(NotifierService);
-  private readonly activePageService = inject(ActivePageService);
-
-  constructor() {
-    this.activePageService.activePage$
-      .pipe(
-        distinctUntilChanged(),
-        switchMap((page) => {
-          if (page === 'search' || page === 'downloads') {
-            return interval(500).pipe(
-              startWith(0),
-              switchMap(() => this.downloads()),
-            );
-          } else {
-            // Return empty observable to stop polling
-            return EMPTY;
-          }
-        }),
-        untilDestroyed(this),
-      )
-      .subscribe((comics) => this.downloadingList$.next(comics));
-  }
-
   allComics(): Observable<ComicsDatabase[]> {
     return this.httpService.request<ComicsDatabase[]>('GET', `/comics`);
   }

@@ -1,4 +1,4 @@
-import { Component, OnInit, Signal, inject, signal } from '@angular/core';
+import { Component, OnInit, inject, signal } from '@angular/core';
 import { Category, ComicsDatabase, HttpResponseError, Series } from 'interfaces';
 import { ActivatedRoute, RouterModule } from '@angular/router';
 import { ComicsService, HistoryService, ModalService, NotifierService } from 'services';
@@ -41,6 +41,7 @@ import { CanComponentDeactivate } from 'src/app/guard/unsaved-changes-guard.guar
 import { ExpanderButtonComponent } from '../expander-button/expander-button.component';
 import { HistoryTableComponent } from '../history-table/history-table.component';
 import { ComicVineIssueInfo } from 'src/app/interfaces/comicVine';
+import { History } from 'interfaces';
 
 @Component({
   selector: 'app-comic-database-details',
@@ -95,9 +96,7 @@ export class ComicDatabaseDetailsComponent implements OnInit, CanComponentDeacti
   imageLoaded: boolean = false;
 
   displayProgressDetails = signal(false);
-  protected comicProgressDetails$ = this.historyService.historyComicId(
-    this.route.snapshot.paramMap.get('id') as string,
-  );
+  protected comicProgressDetails$: Observable<History[]>;
 
   Role = Role;
 
@@ -235,6 +234,9 @@ export class ComicDatabaseDetailsComponent implements OnInit, CanComponentDeacti
           link: comic.link,
         },
       ]),
+    );
+    this.comicProgressDetails$ = this.id$.pipe(
+      switchMap((id) => this.historyService.historyComicId(id)),
     );
   }
 

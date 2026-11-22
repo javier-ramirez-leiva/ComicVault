@@ -6,7 +6,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.IOException;
+import java.io.OutputStream;
 import java.io.UncheckedIOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -17,6 +20,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
+import java.util.zip.Deflater;
 import java.util.zip.ZipOutputStream;
 
 @Service
@@ -38,20 +42,40 @@ public class FileManagerServiceImpl implements FileManagerService {
     public Path createZip(List<String> filePaths) throws FileManagerException {
         try {
             Path zipPath = Files.createTempFile("comics-", ".zip");
-            try (ZipOutputStream zipOutputStream = new ZipOutputStream(Files.newOutputStream(zipPath))) {
-                for (String filePath : filePaths) {
-                    Path path = Paths.get(filePath);
-                    if (Files.exists(path) && Files.isReadable(path)) {
-                        zipOutputStream.putNextEntry(new ZipEntry(path.getFileName().toString()));
-                        Files.copy(path, zipOutputStream);
+            try (OutputStream outputStream = Files.newOutputStream(zipPath)) {
+                writeZip(filePaths, outputStream);
+            }
+            return zipPath;
+        } catch (Exception e) {
+            logger.error("Temporary zip could not be created", e);
+            throw new FileManagerException("Temporary zip could not be created", e);
+        }
+    }
+
+    @Override
+    public void writeZip(List<String> filePaths, OutputStream outputStream) throws IOException {
+        byte[] buffer = new byte[64 * 1024];
+        try (ZipOutputStream zipOutputStream = new ZipOutputStream(new BufferedOutputStream(outputStream, buffer.length))) {
+            // CBR and CBZ are already compressed archives. Recompressing them costs CPU with
+            // virtually no size benefit, so use the fastest valid ZIP mode.
+            zipOutputStream.setLevel(Deflater.NO_COMPRESSION);
+            for (String filePath : filePaths) {
+                Path path = Paths.get(filePath);
+                if (Files.exists(path) && Files.isReadable(path)) {
+                    zipOutputStream.putNextEntry(new ZipEntry(path.getFileName().toString()));
+                    try (BufferedInputStream inputStream = new BufferedInputStream(Files.newInputStream(path), buffer.length)) {
+                        int bytesRead;
+                        while ((bytesRead = inputStream.read(buffer)) != -1) {
+                            zipOutputStream.write(buffer, 0, bytesRead);
+                        }
+                    } finally {
                         zipOutputStream.closeEntry();
                     }
                 }
-                return zipPath;
             }
-        } catch (Exception e) {
-            logger.error("Temporary zip could not be created");
-            throw new FileManagerException("Temporary zip could not be created");
+        } catch (IOException e) {
+            logger.error("ZIP stream could not be created", e);
+            throw e;
         }
     }
 
