@@ -24,7 +24,6 @@ ComicVault is an open-source personal comic library and downloader.   It helps y
 - Integration with alternative download solutions (e.g. JDownloader)  
 
 
-<img src="./docs/mockups/device-mockups.png" style="margin: 20px 0;">
 
 ## 🚀 Setup
 
