@@ -1,5 +1,5 @@
 @if (testResult === true) {
-  <button type="button" (click)="testAPI()" class="button-icon px-5 button-success">
+  <button type="button" (click)="testAPI()" class="button-icon cv-test-control button-success">
     <svg
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
@@ -7,6 +7,7 @@
       stroke-width="1.5"
       stroke="currentColor"
       class="size-6"
+      aria-hidden="true"
     >
       <path
         stroke-linecap="round"
@@ -18,7 +19,7 @@
 }
 
 @if (testResult === false) {
-  <button type="button" (click)="testAPI()" class="button-icon px-5 button-error">
+  <button type="button" (click)="testAPI()" class="button-icon cv-test-control button-error">
     <svg
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
@@ -26,6 +27,7 @@
       stroke-width="1.5"
       stroke="currentColor"
       class="size-6"
+      aria-hidden="true"
     >
       <path
         stroke-linecap="round"
@@ -37,7 +39,7 @@
 }
 
 @if (testResult === null) {
-  <button type="button" (click)="testAPI()" class="button-icon px-5 button-play">
+  <button type="button" (click)="testAPI()" class="button-icon cv-test-control button-play">
     <svg
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
@@ -45,6 +47,7 @@
       stroke-width="1.5"
       stroke="currentColor"
       class="size-6"
+      aria-hidden="true"
     >
       <path
         stroke-linecap="round"

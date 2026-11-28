@@ -1,6 +1,6 @@
-<div class="relative bg-modal-background rounded-lg shadow-sm">
+<div class="relative cv-settings-dialog bg-modal-background">
   <app-cross-modal (onCloseClick)="cancel()"></app-cross-modal>
-  <div class="p-4 md:p-5 text-center">
+  <div class="p-4 pt-12 md:p-5 md:pt-12 text-center">
     <svg
       class="mx-auto mb-4 text-modal-message-warning w-12 h-12"
       aria-hidden="true"
@@ -18,7 +18,7 @@
     </svg>
 
     <h3 class="mb-5 text-lg font-normal text-modal-message-text">{{ data?.message }}</h3>
-    <div class="flex justify-center gap-6">
+    <div class="flex flex-wrap justify-end gap-2">
       <button (click)="confirm(true)" type="button" class="button-text button-error">
         Yes, I'm sure
       </button>

@@ -1,10 +1,10 @@
-<label class="inline-flex items-center cursor-pointer">
-  <input type="checkbox" [checked]="value" (change)="onToggleChange($event)" class="sr-only peer" />
+<label class="inline-flex items-center cursor-pointer cv-switch">
+  <input type="checkbox" role="switch" [checked]="value" (change)="onToggleChange($event)" class="sr-only peer" />
   <div
-    class="relative w-11 h-6 bg-slider-background border-slider-border peer-checked:bg-slider-active peer-focus:outline-hidden peer-focus:ring-4 peer-focus:ring-slider-focus-ring rounded-full peer peer-checked:after:translate-x-full peer-checked:rtl:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all"
+    class="relative shrink-0 w-11 h-6 bg-slider-background border-slider-border peer-checked:bg-slider-active peer-focus:outline-hidden peer-focus:ring-4 peer-focus:ring-slider-focus-ring rounded-full peer peer-checked:after:translate-x-full peer-checked:rtl:after:-translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:start-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all"
   ></div>
   @if (label) {
-    <span class="ms-3 text-sm font-medium text-generic-text">
+    <span class="ms-3 min-w-0 text-sm font-medium text-generic-text">
       {{ label }}
     </span>
   }

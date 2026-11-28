@@ -1,18 +1,26 @@
-<div class="whole-page-container">
-  <div class="mb-4">
-    <app-expander-button
+<div class="whole-page-container cv-settings-page">
+  <div class="cv-settings-layout">
+    <header class="cv-settings-heading">
+      <h1>Settings</h1>
+      <p>Manage your library, appearance and integrations.</p>
+    </header>
+    <div class="cv-settings-sections">
+    <section class="cv-settings-section"
       appHideRoles
-      [appHideForRoles]="[Role.Requester, Role.Viewer]"
+      [appHideForRoles]="[Role.Requester, Role.Viewer]">
+      <app-expander-button
       title="Library"
-      [upperBorder]="true"
       (buttonClicked)="toggleShowServer()"
-    ></app-expander-button>
-    <div [ngClass]="{ hidden: !showServer }">
-      <div class="flex flex-col p-5 border border-settings-menu-border">
+        [settingsStyle]="true"
+        [open]="showServer"
+        description="Storage, scanning and library maintenance"
+        panelId="settings-showServer"
+      ></app-expander-button>
+      <div id="settings-showServer" [hidden]="!showServer">
+      <div class="cv-settings-panel">
         <div
           appHideRoles
           [appHideForRoles]="[Role.Owner, Role.Contributor, Role.Requester, Role.Viewer]"
-          class="mb-5"
         >
           <app-input-text
             [(value)]="storagePath"
@@ -24,7 +32,7 @@
         <div
           appHideRoles
           [appHideForRoles]="[Role.Owner, Role.Contributor, Role.Requester, Role.Viewer]"
-          class="flex justify-end mb-5"
+          class="cv-settings-submit"
         >
           <app-test-button
             test="storage"
@@ -35,10 +43,9 @@
         <div
           appHideRoles
           [appHideForRoles]="[Role.Owner, Role.Contributor, Role.Requester, Role.Viewer]"
-          class="flex gap-4"
+          class="cv-settings-row"
         >
           <app-boolean-slider
-            class="mb-5"
             type="ngModel"
             [(value)]="scanArchives"
             (valueChange)="sendScanArchives()"
@@ -51,10 +58,9 @@
         <div
           appHideRoles
           [appHideForRoles]="[Role.Owner, Role.Contributor, Role.Requester, Role.Viewer]"
-          class="flex gap-4"
+          class="cv-settings-row"
         >
           <app-boolean-slider
-            class="mb-5"
             type="ngModel"
             [(value)]="deleteArchives"
             (valueChange)="sendDeleteArchives()"
@@ -67,10 +73,9 @@
         <div
           appHideRoles
           [appHideForRoles]="[Role.Owner, Role.Contributor, Role.Requester, Role.Viewer]"
-          class="flex gap-4"
+          class="cv-settings-row"
         >
           <app-boolean-slider
-            class="mb-5"
             type="ngModel"
             [(value)]="autoMetadata"
             (valueChange)="sendAutoMetadata()"
@@ -83,10 +88,9 @@
         <div
           appHideRoles
           [appHideForRoles]="[Role.Owner, Role.Contributor, Role.Requester, Role.Viewer]"
-          class="flex gap-4"
+          class="cv-settings-row"
         >
           <app-boolean-slider
-            class="mb-5"
             type="ngModel"
             [(value)]="generateNavigationThumbnails"
             (valueChange)="sendGenerateNavigationThumbnails()"
@@ -96,9 +100,9 @@
             message="When adding or scanning a comic, create page thumbnails for thumbnail navigation"
           ></app-help-button>
         </div>
-        <div class="mb-5 mt-5">
-          <p class="block mb-4 text-sm font-medium text-generic-text">Manage library content</p>
-          <div class="flex flex-col md:flex-row gap-2 w-fit">
+        <div class="cv-settings-group">
+          <p class="cv-settings-label">Manage library content</p>
+          <div class="cv-settings-actions">
             <app-scan-lib-button [mini]="false"></app-scan-lib-button>
             <app-clean-lib-button
               appHideRoles
@@ -114,17 +118,23 @@
         </div>
       </div>
     </div>
-    <app-expander-button title="Appearance & UI" (buttonClicked)="toggleShowTheme()"></app-expander-button>
-    <div [ngClass]="{ hidden: !showTheme }">
-      <div class="flex flex-col p-5 border border-settings-menu-border">
+    </section>
+    <section class="cv-settings-section">
+      <app-expander-button title="Appearance & UI" (buttonClicked)="toggleShowTheme()"
+        [settingsStyle]="true"
+        [open]="showTheme"
+        description="Color theme, dark mode and pagination"
+        panelId="settings-showTheme"
+      ></app-expander-button>
+      <div id="settings-showTheme" [hidden]="!showTheme">
+      <div class="cv-settings-panel">
         <app-boolean-slider
-          class="mb-5"
           type="ngModel"
           [(value)]="darkMode"
           (valueChange)="darkModeService.setDarkMode($event)"
-          label="Dark Mode"
+          label="Dark mode"
         ></app-boolean-slider>
-        <fieldset class="mb-6">
+        <fieldset class="cv-settings-group">
           <legend class="mb-2 text-sm font-medium text-generic-text">Color theme</legend>
           <div class="cv-palette-grid">
             @for (palette of darkModeService.palettes; track palette.id) {
@@ -137,41 +147,45 @@
               </label>
             }
           </div>
-          <p class="mt-2 text-sm text-generic-text">Applies to both light and dark mode. Saved on this browser.</p>
+          <p class="cv-settings-hint">Applies to both light and dark mode. Saved on this browser.</p>
         </fieldset>
-        <div class="flex gap-4">
-          <p class="block mb-2 text-sm font-medium text-generic-text">
-            How many provider pages fit into one app page
-          </p>
+        <div class="cv-settings-row">
+          <label class="cv-settings-label" for="pagination-ratio">Provider pages per app page</label>
           <app-help-button
             message="Adjust the ratio of provider pages per app page for better reading comfort."
           ></app-help-button>
         </div>
         <app-digit-input
           id="pagination-ratio"
+          accessibleLabel="Provider pages per app page"
           [(value)]="paginationRatio"
           (valueChange)="updatePaginationRatio()"
         ></app-digit-input>
       </div>
     </div>
-    <app-expander-button
+    </section>
+    <section class="cv-settings-section"
       appHideRoles
-      [appHideForRoles]="[Role.Owner, Role.Contributor, Role.Requester, Role.Viewer]"
+      [appHideForRoles]="[Role.Owner, Role.Contributor, Role.Requester, Role.Viewer]">
+      <app-expander-button
       title="Slack"
       (buttonClicked)="toggleShowSlack()"
-    ></app-expander-button>
-    <div [ngClass]="{ hidden: !showSlack }">
-      <div class="flex flex-col p-5 border border-settings-menu-border">
-        <div class="mb-5">
+        [settingsStyle]="true"
+        [open]="showSlack"
+        description="Notification settings and webhook"
+        panelId="settings-showSlack"
+      ></app-expander-button>
+      <div id="settings-showSlack" [hidden]="!showSlack">
+      <div class="cv-settings-panel">
+        <div>
           <app-boolean-slider
-            class="mb-5"
             type="ngModel"
             [(value)]="slackConfiguration.enableNotifications"
             (valueChange)="sendEnableNotifications()"
-            label="Enable slack notification"
+            label="Enable Slack notifications"
           ></app-boolean-slider>
         </div>
-        <div class="mb-5">
+        <div>
           <app-input-text
             [(value)]="slackConfiguration.comicVaultBaseUrl"
             (valueChange)="resetSlackStatus$.next()"
@@ -180,7 +194,7 @@
             helpMessage="Fill in your ComicVault app’s domain or local IP to generate direct Slack notification links"
           ></app-input-text>
         </div>
-        <div class="mb-5">
+        <div>
           <app-input-text
             [(value)]="slackConfiguration.slackWebHook"
             (valueChange)="resetSlackStatus$.next()"
@@ -188,7 +202,7 @@
             id="slackWebHook"
           ></app-input-text>
         </div>
-        <div class="flex justify-end">
+        <div class="cv-settings-submit">
           <app-test-button
             test="slack"
             [payload]="slackConfiguration"
@@ -197,33 +211,40 @@
         </div>
       </div>
     </div>
-    <app-expander-button
+    </section>
+    <section class="cv-settings-section"
       appHideRoles
-      [appHideForRoles]="[Role.Owner, Role.Contributor, Role.Requester, Role.Viewer]"
+      [appHideForRoles]="[Role.Owner, Role.Contributor, Role.Requester, Role.Viewer]">
+      <app-expander-button
       title="Comic Providers"
       (buttonClicked)="toggleComicProviders()"
-    ></app-expander-button>
-    <div [ngClass]="{ hidden: !showComicProviders }">
-      <div class="flex flex-col p-5 border border-settings-menu-border">
-        <div class="mb-5">
+        [settingsStyle]="true"
+        [open]="showComicProviders"
+        description="Provider connection and request limits"
+        panelId="settings-showComicProviders"
+      ></app-expander-button>
+      <div id="settings-showComicProviders" [hidden]="!showComicProviders">
+      <div class="cv-settings-panel">
+        <div>
           <h2 class="text-lg text-generic-text mb-2">GetComics</h2>
-          <div class="p-4 border border-settings-menu-border rounded-lg">
+          <div class="cv-settings-provider">
             <app-input-text
               [(value)]="getcomicsBaseUrl"
               title="Base URL"
-              id="'getcomicsBaseUrl"
+              id="getcomicsBaseUrl"
             ></app-input-text>
-            <div class="flex gap-4 mt-4">
-              <p class="block mb-2 text-sm font-medium text-generic-text">Requests per second</p>
+            <div class="cv-settings-row">
+              <label class="cv-settings-label" for="getComicsRequestsPerSecond">Requests per second</label>
               <app-help-button
                 message="Adjust the number of requests per second. Setting this too high may cause 'Too Many Requests' errors. A value of 1 means one request per second, 0.5 means one request every two seconds, etc."
               ></app-help-button>
             </div>
             <app-digit-input
               id="getComicsRequestsPerSecond"
+              accessibleLabel="Requests per second"
               [(value)]="getComicsRequestsPerSecond"
             ></app-digit-input>
-            <div class="flex justify-end">
+            <div class="cv-settings-submit">
               <app-test-button
                 test="getcomicsBaseUrl"
                 [payload]="{
@@ -236,24 +257,30 @@
         </div>
       </div>
     </div>
-    <app-expander-button
+    </section>
+    <section class="cv-settings-section"
       appHideRoles
-      [appHideForRoles]="[Role.Owner, Role.Contributor, Role.Requester, Role.Viewer]"
+      [appHideForRoles]="[Role.Owner, Role.Contributor, Role.Requester, Role.Viewer]">
+      <app-expander-button
       title="ComicVine"
       (buttonClicked)="toggleShowComicVine()"
-    ></app-expander-button>
-    <div [ngClass]="{ hidden: !showComicVine }">
-      <div class="flex flex-col p-5 border border-settings-menu-border">
-        <div class="my-5">
+        [settingsStyle]="true"
+        [open]="showComicVine"
+        description="Metadata integration and API key"
+        panelId="settings-showComicVine"
+      ></app-expander-button>
+      <div id="settings-showComicVine" [hidden]="!showComicVine">
+      <div class="cv-settings-panel">
+        <div>
           <app-input-text
             [(value)]="comicVineAPIKey"
             (valueChange)="resetComicVineStatus$.next()"
-            title="ComicVine api key"
+            title="ComicVine API key"
             id="comicVineApiKey"
             helpMessage="Set your ComicVine API key to enable ComicVine metadata fetching. You can obtain an API key from the ComicVine website"
           ></app-input-text>
         </div>
-        <div class="flex justify-end">
+        <div class="cv-settings-submit">
           <app-test-button
             test="comicvine"
             [payload]="comicVineAPIKey"
@@ -262,15 +289,21 @@
         </div>
       </div>
     </div>
-    <app-expander-button
+    </section>
+    <section class="cv-settings-section"
       appHideRoles
-      [appHideForRoles]="[Role.Owner, Role.Contributor, Role.Requester, Role.Viewer]"
+      [appHideForRoles]="[Role.Owner, Role.Contributor, Role.Requester, Role.Viewer]">
+      <app-expander-button
       title="JDownloader"
       (buttonClicked)="toggleJDownloader()"
-    ></app-expander-button>
-    <div [ngClass]="{ hidden: !showJDownloader }">
-      <div class="flex flex-col p-5 border border-settings-menu-border">
-        <div class="my-5">
+        [settingsStyle]="true"
+        [open]="showJDownloader"
+        description="Download paths and cleanup"
+        panelId="settings-showJDownloader"
+      ></app-expander-button>
+      <div id="settings-showJDownloader" [hidden]="!showJDownloader">
+      <div class="cv-settings-panel">
+        <div>
           <app-input-text
             [(value)]="jdownloaderConfiguration.jdownloaderCrawljobPath"
             (valueChange)="resetJdownloaderStatus$.next()"
@@ -279,27 +312,26 @@
             helpMessage="Folder path where crawl jobs are added for JDownloader (as seen inside the ComicVault Docker container if applicable)"
           ></app-input-text>
         </div>
-        <div class="my-5">
+        <div>
           <app-input-text
             [(value)]="jdownloaderConfiguration.jdownloaderOutputPath"
             (valueChange)="resetJdownloaderStatus$.next()"
-            title=" JDownloader output path"
+            title="JDownloader output path"
             id="outputPath"
             helpMessage="Folder path where JDownloader outputs downloads. Set this to match ComicVault’s main Comics path (considering Docker specifics)"
           ></app-input-text>
         </div>
-        <div class="flex gap-4">
+        <div class="cv-settings-row">
           <app-boolean-slider
-            class="mb-5"
             type="ngModel"
             [(value)]="jdownloaderConfiguration.deleteFolderOutputFolder"
-            label="Delete output folder when finish"
+            label="Delete output folder when finished"
           ></app-boolean-slider>
           <app-help-button
             message="ComicVault will delete JDownloader’s output download folder contents (does not remove jobs from JDownloader)"
           ></app-help-button>
         </div>
-        <div class="flex justify-end">
+        <div class="cv-settings-submit">
           <app-test-button
             test="jdownloader"
             [payload]="jdownloaderConfiguration"
@@ -308,20 +340,25 @@
         </div>
       </div>
     </div>
-    <app-expander-button
+    </section>
+    <section class="cv-settings-section"
       appHideRoles
-      [appHideForRoles]="[Role.Owner, Role.Contributor, Role.Requester, Role.Viewer]"
+      [appHideForRoles]="[Role.Owner, Role.Contributor, Role.Requester, Role.Viewer]">
+      <app-expander-button
       title="Advanced"
-      [bottomBorder]="true"
       (buttonClicked)="toggleAdvanced()"
-    ></app-expander-button>
-    <div [ngClass]="{ hidden: !showAdvanced }">
-      <div class="p-5 border border-t-0 border-settings-menu-border rounded-b-lg">
-        <div class="mb-5 mt-5">
-          <div class="flex flex-col md:flex-row gap-2 w-fit">
+        [settingsStyle]="true"
+        [open]="showAdvanced"
+        description="Server information, jobs and logs"
+        panelId="settings-showAdvanced"
+      ></app-expander-button>
+      <div id="settings-showAdvanced" [hidden]="!showAdvanced">
+      <div class="cv-settings-panel">
+        <div class="cv-settings-group">
+          <div class="cv-settings-actions">
             <button
               type="button"
-              class="button-text inline-flex items-center button-primary me-2 mb-2"
+              class="cv-settings-action"
               (click)="displayServerInfo()"
             >
               <svg
@@ -343,7 +380,7 @@
             </button>
             <button
               type="button"
-              class="button-text inline-flex items-center button-primary me-2 mb-2"
+              class="cv-settings-action"
               routerLink="jobs"
             >
               <svg
@@ -365,7 +402,7 @@
             </button>
             <button
               type="button"
-              class="button-text inline-flex items-center button-primary me-2 mb-2"
+              class="cv-settings-action"
               routerLink="logs"
             >
               <svg
@@ -387,7 +424,7 @@
             </button>
             <button
               type="button"
-              class="button-text inline-flex items-center button-primary me-2 mb-2"
+              class="cv-settings-action"
               routerLink="exceptions"
             >
               <svg
@@ -409,6 +446,8 @@
           </div>
         </div>
       </div>
+    </div>
+    </section>
     </div>
   </div>
 </div>

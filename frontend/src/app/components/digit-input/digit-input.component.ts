@@ -12,6 +12,7 @@ export class DigitInputComponent {
   @Output() valueChange = new EventEmitter<number>();
   @Input({ required: true }) id: string = '';
   @Input({ required: false }) large = false;
+  @Input() accessibleLabel: string | undefined;
 
   onNgModelChange(value: any) {
     this.value = Number(value); // convert to number safely

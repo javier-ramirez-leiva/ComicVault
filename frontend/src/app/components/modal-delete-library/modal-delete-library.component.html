@@ -1,6 +1,6 @@
-<div class="relative pt-10 pb-4 bg-modal-background rounded-lg shadow-sm">
+<div class="relative pt-10 pb-4 cv-settings-dialog bg-modal-background">
   <app-cross-modal (onCloseClick)="cancel()"></app-cross-modal>
-  <div class="p-4 md:p-5 text-center">
+  <div class="p-4 md:p-5 text-start">
     <svg
       class="mx-auto mb-4 text-modal-message-warning w-12 h-12"
       aria-hidden="true"
@@ -20,7 +20,7 @@
       Are you sure you want to delete read comics? Select one option
     </h3>
   </div>
-  <div class="p-4 md:p-5 text-center">
+  <div class="p-4 md:p-5 text-start">
     <div class="relative flex items-center mb-4">
       <app-radio-button-input
         label="Read by everyone"
@@ -46,7 +46,7 @@
       ></app-radio-button-input>
     </div>
   </div>
-  <div class="flex justify-center gap-6">
+  <div class="flex flex-wrap justify-end gap-2 px-4">
     <button (click)="confirm()" type="button" class="button-text button-error">
       Yes, I'm sure
     </button>

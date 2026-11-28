@@ -1,17 +1,17 @@
 @if (helpMessage) {
-  <div class="flex gap-4 items-center">
+  <div class="cv-field-heading flex gap-2 items-center">
     @if (title) {
-      <p class="block mb-2 text-sm font-medium text-generic-text h-full text-center">
+      <label [attr.for]="id" class="block text-sm font-medium text-generic-text">
         {{ title }}
-      </p>
+      </label>
     }
     <app-help-button [message]="helpMessage"></app-help-button>
   </div>
 } @else {
   @if (title) {
-    <p class="block mb-2 text-sm font-medium text-generic-text">
+    <label [attr.for]="id" class="block mb-2 text-sm font-medium text-generic-text">
       {{ title }}
-    </p>
+    </label>
   }
 }
 
@@ -20,7 +20,7 @@
   (ngModelChange)="onValueChange($event)"
   [id]="id"
   [autocomplete]="'off'"
-  class="bg-input-background border border-input-border text-generic-text text-sm rounded-lg focus:ring-input-field-focus-ring focus:border-input-button-focus-ring block w-full p-2.5"
+  class="cv-text-input bg-input-background border border-input-border text-generic-text text-sm rounded-lg focus:ring-input-field-focus-ring focus:border-input-button-focus-ring block w-full p-2.5"
   required
   [disabled]="disabled"
   [readOnly]="disabled"

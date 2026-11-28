@@ -1,11 +1,12 @@
 <div
-  class="relative flex items-center"
+  class="cv-stepper relative flex items-center"
   [ngClass]="{
     'max-w-[16rem]': large === true,
     'max-w-[8rem]': !large,
   }"
 >
   <button
+    aria-label="Decrease value"
     (click)="onNgModelChange(value - 1)"
     type="button"
     class="bg-input-background hover:bg-input-hover border-input-border border rounded-s-lg p-3 h-11 focus:ring-input-button-focus-ring focus:ring-2 focus:outline-hidden cursor-pointer"
@@ -30,12 +31,14 @@
     type="number"
     step="any"
     [id]="id"
+    [attr.aria-label]="accessibleLabel || null"
     class="no-arrows bg-input-background border border-input-border h-11 text-center text-generic-text text-sm focus:ring-input-field-focus-ring focus:border-input-field-focus-ring block w-full py-2.5 placeholder-input-placeholder"
     placeholder="1"
     [(ngModel)]="value"
     (ngModelChange)="onNgModelChange($event)"
   />
   <button
+    aria-label="Increase value"
     (click)="onNgModelChange(value + 1)"
     type="button"
     class="bg-input-background hover:bg-input-hover border-input-border border rounded-e-lg p-3 h-11 focus:ring-input-button-focus-ring focus:ring-2 focus:outline-hidden cursor-pointer"

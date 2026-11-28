@@ -12,9 +12,19 @@ export class ExpanderButtonComponent {
   @Input({ required: false }) bottomBorder = false;
   @Output() buttonClicked = new EventEmitter<void>();
 
+  @Input() settingsStyle = false;
+  @Input() open: boolean | undefined;
+  @Input() description = '';
+  @Input() panelId: string | undefined;
+
   expanded = signal(false);
+  isExpanded(): boolean {
+    return this.open ?? this.expanded();
+  }
   onButtonClick(): void {
-    this.expanded.update((value) => !value);
+    if (this.open === undefined) {
+      this.expanded.update((value) => !value);
+    }
     this.buttonClicked.emit();
   }
 }
