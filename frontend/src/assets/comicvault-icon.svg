@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 192 192" color="#1763a0" role="img" aria-label="ComicVault">
+  <title>ComicVault</title>
+  <defs>
+    <mask id="door-cut">
+      <rect width="192" height="192" fill="white"/>
+      <path d="M113 78 145 46 M116 116 144 144 M126 124 V143 Q126 156 96 156" fill="none" stroke="black" stroke-width="12" stroke-linecap="round" stroke-linejoin="round"/>
+      <circle cx="96" cy="96" r="37" fill="black"/>
+    </mask>
+  </defs>
+  <circle cx="96" cy="96" r="94" fill="var(--cv-logo-rim, currentColor)" opacity=".15"/>
+  <circle cx="96" cy="96" r="92" fill="none" stroke="currentColor" stroke-width="2"/>
+  <circle cx="96" cy="96" r="78" fill="currentColor"/>
+  <g fill="none" stroke="var(--cv-logo-detail, white)" stroke-width="3" opacity=".34" mask="url(#door-cut)">
+    <circle cx="96" cy="96" r="70"/><circle cx="96" cy="96" r="61"/><circle cx="96" cy="96" r="52"/><circle cx="96" cy="96" r="43"/>
+  </g>
+  <g fill="var(--cv-logo-detail, white)" opacity=".85">
+    <circle cx="96" cy="23" r="2.7"/><circle cx="96" cy="169" r="2.7"/><circle cx="23" cy="96" r="2.7"/><circle cx="169" cy="96" r="2.7"/>
+    <circle cx="59.5" cy="32.8" r="2.7"/><circle cx="132.5" cy="32.8" r="2.7"/><circle cx="32.8" cy="59.5" r="2.7"/><circle cx="159.2" cy="59.5" r="2.7"/><circle cx="32.8" cy="132.5" r="2.7"/><circle cx="159.2" cy="132.5" r="2.7"/><circle cx="59.5" cy="159.2" r="2.7"/><circle cx="132.5" cy="159.2" r="2.7"/>
+  </g>
+  <g fill="none" stroke="var(--cv-logo-detail, white)" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M119 73 145 47 M119 119 144 144 M126 127 V143 Q126 156 96 156"/>
+    <path d="M96 62 125 79 V113 L96 130 67 113 V79Z"/>
+  </g>
+  <path d="M96 75 114 86 V106 L96 117 78 106 V86Z" fill="var(--cv-logo-detail, white)" opacity=".20" stroke="var(--cv-logo-detail, white)" stroke-width="3" stroke-linejoin="round"/>
+</svg>

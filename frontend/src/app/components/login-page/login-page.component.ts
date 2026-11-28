@@ -1,3 +1,4 @@
+import { ComicvaultLogoComponent } from '../comicvault-logo/comicvault-logo.component';
 import { Component, OnInit, inject } from '@angular/core';
 import { AuthService } from 'services';
 
@@ -5,7 +6,6 @@ import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { catchError, throwError } from 'rxjs';
 import { NotifierService } from 'services';
-import { DarkmodeService } from 'services';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { InputTextComponent } from '../input-text/input-text.component';
@@ -13,7 +13,7 @@ import { InputTextComponent } from '../input-text/input-text.component';
 @UntilDestroy()
 @Component({
   selector: 'app-login-page',
-  imports: [FormsModule, InputTextComponent],
+  imports: [ComicvaultLogoComponent, FormsModule, InputTextComponent],
   templateUrl: './login-page.component.html',
 })
 export class LoginPageComponent implements OnInit {
@@ -23,18 +23,13 @@ export class LoginPageComponent implements OnInit {
   password: string = '';
   router: Router = inject(Router);
   notifier: NotifierService = inject(NotifierService);
-  darkMode: DarkmodeService = inject(DarkmodeService);
   deviceDetectorService: DeviceDetectorService = inject(DeviceDetectorService);
-  iconSrc: string = '';
 
   ngOnInit(): void {
     this.authService.signOut();
     const deviceInfo = this.deviceDetectorService.getDeviceInfo();
     this.device = deviceInfo.device;
 
-    this.darkMode.isDarkMode$.pipe(untilDestroyed(this)).subscribe((dark) => {
-      this.iconSrc = dark ? 'assets/icon-192x192.png' : 'assets/icon-light-192x192.png';
-    });
   }
 
   login() {
