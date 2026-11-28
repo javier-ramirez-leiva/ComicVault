@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" class="dark" data-palette="ocean">
   <head>
     <meta charset="utf-8" />
     <title>ComicVault</title>
@@ -8,13 +8,23 @@
       name="viewport"
       content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no"
     />
+    <script>
+      // Restore appearance before Angular renders the first frame.
+      try {
+        const root = document.documentElement;
+        root.classList.toggle('dark', JSON.parse(localStorage.getItem('darkMode')) !== 'null');
+        const palette = JSON.parse(localStorage.getItem('colorPalette'));
+        if (['ocean', 'forest', 'violet', 'sunset'].includes(palette)) {
+          root.dataset.palette = palette;
+        }
+      } catch { /* Keep the default appearance if storage is unavailable. */ }
+    </script>
     <link rel="icon" type="image/x-icon" href="favicon.ico" />
     <link rel="manifest" href="manifest.webmanifest" />
   </head>
-  <body id="body" class="bg-slate-950">
+  <body id="body" class="bg-background">
     <app-root></app-root>
     <noscript> Please enable JavaScript to continue using this application. </noscript>
 
-    <script></script>
   </body>
 </html>

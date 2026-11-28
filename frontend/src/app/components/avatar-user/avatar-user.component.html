@@ -3,7 +3,7 @@
     class="relative inline-flex items-center justify-center size-8 overflow-hidden rounded-full mr-2"
     [ngStyle]="{ 'background-color': color }"
   >
-    <span class="font-normal text-lg text-slate-200">{{ username[0].toUpperCase() }}</span>
+    <span class="font-normal text-lg text-button-avatar-text">{{ username[0].toUpperCase() }}</span>
   </div>
   {{ username }}
 }
@@ -16,7 +16,7 @@
     (click)="onClickHandler()"
   >
     @if (username) {
-      <span class="font-medium text-slate-200">
+      <span class="font-medium text-button-avatar-text">
         {{ username[0].toUpperCase() }}
       </span>
     }

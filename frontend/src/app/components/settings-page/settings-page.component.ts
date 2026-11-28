@@ -51,7 +51,7 @@ import { ModalServerInfoComponent } from '../modal-server-info/modal-server-info
 })
 export class SettingsPageComponent {
   showServer: boolean = false;
-  showTheme: boolean = false;
+  showTheme: boolean = true;
   showSlack: boolean = false;
   showComicProviders: boolean = false;
   showComicVine: boolean = false;
@@ -179,10 +179,6 @@ export class SettingsPageComponent {
 
   toggleJDownloader() {
     this.showJDownloader = !this.showJDownloader;
-  }
-
-  toggleDarkMode() {
-    this.darkModeService.updateDarkMode();
   }
 
   updatePaginationRatio() {

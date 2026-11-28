@@ -114,16 +114,31 @@
         </div>
       </div>
     </div>
-    <app-expander-button title="UI" (buttonClicked)="toggleShowTheme()"></app-expander-button>
+    <app-expander-button title="Appearance & UI" (buttonClicked)="toggleShowTheme()"></app-expander-button>
     <div [ngClass]="{ hidden: !showTheme }">
       <div class="flex flex-col p-5 border border-settings-menu-border">
         <app-boolean-slider
           class="mb-5"
           type="ngModel"
           [(value)]="darkMode"
-          (valueChange)="toggleDarkMode()"
+          (valueChange)="darkModeService.setDarkMode($event)"
           label="Dark Mode"
         ></app-boolean-slider>
+        <fieldset class="mb-6">
+          <legend class="mb-2 text-sm font-medium text-generic-text">Color theme</legend>
+          <div class="cv-palette-grid">
+            @for (palette of darkModeService.palettes; track palette.id) {
+              <label class="cv-palette-option" [attr.data-preview-palette]="palette.id">
+                <input type="radio" name="colorPalette" [value]="palette.id"
+                  [checked]="darkModeService.palette() === palette.id"
+                  (change)="darkModeService.setPalette(palette.id)" />
+                <span class="cv-palette-swatch" aria-hidden="true"></span>
+                <span>{{ palette.label }}</span>
+              </label>
+            }
+          </div>
+          <p class="mt-2 text-sm text-generic-text">Applies to both light and dark mode. Saved on this browser.</p>
+        </fieldset>
         <div class="flex gap-4">
           <p class="block mb-2 text-sm font-medium text-generic-text">
             How many provider pages fit into one app page

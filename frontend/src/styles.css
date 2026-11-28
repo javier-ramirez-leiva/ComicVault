@@ -4,272 +4,473 @@
 
 @custom-variant dark (&:is(.dark *));
 
-@theme {
-  /*General*/
-  --color-background: var(--color-slate-200);
-  --color-topBar: oklch(92.9% 0.013 255.508 / 0.95);
-  --color-topBar-left-corner: var(--color-slate-800);
+/* THEME CONFIGURATION — change these values, not the component aliases below.
+ * All existing Tailwind utility names remain available. The .dark class is
+ * managed by the existing DarkmodeService. Accent hue uses OKLCH degrees.
+ */
+:root {
+  color-scheme: light;
+  --accent-hue: 245;
+  --accent-chroma: 0.15;
+  --ui-canvas: #f3f5f7;
+  --ui-surface: #ffffff;
+  --ui-raised: #f8fafc;
+  --ui-hover: #e9edf2;
+  --ui-border: #d5dce5;
+  --ui-control-border: #8492a5;
+  --ui-text: #192333;
+  --ui-muted: #526174;
+  --ui-accent: oklch(48% var(--accent-chroma) var(--accent-hue));
+  --ui-action: oklch(48% var(--accent-chroma) var(--accent-hue));
+  --ui-action-hover: oklch(41% var(--accent-chroma) var(--accent-hue));
+  --ui-selected: color-mix(in srgb, var(--ui-accent) 11%, var(--ui-surface));
+  --ui-focus: var(--ui-accent);
+  --ui-success: #166534;
+  --ui-danger: #b42332;
+  --ui-warning: #92400e;
+  --ui-overlay: rgb(10 17 28 / 55%);
+  --ui-cover-overlay: rgb(15 23 35 / 94%);
+  --ui-on-action: #ffffff;
+}
 
-  /*Reader*/
-  --color-reader-background: var(--color-slate-50);
+html.dark {
+  color-scheme: dark;
+  --ui-canvas: #10151e;
+  --ui-surface: #171e29;
+  --ui-raised: #202936;
+  --ui-hover: #293545;
+  --ui-border: #334154;
+  --ui-control-border: #718198;
+  --ui-text: #edf2f8;
+  --ui-muted: #a7b5c7;
+  --ui-accent: oklch(79% min(0.12, var(--accent-chroma)) var(--accent-hue));
+  --ui-action: oklch(48% var(--accent-chroma) var(--accent-hue));
+  --ui-action-hover: oklch(42% var(--accent-chroma) var(--accent-hue));
+  --ui-success: #86efac;
+  --ui-danger: #fda4af;
+  --ui-warning: #fcd34d;
+  --ui-overlay: rgb(0 0 0 / 72%);
+}
 
-  /*Login menu*/
-  --color-login-background: var(--color-slate-400);
-  --color-login-border: var(--color-slate-700);
+/* Named palettes: change hue and chroma here. Mode and palette are independent. */
+html[data-palette='ocean'],
+[data-preview-palette='ocean'] {
+  --accent-hue: 245;
+  --accent-chroma: 0.15;
+}
+html[data-palette='forest'],
+[data-preview-palette='forest'] {
+  --accent-hue: 160;
+  --accent-chroma: 0.12;
+}
+html[data-palette='violet'],
+[data-preview-palette='violet'] {
+  --accent-hue: 295;
+  --accent-chroma: 0.15;
+}
+html[data-palette='sunset'],
+[data-preview-palette='sunset'] {
+  --accent-hue: 50;
+  --accent-chroma: 0.12;
+}
 
-  /*Nav menu*/
-  --color-nav-menu-background: var(--color-slate-300);
-  --color-nav-menu-button-active: var(--color-slate-200);
-  --color-nav-menu-button-text: var(--color-slate-900);
-  --color-nav-menu-button-border: var(--color-slate-400);
-  --color-nav-menu-section-border: var(--color-slate-500);
-  --color-nav-menu-bottom-icon: var(--color-slate-100);
-  --color-nav-menu-bottom-icon-active: var(--color-sky-700);
-  --color-nav-menu-bottom-text: var(--color-slate-900);
-  --color-nav-menu-bottom-text-active: var(--color-sky-700);
+/* Shared status and derived colors. Keep these independent of theme mode. */
+:root,
+html.dark {
+  --ui-success-action: #166534;
+  --ui-danger-action: #b42332;
+  --ui-warning-action: #92400e;
+  --ui-success-hover: #14532d;
+  --ui-danger-hover: #941b29;
+  --ui-warning-hover: #78350f;
+  --ui-success-soft: color-mix(in srgb, var(--ui-success) 13%, var(--ui-surface));
+  --ui-danger-soft: color-mix(in srgb, var(--ui-danger) 13%, var(--ui-surface));
+  --ui-warning-soft: color-mix(in srgb, var(--ui-warning) 13%, var(--ui-surface));
+  --ui-cover-text: #f8fafc;
+  --ui-cover-link: #b6dcff;
+}
 
-  /*Texts*/
-  --color-white-text: var(--color-slate-100);
-  --color-generic-text: var(--color-slate-900);
-  --color-text-whole-page: var(--color-sky-800);
-  --color-text-whole-page-error: oklch(50.5% 0.213 27.518);
-  /*red-700*/
-  --color-text-whole-page-secondary: var(--color-slate-900);
-  --color-text-box-background: var(--color-slate-100);
-  --color-text-box-text: var(--color-slate-900);
+/* Component aliases — declared at runtime so all modes resolve correctly.
+ * @theme inline below exposes these aliases to Tailwind v4 utilities. */
+:root,
+html.dark {
+  --cv-background: var(--ui-canvas);
+  --cv-topBar: color-mix(in srgb, var(--ui-surface) 96%, transparent);
+  --cv-topBar-left-corner: var(--ui-muted);
+  --cv-reader-background: var(--ui-canvas);
+  --cv-login-background: var(--ui-surface);
+  --cv-login-border: var(--ui-control-border);
+  --cv-nav-menu-background: var(--ui-surface);
+  --cv-nav-menu-button-active: var(--ui-selected);
+  --cv-nav-menu-button-text: var(--ui-text);
+  --cv-nav-menu-button-border: var(--ui-border);
+  --cv-nav-menu-section-border: var(--ui-border);
+  --cv-nav-menu-bottom-icon: var(--ui-muted);
+  --cv-nav-menu-bottom-icon-active: var(--ui-accent);
+  --cv-nav-menu-bottom-text: var(--ui-text);
+  --cv-nav-menu-bottom-text-active: var(--ui-accent);
+  --cv-white-text: var(--ui-on-action);
+  --cv-generic-text: var(--ui-text);
+  --cv-text-whole-page: var(--ui-accent);
+  --cv-text-whole-page-error: var(--ui-danger);
+  --cv-text-whole-page-secondary: var(--ui-text);
+  --cv-text-box-background: var(--ui-raised);
+  --cv-text-box-text: var(--ui-text);
+  --cv-loading-spinner-primary: var(--ui-control-border);
+  --cv-loading-spinner-secondary: var(--ui-accent);
+  --cv-loading-bar-primary: var(--ui-control-border);
+  --cv-loading-bar-secondary: var(--ui-accent);
+  --cv-cover-card-pulsing: var(--ui-hover);
+  --cv-cover-card-background: var(--ui-cover-overlay);
+  --cv-cover-card-title: var(--ui-cover-text);
+  --cv-cover-card-text: var(--ui-cover-link);
+  --cv-cover-card-border: var(--ui-border);
+  --cv-cover-card-active-border: var(--ui-focus);
+  --cv-cover-card-read: var(--ui-success-action);
+  --cv-cover-card-download: var(--ui-action);
+  --cv-cover-card-download-border: var(--ui-focus);
+  --cv-cover-card-new: var(--ui-warning-action);
+  --cv-cover-card-number-download: var(--ui-action);
+  --cv-cover-card-number-read: var(--ui-warning-action);
+  --cv-cover-card-number-read-border: var(--ui-warning);
+  --cv-cover-card-badge-text: var(--ui-on-action);
+  --cv-cover-card-edit-button: var(--ui-action);
+  --cv-cover-card-progress-background: var(--ui-border);
+  --cv-cover-card-dragger-background: var(--ui-hover);
+  --cv-table-text: var(--ui-muted);
+  --cv-table-title: var(--ui-text);
+  --cv-table-link: var(--ui-accent);
+  --cv-table-odd-background: var(--ui-surface);
+  --cv-table-even-background: var(--ui-raised);
+  --cv-table-row-not-selected-background: var(--ui-surface);
+  --cv-table-row-selected-background: var(--ui-selected);
+  --cv-table-border: var(--ui-border);
+  --cv-table-header-background: var(--ui-raised);
+  --cv-table-header-text: var(--ui-text);
+  --cv-modal-background: var(--ui-surface);
+  --cv-modal-title-text: var(--ui-text);
+  --cv-modal-title-cross-text: var(--ui-muted);
+  --cv-modal-title-cross-hover: var(--ui-hover);
+  --cv-modal-title-cross-hover-text: var(--ui-text);
+  --cv-modal-message-warning: var(--ui-muted);
+  --cv-modal-message-text: var(--ui-muted);
+  --cv-modal-blurry-background: var(--ui-overlay);
+  --cv-right-panel-background: var(--ui-surface);
+  --cv-right-panel-text: var(--ui-text);
+  --cv-right-panel-title: var(--ui-muted);
+  --cv-right-panel-title-cross-text: var(--ui-muted);
+  --cv-right-panel-title-cross-hover: var(--ui-hover);
+  --cv-right-panel-title-cross-hover-text: var(--ui-text);
+  --cv-paginator-background: var(--ui-raised);
+  --cv-paginator-text: var(--ui-text);
+  --cv-paginator-hover: var(--ui-hover);
+  --cv-paginator-focus-ring: var(--ui-focus);
+  --cv-severity-success-text: var(--ui-success);
+  --cv-severity-success-background: var(--ui-success-soft);
+  --cv-severity-error-text: var(--ui-danger);
+  --cv-severity-error-background: var(--ui-danger-soft);
+  --cv-severity-warning-text: var(--ui-warning);
+  --cv-severity-warning-background: var(--ui-warning-soft);
+  --cv-severity-info-text: var(--ui-accent);
+  --cv-severity-info-background: var(--ui-selected);
+  --cv-severity-desactivated-text: var(--ui-muted);
+  --cv-severity-desactivated-background: var(--ui-raised);
+  --cv-button-primary-background: var(--ui-action);
+  --cv-button-primary-text: var(--ui-on-action);
+  --cv-button-primary-hover: var(--ui-action-hover);
+  --cv-button-primary-focus-ring: var(--ui-focus);
+  --cv-button-primary-border: var(--ui-focus);
+  --cv-button-success-background: var(--ui-success-action);
+  --cv-button-success-text: var(--ui-on-action);
+  --cv-button-success-hover: var(--ui-success-hover);
+  --cv-button-success-focus-ring: var(--ui-focus);
+  --cv-button-play-background: var(--ui-action);
+  --cv-button-play-text: var(--ui-on-action);
+  --cv-button-play-hover: var(--ui-action-hover);
+  --cv-button-play-focus-ring: var(--ui-focus);
+  --cv-button-error-background: var(--ui-danger-action);
+  --cv-button-error-text: var(--ui-on-action);
+  --cv-button-error-hover: var(--ui-danger-hover);
+  --cv-button-error-focus-ring: var(--ui-focus);
+  --cv-button-deactivated-background: var(--ui-raised);
+  --cv-button-deactivated-text: var(--ui-text);
+  --cv-button-deactivated-hover: var(--ui-hover);
+  --cv-button-deactivated-focus-ring: var(--ui-focus);
+  --cv-button-not-seen-background: var(--ui-raised);
+  --cv-button-not-seen-text: var(--ui-text);
+  --cv-button-not-seen-hover: var(--ui-hover);
+  --cv-button-not-seen-focus-ring: var(--ui-focus);
+  --cv-button-multiselect-background: var(--ui-raised);
+  --cv-button-multiselect-text: var(--ui-text);
+  --cv-button-multiselect-hover: var(--ui-hover);
+  --cv-button-multiselect-focus-ring: var(--ui-focus);
+  --cv-button-edit-background: var(--ui-action);
+  --cv-button-edit-text: var(--ui-on-action);
+  --cv-button-edit-hover: var(--ui-action-hover);
+  --cv-button-edit-focus-ring: var(--ui-focus);
+  --cv-button-edit-ok-background: var(--ui-success-action);
+  --cv-button-edit-ok-text: var(--ui-on-action);
+  --cv-button-edit-ok-hover: var(--ui-success-hover);
+  --cv-button-edit-ok-focus-ring: var(--ui-focus);
+  --cv-button-edit-cancel-background: var(--ui-danger-action);
+  --cv-button-edit-cancel-text: var(--ui-on-action);
+  --cv-button-edit-cancel-hover: var(--ui-danger-hover);
+  --cv-button-edit-cancel-focus-ring: var(--ui-focus);
+  --cv-button-avatar-text: var(--ui-on-action);
+  --cv-slider-border: var(--ui-control-border);
+  --cv-slider-background: var(--ui-control-border);
+  --cv-slider-focus-ring: var(--ui-focus);
+  --cv-slider-active: var(--ui-action);
+  --cv-checkbox-background-inactive: var(--ui-surface);
+  --cv-checkbox-background-active: var(--ui-action);
+  --cv-checkbox-text: var(--ui-on-action);
+  --cv-checkbox-border: var(--ui-control-border);
+  --cv-checkbox-focus-ring: var(--ui-focus);
+  --cv-bar-slider-background: var(--ui-control-border);
+  --cv-settings-menu-background: var(--ui-surface);
+  --cv-settings-menu-button-active: var(--ui-selected);
+  --cv-settings-menu-button-text: var(--ui-text);
+  --cv-settings-menu-border: var(--ui-border);
+  --cv-input-background: var(--ui-surface);
+  --cv-input-hover: var(--ui-hover);
+  --cv-input-border: var(--ui-control-border);
+  --cv-input-button-focus-ring: var(--ui-focus);
+  --cv-input-field-focus-ring: var(--ui-focus);
+  --cv-input-placeholder: var(--ui-muted);
+  --cv-input-icon: var(--ui-muted);
+  --cv-input-radio-background: var(--ui-raised);
+  --cv-input-radio-text: var(--ui-accent);
+  --cv-input-radio-border: var(--ui-control-border);
+  --cv-input-radio-focus-ring: var(--ui-focus);
+  --cv-input-radio-label-text: var(--ui-text);
+  --cv-input-select-background: var(--ui-surface);
+  --cv-input-select-border: var(--ui-control-border);
+  --cv-input-select-text: var(--ui-text);
+  --cv-input-select-focus-ring: var(--ui-focus);
+  --cv-input-color-background: var(--ui-surface);
+  --cv-input-color-border: var(--ui-control-border);
+  --cv-two-choices-active-text: var(--ui-on-action);
+  --cv-two-choices-active-background: var(--ui-action);
+  --cv-two-choices-inactive-text: var(--ui-accent);
+  --cv-two-choices-inactive-background: var(--ui-raised);
+  --cv-notification-success-text: var(--ui-success);
+  --cv-notification-success-background: var(--ui-success-soft);
+  --cv-notification-success-border: var(--ui-border);
+  --cv-notification-error-text: var(--ui-danger);
+  --cv-notification-error-background: var(--ui-danger-soft);
+  --cv-notification-error-border: var(--ui-border);
+  --cv-notification-info-text: var(--ui-accent);
+  --cv-notification-info-background: var(--ui-selected);
+  --cv-notification-info-border: var(--ui-border);
+  --cv-notification-debug-text: var(--ui-muted);
+  --cv-notification-debug-background: var(--ui-raised);
+  --cv-notification-debug-border: var(--ui-border);
+  --cv-notification-warning-text: var(--ui-warning);
+  --cv-notification-warning-background: var(--ui-warning-soft);
+  --cv-notification-warning-border: var(--ui-border);
+  --cv-processing-notification-text: var(--ui-on-action);
+  --cv-processing-notification-icon: var(--ui-on-action);
+  --cv-processing-notification-empty-background: var(--ui-warning-action);
+  --cv-processing-notification-scan-background: var(--ui-success-action);
+  --cv-processing-notification-clean-background: var(--ui-danger-action);
+  --cv-processing-notification-download-background: var(--ui-action);
+  --cv-tag-text: var(--ui-accent);
+  --cv-tag-background: var(--ui-selected);
+  --cv-input-focus-ring: var(--ui-focus);
+}
 
-  /*Spinner*/
-  --color-loading-spinner-primary: var(--color-slate-100);
-  --color-loading-spinner-secondary: var(--color-sky-800);
-
-  /*Loading bar*/
-  --color-loading-bar-primary: var(--color-slate-100);
-  --color-loading-bar-secondary: var(--color-sky-800);
-
-  /*Cover Card*/
-  --color-cover-card-pulsing: var(--color-slate-500);
-  --color-cover-card-background: oklch(27.9% 0.041 260.031 / 0.9);
-  --color-cover-card-title: var(--color-slate-100);
-  --color-cover-card-text: var(--color-sky-600);
-  --color-cover-card-border: var(--color-slate-300);
-  --color-cover-card-active-border: var(--color-sky-600);
-  --color-cover-card-read: oklch(50.8% 0.118 165.612 / 0.95);
-  /*emerald-700*/
-  --color-cover-card-download: oklch(50% 0.134 242.749 / 0.95);
-  --color-cover-card-download-border: var(--color-sky-500);
-  /*sky-700*/
-  --color-cover-card-new: oklch(66.6% 0.179 58.318 / 1);
-  /*amber-600*/
-  --color-cover-card-number-download: oklch(50% 0.134 242.749 / 0.95);
-  /*sky-700*/
-  --color-cover-card-number-read: oklch(66.6% 0.179 58.318 / 0.95);
-  --color-cover-card-number-read-border: var(--color-amber-500);
-  /*amber-600*/
-  --color-cover-card-badge-text: var(--color-slate-100);
-  --color-cover-card-edit-button: var(--color-violet-700);
-  /*emerald-700*/
-  --color-cover-card-progress-background: var(--color-slate-100);
-  --color-cover-card-dragger-background: var(--color-slate-400);
-
-  /*Tables*/
-  --color-table-text: var(--color-slate-500);
-  --color-table-title: var(--color-slate-900);
-  --color-table-link: var(--color-sky-600);
-  --color-table-odd-background: var(--color-slate-100);
-  --color-table-even-background: var(--color-slate-300);
-  --color-table-row-not-selected-background: var(--color-slate-100);
-  --color-table-row-selected-background: var(--color-slate-300);
-  --color-table-border: var(--color-slate-400);
-
-  --color-table-header-background: var(--color-slate-400);
-  --color-table-header-text: var(--color-slate-900);
-
-  /*Modals*/
-  --color-modal-background: var(--color-slate-200);
-  --color-modal-title-text: var(--color-slate-900);
-  --color-modal-title-cross-text: var(--color-slate-400);
-  --color-modal-title-cross-hover: var(--color-slate-200);
-  --color-modal-title-cross-hover-text: var(--color-slate-900);
-  --color-modal-message-warning: var(--color-slate-400);
-  --color-modal-message-text: var(--color-slate-500);
-  --color-modal-blurry-background: oklch(20.8% 0.042 265.755 / 0.5);
-
-  /*Right Panel*/
-  --color-right-panel-background: var(--color-slate-100);
-  --color-right-panel-text: var(--color-slate-950);
-  --color-right-panel-title: var(--color-slate-400);
-  --color-right-panel-title-cross-text: var(--color-slate-400);
-  --color-right-panel-title-cross-hover: var(--color-slate-200);
-  --color-right-panel-title-cross-hover-text: var(--color-slate-900);
-
-  /*Paginator*/
-  --color-paginator-background: var(--color-slate-300);
-  --color-paginator-text: var(--color-slate-800);
-  --color-paginator-hover: var(--color-slate-500);
-  --color-paginator-focus-ring: var(--color-slate-50);
-
-  /*Severities*/
-  --color-severity-success-text: var(--color-emerald-800);
-  --color-severity-success-background: var(--color-emerald-200);
-  --color-severity-error-text: oklch(44.4% 0.177 26.899);
-  --color-severity-error-background: oklch(88.5% 0.062 18.334);
-  --color-severity-warning-text: var(--color-amber-800);
-  --color-severity-warning-background: var(--color-amber-200);
-  --color-severity-info-text: var(--color-sky-800);
-  --color-severity-info-background: var(--color-sky-200);
-  --color-severity-desactivated-text: var(--color-slate-100);
-  --color-severity-desactivated-background: var(--color-slate-500);
-
-  /**Buttons**/
-  /*Buttons primary*/
-  --color-button-primary-background: var(--color-sky-700);
-  --color-button-primary-text: var(--color-slate-100);
-  --color-button-primary-hover: var(--color-sky-600);
-  --color-button-primary-focus-ring: var(--color-sky-300);
-  --color-button-primary-border: var(--color-sky-500);
-
-  /*Buttons success*/
-  --color-button-success-background: var(--color-emerald-700);
-  --color-button-success-text: var(--color-slate-100);
-  --color-button-success-hover: var(--color-emerald-600);
-  --color-button-success-focus-ring: var(--color-emerald-300);
-
-  /*Buttons play*/
-  --color-button-play-background: var(--color-amber-600);
-  --color-button-play-text: var(--color-slate-100);
-  --color-button-play-hover: var(--color-amber-700);
-  --color-button-play-focus-ring: var(--color-amber-400);
-
-  /*Buttons error*/
-  --color-button-error-background: oklch(50.5% 0.213 27.518);
-  --color-button-error-text: var(--color-slate-100);
-  --color-button-error-hover: oklch(57.7% 0.245 27.325);
-  --color-button-error-focus-ring: oklch(63.7% 0.237 25.331);
-
-  /*Buttons deactivated*/
-  --color-button-deactivated-background: var(--color-slate-100);
-  --color-button-deactivated-text: var(--color-slate-900);
-  --color-button-deactivated-hover: var(--color-slate-300);
-  --color-button-deactivated-focus-ring: var(--color-slate-500);
-
-  /*Buttons not seen*/
-  --color-button-not-seen-background: var(--color-slate-400);
-  --color-button-not-seen-text: var(--color-slate-100);
-  --color-button-not-seen-hover: var(--color-slate-500);
-  --color-button-not-seen-focus-ring: var(--color-slate-600);
-
-  /*Buttons not multiselect*/
-  --color-button-multiselect-background: var(--color-slate-600);
-  --color-button-multiselect-text: var(--color-slate-100);
-  --color-button-multiselect-hover: var(--color-slate-400);
-  --color-button-multiselect-focus-ring: var(--color-slate-700);
-
-  /*Buttons edit*/
-  --color-button-edit-background: var(--color-violet-700);
-  --color-button-edit-text: var(--color-slate-100);
-  --color-button-edit-hover: var(--color-violet-600);
-  --color-button-edit-focus-ring: var(--color-violet-300);
-
-  --color-button-edit-ok-background: var(--color-emerald-700);
-  --color-button-edit-ok-text: var(--color-slate-100);
-  --color-button-edit-ok-hover: var(--color-emerald-600);
-  --color-button-edit-ok-focus-ring: var(--color-emerald-300);
-
-  --color-button-edit-cancel-background: oklch(50.5% 0.213 27.518);
-  --color-button-edit-cancel-text: var(--color-slate-100);
-  --color-button-edit-cancel-hover: oklch(57.7% 0.245 27.325);
-  --color-button-edit-cancel-focus-ring: oklch(63.7% 0.237 25.331);
-
-  /*Avatar text*/
-  --color-button-avatar-text: var(--color-slate-200);
-
-  /*Slider*/
-  --color-slider-border: var(--color-slate-50);
-  --color-slider-background: var(--color-slate-400);
-  --color-slider-focus-ring: var(--color-sky-300);
-  --color-slider-active: var(--color-sky-600);
-
-  /*Checkbox*/
-  --color-checkbox-background-inactive: var(--color-slate-100);
-  --color-checkbox-background-active: var(--color-sky-600);
-  --color-checkbox-text: var(--color-slate-100);
-  --color-checkbox-border: var(--color-slate-300);
-  --color-checkbox-focus-ring: var(--color-sky-500);
-
-  /**Slider page*/
-  --color-bar-slider-background: var(--color-slate-700);
-
-  /*Settings menu*/
-  --color-settings-menu-background: var(--color-slate-300);
-  --color-settings-menu-button-active: var(--color-slate-400);
-  --color-settings-menu-button-text: var(--color-slate-900);
-  --color-settings-menu-border: var(--color-slate-500);
-
-  /**Inputs**/
-  --color-input-background: var(--color-slate-50);
-  --color-input-hover: var(--color-slate-200);
-  --color-input-border: var(--color-slate-300);
-  --color-input-button-focus-ring: var(--color-slate-100);
-  --color-input-field-focus-ring: var(--color-sky-600);
-  --color-input-placeholder: var(--color-slate-400);
-  --color-input-icon: var(--color-slate-500);
-
-  /**Input radio button**/
-  --color-input-radio-background: var(--color-slate-400);
-  --color-input-radio-text: var(--color-sky-600);
-  --color-input-radio-border: var(--color-slate-300);
-  --color-input-radio-focus-ring: var(--color-sky-500);
-  --color-input-radio-label-text: var(--color-slate-900);
-
-  /**Input select**/
-  --color-input-select-background: var(--color-slate-50);
-  --color-input-select-border: var(--color-slate-300);
-  --color-input-select-text: var(--color-slate-900);
-  --color-input-select-focus-ring: var(--color-sky-600);
-
-  /**Input color**/
-  --color-input-color-background: var(--color-slate-50);
-  --color-input-color-border: var(--color-slate-200);
-
-  /**Two choices chip*/
-  --color-two-choices-active-text: var(--color-slate-100);
-  --color-two-choices-active-background: var(--color-sky-600);
-  --color-two-choices-inactive-text: var(--color-sky-600);
-  --color-two-choices-inactive-background: var(--color-slate-100);
-
-  /*Notifications*/
-  --color-notification-success-text: var(--color-emerald-800);
-  --color-notification-success-background: var(--color-emerald-50);
-  --color-notification-success-border: var(--color-emerald-300);
-
-  --color-notification-error-text: oklch(44.4% 0.177 26.899);
-  --color-notification-error-background: oklch(97.1% 0.013 17.38);
-  --color-notification-error-border: oklch(80.8% 0.114 19.571);
-
-  --color-notification-info-text: var(--color-sky-800);
-  --color-notification-info-background: var(--color-slate-50);
-  --color-notification-info-border: var(--color-sky-300);
-
-  --color-notification-debug-text: var(--color-slate-800);
-  --color-notification-debug-background: var(--color-slate-50);
-  --color-notification-debug-border: var(--color-slate-300);
-
-  --color-notification-warning-text: var(--color-amber-800);
-  --color-notification-warning-background: var(--color-slate-50);
-  --color-notification-warning-border: var(--color-amber-300);
-
-  /*Processing notification*/
-  --color-processing-notification-text: var(--color-slate-100);
-  --color-processing-notification-icon: var(--color-slate-100);
-
-  --color-processing-notification-empty-background: var(--color-amber-800);
-  --color-processing-notification-scan-background: var(--color-emerald-800);
-  --color-processing-notification-clean-background: oklch(44.4% 0.177 26.899);
-  --color-processing-notification-download-background: var(--color-sky-800);
-
-  /**Two choices chip*/
-  --color-tag-text: var(--color-violet-800);
-  --color-tag-background: var(--color-violet-200);
+@theme inline {
+  --color-background: var(--cv-background);
+  --color-topBar: var(--cv-background);
+  --color-topBar-left-corner: var(--cv-topBar-left-corner);
+  --color-reader-background: var(--cv-reader-background);
+  --color-login-background: var(--cv-login-background);
+  --color-login-border: var(--cv-login-border);
+  --color-nav-menu-background: var(--cv-nav-menu-background);
+  --color-nav-menu-button-active: var(--cv-nav-menu-button-active);
+  --color-nav-menu-button-text: var(--cv-nav-menu-button-text);
+  --color-nav-menu-button-border: var(--cv-nav-menu-button-border);
+  --color-nav-menu-section-border: var(--cv-nav-menu-section-border);
+  --color-nav-menu-bottom-icon: var(--cv-nav-menu-bottom-icon);
+  --color-nav-menu-bottom-icon-active: var(--cv-nav-menu-bottom-icon-active);
+  --color-nav-menu-bottom-text: var(--cv-nav-menu-bottom-text);
+  --color-nav-menu-bottom-text-active: var(--cv-nav-menu-bottom-text-active);
+  --color-white-text: var(--cv-white-text);
+  --color-generic-text: var(--cv-generic-text);
+  --color-text-whole-page: var(--cv-text-whole-page);
+  --color-text-whole-page-error: var(--cv-text-whole-page-error);
+  --color-text-whole-page-secondary: var(--cv-text-whole-page-secondary);
+  --color-text-box-background: var(--cv-text-box-background);
+  --color-text-box-text: var(--cv-text-box-text);
+  --color-loading-spinner-primary: var(--cv-loading-spinner-primary);
+  --color-loading-spinner-secondary: var(--cv-loading-spinner-secondary);
+  --color-loading-bar-primary: var(--cv-loading-bar-primary);
+  --color-loading-bar-secondary: var(--cv-loading-bar-secondary);
+  --color-cover-card-pulsing: var(--cv-cover-card-pulsing);
+  --color-cover-card-background: var(--cv-cover-card-background);
+  --color-cover-card-title: var(--cv-cover-card-title);
+  --color-cover-card-text: var(--cv-cover-card-text);
+  --color-cover-card-border: var(--cv-cover-card-border);
+  --color-cover-card-active-border: var(--cv-cover-card-active-border);
+  --color-cover-card-read: var(--cv-cover-card-read);
+  --color-cover-card-download: var(--cv-cover-card-download);
+  --color-cover-card-download-border: var(--cv-cover-card-download-border);
+  --color-cover-card-new: var(--cv-cover-card-new);
+  --color-cover-card-number-download: var(--cv-cover-card-number-download);
+  --color-cover-card-number-read: var(--cv-cover-card-number-read);
+  --color-cover-card-number-read-border: var(--cv-cover-card-number-read-border);
+  --color-cover-card-badge-text: var(--cv-cover-card-badge-text);
+  --color-cover-card-edit-button: var(--cv-cover-card-edit-button);
+  --color-cover-card-progress-background: var(--cv-cover-card-progress-background);
+  --color-cover-card-dragger-background: var(--cv-cover-card-dragger-background);
+  --color-table-text: var(--cv-table-text);
+  --color-table-title: var(--cv-table-title);
+  --color-table-link: var(--cv-table-link);
+  --color-table-odd-background: var(--cv-table-odd-background);
+  --color-table-even-background: var(--cv-table-even-background);
+  --color-table-row-not-selected-background: var(--cv-table-row-not-selected-background);
+  --color-table-row-selected-background: var(--cv-table-row-selected-background);
+  --color-table-border: var(--cv-table-border);
+  --color-table-header-background: var(--cv-table-header-background);
+  --color-table-header-text: var(--cv-table-header-text);
+  --color-modal-background: var(--cv-modal-background);
+  --color-modal-title-text: var(--cv-modal-title-text);
+  --color-modal-title-cross-text: var(--cv-modal-title-cross-text);
+  --color-modal-title-cross-hover: var(--cv-modal-title-cross-hover);
+  --color-modal-title-cross-hover-text: var(--cv-modal-title-cross-hover-text);
+  --color-modal-message-warning: var(--cv-modal-message-warning);
+  --color-modal-message-text: var(--cv-modal-message-text);
+  --color-modal-blurry-background: var(--cv-modal-blurry-background);
+  --color-right-panel-background: var(--cv-right-panel-background);
+  --color-right-panel-text: var(--cv-right-panel-text);
+  --color-right-panel-title: var(--cv-right-panel-title);
+  --color-right-panel-title-cross-text: var(--cv-right-panel-title-cross-text);
+  --color-right-panel-title-cross-hover: var(--cv-right-panel-title-cross-hover);
+  --color-right-panel-title-cross-hover-text: var(--cv-right-panel-title-cross-hover-text);
+  --color-paginator-background: var(--cv-paginator-background);
+  --color-paginator-text: var(--cv-paginator-text);
+  --color-paginator-hover: var(--cv-paginator-hover);
+  --color-paginator-focus-ring: var(--cv-paginator-focus-ring);
+  --color-severity-success-text: var(--cv-severity-success-text);
+  --color-severity-success-background: var(--cv-severity-success-background);
+  --color-severity-error-text: var(--cv-severity-error-text);
+  --color-severity-error-background: var(--cv-severity-error-background);
+  --color-severity-warning-text: var(--cv-severity-warning-text);
+  --color-severity-warning-background: var(--cv-severity-warning-background);
+  --color-severity-info-text: var(--cv-severity-info-text);
+  --color-severity-info-background: var(--cv-severity-info-background);
+  --color-severity-desactivated-text: var(--cv-severity-desactivated-text);
+  --color-severity-desactivated-background: var(--cv-severity-desactivated-background);
+  --color-button-primary-background: var(--cv-button-primary-background);
+  --color-button-primary-text: var(--cv-button-primary-text);
+  --color-button-primary-hover: var(--cv-button-primary-hover);
+  --color-button-primary-focus-ring: var(--cv-button-primary-focus-ring);
+  --color-button-primary-border: var(--cv-button-primary-border);
+  --color-button-success-background: var(--cv-button-success-background);
+  --color-button-success-text: var(--cv-button-success-text);
+  --color-button-success-hover: var(--cv-button-success-hover);
+  --color-button-success-focus-ring: var(--cv-button-success-focus-ring);
+  --color-button-play-background: var(--cv-button-play-background);
+  --color-button-play-text: var(--cv-button-play-text);
+  --color-button-play-hover: var(--cv-button-play-hover);
+  --color-button-play-focus-ring: var(--cv-button-play-focus-ring);
+  --color-button-error-background: var(--cv-button-error-background);
+  --color-button-error-text: var(--cv-button-error-text);
+  --color-button-error-hover: var(--cv-button-error-hover);
+  --color-button-error-focus-ring: var(--cv-button-error-focus-ring);
+  --color-button-deactivated-background: var(--cv-button-deactivated-background);
+  --color-button-deactivated-text: var(--cv-button-deactivated-text);
+  --color-button-deactivated-hover: var(--cv-button-deactivated-hover);
+  --color-button-deactivated-focus-ring: var(--cv-button-deactivated-focus-ring);
+  --color-button-not-seen-background: var(--cv-button-not-seen-background);
+  --color-button-not-seen-text: var(--cv-button-not-seen-text);
+  --color-button-not-seen-hover: var(--cv-button-not-seen-hover);
+  --color-button-not-seen-focus-ring: var(--cv-button-not-seen-focus-ring);
+  --color-button-multiselect-background: var(--cv-button-multiselect-background);
+  --color-button-multiselect-text: var(--cv-button-multiselect-text);
+  --color-button-multiselect-hover: var(--cv-button-multiselect-hover);
+  --color-button-multiselect-focus-ring: var(--cv-button-multiselect-focus-ring);
+  --color-button-edit-background: var(--cv-button-edit-background);
+  --color-button-edit-text: var(--cv-button-edit-text);
+  --color-button-edit-hover: var(--cv-button-edit-hover);
+  --color-button-edit-focus-ring: var(--cv-button-edit-focus-ring);
+  --color-button-edit-ok-background: var(--cv-button-edit-ok-background);
+  --color-button-edit-ok-text: var(--cv-button-edit-ok-text);
+  --color-button-edit-ok-hover: var(--cv-button-edit-ok-hover);
+  --color-button-edit-ok-focus-ring: var(--cv-button-edit-ok-focus-ring);
+  --color-button-edit-cancel-background: var(--cv-button-edit-cancel-background);
+  --color-button-edit-cancel-text: var(--cv-button-edit-cancel-text);
+  --color-button-edit-cancel-hover: var(--cv-button-edit-cancel-hover);
+  --color-button-edit-cancel-focus-ring: var(--cv-button-edit-cancel-focus-ring);
+  --color-button-avatar-text: var(--cv-button-avatar-text);
+  --color-slider-border: var(--cv-slider-border);
+  --color-slider-background: var(--cv-slider-background);
+  --color-slider-focus-ring: var(--cv-slider-focus-ring);
+  --color-slider-active: var(--cv-slider-active);
+  --color-checkbox-background-inactive: var(--cv-checkbox-background-inactive);
+  --color-checkbox-background-active: var(--cv-checkbox-background-active);
+  --color-checkbox-text: var(--cv-checkbox-text);
+  --color-checkbox-border: var(--cv-checkbox-border);
+  --color-checkbox-focus-ring: var(--cv-checkbox-focus-ring);
+  --color-bar-slider-background: var(--cv-bar-slider-background);
+  --color-settings-menu-background: var(--cv-settings-menu-background);
+  --color-settings-menu-button-active: var(--cv-settings-menu-button-active);
+  --color-settings-menu-button-text: var(--cv-settings-menu-button-text);
+  --color-settings-menu-border: var(--cv-settings-menu-border);
+  --color-input-background: var(--cv-input-background);
+  --color-input-hover: var(--cv-input-hover);
+  --color-input-border: var(--cv-input-border);
+  --color-input-button-focus-ring: var(--cv-input-button-focus-ring);
+  --color-input-field-focus-ring: var(--cv-input-field-focus-ring);
+  --color-input-placeholder: var(--cv-input-placeholder);
+  --color-input-icon: var(--cv-input-icon);
+  --color-input-radio-background: var(--cv-input-radio-background);
+  --color-input-radio-text: var(--cv-input-radio-text);
+  --color-input-radio-border: var(--cv-input-radio-border);
+  --color-input-radio-focus-ring: var(--cv-input-radio-focus-ring);
+  --color-input-radio-label-text: var(--cv-input-radio-label-text);
+  --color-input-select-background: var(--cv-input-select-background);
+  --color-input-select-border: var(--cv-input-select-border);
+  --color-input-select-text: var(--cv-input-select-text);
+  --color-input-select-focus-ring: var(--cv-input-select-focus-ring);
+  --color-input-color-background: var(--cv-input-color-background);
+  --color-input-color-border: var(--cv-input-color-border);
+  --color-two-choices-active-text: var(--cv-two-choices-active-text);
+  --color-two-choices-active-background: var(--cv-two-choices-active-background);
+  --color-two-choices-inactive-text: var(--cv-two-choices-inactive-text);
+  --color-two-choices-inactive-background: var(--cv-two-choices-inactive-background);
+  --color-notification-success-text: var(--cv-notification-success-text);
+  --color-notification-success-background: var(--cv-notification-success-background);
+  --color-notification-success-border: var(--cv-notification-success-border);
+  --color-notification-error-text: var(--cv-notification-error-text);
+  --color-notification-error-background: var(--cv-notification-error-background);
+  --color-notification-error-border: var(--cv-notification-error-border);
+  --color-notification-info-text: var(--cv-notification-info-text);
+  --color-notification-info-background: var(--cv-notification-info-background);
+  --color-notification-info-border: var(--cv-notification-info-border);
+  --color-notification-debug-text: var(--cv-notification-debug-text);
+  --color-notification-debug-background: var(--cv-notification-debug-background);
+  --color-notification-debug-border: var(--cv-notification-debug-border);
+  --color-notification-warning-text: var(--cv-notification-warning-text);
+  --color-notification-warning-background: var(--cv-notification-warning-background);
+  --color-notification-warning-border: var(--cv-notification-warning-border);
+  --color-processing-notification-text: var(--cv-processing-notification-text);
+  --color-processing-notification-icon: var(--cv-processing-notification-icon);
+  --color-processing-notification-empty-background: var(
+    --cv-processing-notification-empty-background
+  );
+  --color-processing-notification-scan-background: var(
+    --cv-processing-notification-scan-background
+  );
+  --color-processing-notification-clean-background: var(
+    --cv-processing-notification-clean-background
+  );
+  --color-processing-notification-download-background: var(
+    --cv-processing-notification-download-background
+  );
+  --color-tag-text: var(--cv-tag-text);
+  --color-tag-background: var(--cv-tag-background);
+  --color-input-focus-ring: var(--cv-input-focus-ring);
 }
 
 @layer base {
@@ -278,213 +479,7 @@
   ::before,
   ::backdrop,
   ::file-selector-button {
-    border-color: var(--color-gray-200, currentcolor);
-  }
-
-  .dark {
-    /*General*/
-    --color-background: var(--color-slate-950);
-    --color-topBar: oklch(13% 0.028 261.692 / 0.95);
-    --color-topBar-left-corner: var(--color-slate-400);
-
-    /*Reader*/
-    --color-reader-background: var(--color-slate-950);
-
-    /*Login menu*/
-    --color-login-background: var(--color-slate-800);
-
-    /*Nav menu*/
-    --color-nav-menu-background: var(--color-slate-900);
-    --color-nav-menu-button-active: var(--color-slate-800);
-    --color-nav-menu-button-text: var(--color-slate-100);
-    --color-nav-menu-button-border: var(--color-slate-700);
-    --color-nav-menu-section-border: var(--color-slate-700);
-    --color-nav-menu-bottom-icon: var(--color-slate-400);
-    --color-nav-menu-bottom-icon-active: var(--color-sky-600);
-    --color-nav-menu-bottom-text: var(--color-slate-400);
-    --color-nav-menu-bottom-text-active: var(--color-sky-600);
-
-    /*Multi-select menu*/
-
-    /*Texts*/
-    --color-generic-text: var(--color-slate-100);
-    --color-text-whole-page: var(--color-sky-600);
-    --color-text-whole-page-error: oklch(57.7% 0.245 27.325);
-    /*red-600*/
-    --color-text-whole-page-secondary: var(--color-slate-100);
-    --color-text-box-background: var(--color-slate-900);
-    --color-text-box-text: var(--color-slate-100);
-
-    /*Spinner*/
-    --color-loading-spinner-primary: var(--color-slate-700);
-    --color-loading-spinner-secondary: var(--color-sky-600);
-
-    /*Loading bar*/
-    --color-loading-bar-primary: var(--color-slate-700);
-    --color-loading-bar-secondary: var(--color-sky-600);
-
-    /*Cover Card*/
-    --color-cover-card-pulsing: var(--color-slate-500);
-    --color-cover-card-background: oklch(27.9% 0.041 260.031 / 0.9);
-    --color-cover-card-title: var(--color-sky-600);
-    --color-cover-card-text: var(--color-slate-100);
-    --color-cover-card-border: var(--color-slate-700);
-    --color-cover-card-active-border: var(--color-sky-600);
-    --color-cover-card-read: oklch(50.8% 0.118 165.612 / 0.95);
-    /*emerald-700*/
-    --color-cover-card-download: oklch(50% 0.134 242.749 / 0.95);
-    --color-cover-card-download-border: var(--color-sky-600);
-    /*sky-700*/
-    --color-cover-card-new: oklch(66.6% 0.179 58.318 / 1);
-    /*amber-600*/
-    --color-cover-card-number-download: oklch(50% 0.134 242.749 / 0.95);
-    /*sky-700*/
-    --color-cover-card-number-read: oklch(66.6% 0.179 58.318 / 0.95);
-    --color-cover-card-number-read-border: var(--color-amber-500);
-    /*amber-600*/
-    --color-cover-card-badge-text: var(--color-slate-100);
-    --color-cover-card-edit-button: var(--color-violet-700);
-    /*emerald-700*/
-    --color-cover-card-progress-background: var(--color-slate-700);
-    --color-cover-card-dragger-background: var(--color-slate-400);
-
-    /*Tables*/
-    --color-table-text: var(--color-slate-400);
-    --color-table-title: var(--color-slate-100);
-    --color-table-link: var(--color-sky-500);
-    --color-table-odd-background: var(--color-slate-900);
-    --color-table-even-background: var(--color-slate-800);
-    --color-table-row-selected-background: var(--color-slate-800);
-    --color-table-row-not-selected-background: var(--color-slate-900);
-    --color-table-border: var(--color-slate-700);
-
-    --color-table-header-background: var(--color-slate-700);
-    --color-table-header-text: var(--color-slate-400);
-
-    /*Modals*/
-    --color-modal-background: var(--color-slate-700);
-    --color-modal-title-text: var(--color-slate-100);
-    --color-modal-title-cross-text: var(--color-slate-400);
-    --color-modal-title-cross-hover: var(--color-slate-600);
-    --color-modal-title-cross-hover-text: var(--color-slate-100);
-    --color-modal-message-warning: var(--color-slate-200);
-    --color-modal-message-text: var(--color-slate-400);
-    --color-modal-blurry-background: oklch(20.8% 0.042 265.755 / 0.8);
-
-    /*Right Panel*/
-    --color-right-panel-background: var(--color-slate-800);
-    --color-right-panel-text: var(--color-slate-100);
-    --color-right-panel-title: var(--color-slate-400);
-    --color-right-panel-title-cross-text: var(--color-slate-400);
-    --color-right-panel-title-cross-hover: var(--color-slate-600);
-    --color-right-panel-title-cross-hover-text: var(--color-slate-100);
-
-    /*Paginator*/
-    --color-paginator-background: var(--color-slate-800);
-    --color-paginator-text: var(--color-slate-100);
-    --color-paginator-hover: var(--color-slate-700);
-    --color-paginator-focus-ring: var(--color-slate-800);
-
-    /*Severities*/
-    --color-severity-success-text: var(--color-emerald-300);
-    --color-severity-success-background: var(--color-emerald-900);
-    --color-severity-error-text: oklch(80.8% 0.114 19.571);
-    --color-severity-error-background: oklch(39.6% 0.141 25.723);
-    --color-severity-warning-text: var(--color-amber-300);
-    --color-severity-warning-background: var(--color-amber-900);
-    --color-severity-info-text: var(--color-sky-300);
-    --color-severity-info-background: var(--color-sky-900);
-    --color-severity-desactivated-text: var(--color-slate-300);
-    --color-severity-desactivated-background: var(--color-slate-600);
-
-    /*Buttons deactivated*/
-    --color-button-deactivated-background: var(--color-slate-900);
-    --color-button-deactivated-text: var(--color-slate-100);
-    --color-button-deactivated-hover: var(--color-slate-800);
-    --color-button-deactivated-focus-ring: var(--color-slate-600);
-
-    /*Buttons not seen*/
-    --color-button-not-seen-background: var(--color-slate-600);
-    --color-button-not-seen-text: var(--color-slate-100);
-    --color-button-not-seen-hover: var(--color-slate-700);
-    --color-button-not-seen-focus-ring: var(--color-slate-800);
-
-    /*Buttons not multiselect*/
-    --color-button-multiselect-background: var(--color-slate-600);
-    --color-button-multiselect-text: var(--color-slate-100);
-    --color-button-multiselect-hover: var(--color-slate-500);
-    --color-button-multiselect-focus-ring: var(--color-slate-700);
-
-    /*Slider*/
-    --color-slider-border: var(--color-slate-950);
-    --color-slider-background: var(--color-slate-700);
-    --color-slider-focus-ring: var(--color-sky-800);
-    --color-slider-active: var(--color-sky-700);
-
-    /*Checkbox*/
-    --color-checkbox-background-inactive: var(--color-slate-700);
-    --color-checkbox-text: var(--color-slate-100);
-    --color-checkbox-border: var(--color-slate-600);
-    --color-checkbox-focus-ring: var(--color-sky-600);
-
-    /*Settings menu*/
-    --color-settings-menu-background: var(--color-slate-800);
-    --color-settings-menu-button-active: var(--color-slate-700);
-    --color-settings-menu-button-text: var(--color-slate-100);
-    --color-settings-menu-border: var(--color-slate-600);
-
-    /**Inputs**/
-    --color-input-background: var(--color-slate-700);
-    --color-input-hover: var(--color-slate-600);
-    --color-input-border: var(--color-slate-600);
-    --color-input-focus-ring: var(--color-slate-700);
-    --color-input-field-focus-ring: var(--color-sky-600);
-    --color-input-placeholder: var(--color-slate-400);
-    --color-input-icon: var(--color-slate-400);
-
-    /**Input radio button**/
-    --color-input-radio-background: var(--color-slate-700);
-    --color-input-radio-text: var(--color-sky-600);
-    --color-input-radio-border: var(--color-slate-600);
-    --color-input-radio-focus-ring: var(--color-sky-700);
-    --color-input-radio-label-text: var(--color-slate-300);
-
-    /**Input select**/
-    --color-input-select-background: var(--color-slate-800);
-    --color-input-select-border: var(--color-slate-600);
-    --color-input-select-text: var(--color-slate-100);
-    --color-input-select-focus-ring: var(--color-sky-600);
-
-    /**Input color**/
-    --color-input-color-background: var(--color-slate-900);
-    --color-input-color-border: var(--color-slate-700);
-
-    /**Two choices chip*/
-    --color-two-choices-active-text: var(--color-slate-100);
-    --color-two-choices-active-background: var(--color-sky-700);
-    --color-two-choices-inactive-text: var(--color-sky-700);
-    --color-two-choices-inactive-background: var(--color-slate-800);
-
-    /*Notifications*/
-    --color-notification-success-text: var(--color-emerald-400);
-    --color-notification-success-background: var(--color-slate-800);
-    --color-notification-success-border: var(--color-emerald-800);
-
-    --color-notification-error-text: oklch(70.4% 0.191 22.216);
-    --color-notification-error-background: var(--color-slate-800);
-    --color-notification-error-border: oklch(44.4% 0.177 26.899);
-
-    --color-notification-info-text: var(--color-sky-400);
-    --color-notification-info-background: var(--color-slate-800);
-    --color-notification-info-border: var(--color-sky-800);
-
-    --color-notification-warning-text: var(--color-amber-400);
-    --color-notification-warning-background: var(--color-slate-800);
-    --color-notification-warning-border: var(--color-amber-800);
-
-    /**Two choices chip*/
-    --color-tag-text: var(--color-violet-300);
-    --color-tag-background: var(--color-violet-900);
+    border-color: var(--ui-border, currentcolor);
   }
 }
 
@@ -519,7 +514,7 @@ ul.grid-mini-pages {
 }
 
 .mini-left-menu-button {
-  @apply flex align-middle gap-2 px-4 py-2 hover:bg-nav-menu-background cursor-pointer;
+  @apply flex align-middle gap-2 px-4 py-2 hover:bg-nav-menu-button-active cursor-pointer;
 }
 
 .whole-page-container {
@@ -556,7 +551,7 @@ ul.grid-mini-pages {
 }
 
 .table-row {
-  @apply odd:bg-table-odd-background even:bg-table-even-background border-b dark:border-table-border;
+  @apply odd:bg-table-odd-background even:bg-table-even-background border-b border-table-border;
 }
 
 .modal-container {
@@ -564,7 +559,7 @@ ul.grid-mini-pages {
 }
 
 .right-panel-mask {
-  @apply bg-gray-900/50 dark:bg-gray-900/80 fixed inset-0 z-30;
+  @apply bg-modal-blurry-background fixed inset-0 z-30;
 }
 
 .right-panel-container {
@@ -601,7 +596,7 @@ ul.grid-mini-pages {
   content: '';
   position: absolute;
   inset: 0;
-  background-color: var(--color-cover-card-new);
+  background-color: var(--cv-cover-card-new);
   clip-path: polygon(0 0, 100% 0, 100% 100%);
   border-radius: 0 4px 0 0;
 }
@@ -610,7 +605,7 @@ ul.grid-mini-pages {
   content: '';
   position: absolute;
   inset: 0;
-  background-color: var(--color-cover-card-new);
+  background-color: var(--cv-cover-card-new);
   clip-path: polygon(0 0, 100% 0, 100% 100%);
   border-radius: 0 4px 0 0;
 }
@@ -619,7 +614,7 @@ ul.grid-mini-pages {
   content: '';
   position: absolute;
   inset: 0;
-  background-color: var(--color-cover-card-read);
+  background-color: var(--cv-cover-card-read);
   clip-path: polygon(0 0, 100% 0, 100% 100%);
   border-radius: 0 4px 0 0;
 }
@@ -628,7 +623,7 @@ ul.grid-mini-pages {
   content: '';
   position: absolute;
   inset: 0;
-  background-color: var(--color-cover-card-read);
+  background-color: var(--cv-cover-card-read);
   clip-path: polygon(0 0, 100% 0, 100% 100%);
   border-radius: 0 4px 0 0;
 }
@@ -637,7 +632,7 @@ ul.grid-mini-pages {
   content: '';
   position: absolute;
   inset: 0;
-  background-color: var(--color-cover-card-download);
+  background-color: var(--cv-cover-card-download);
   clip-path: polygon(0 0, 100% 0, 100% 100%);
   border-radius: 0 4px 0 0;
 }
@@ -646,7 +641,7 @@ ul.grid-mini-pages {
   content: '';
   position: absolute;
   inset: 0;
-  background-color: var(--color-cover-card-download);
+  background-color: var(--cv-cover-card-download);
   clip-path: polygon(0 0, 100% 0, 100% 100%);
   border-radius: 0 4px 0 0;
 }
@@ -883,19 +878,49 @@ ul.grid-mini-pages {
   font-family: 'Inter', sans-serif;
 }
 
-/* default (light) */
+/* Drag previews follow the same theme as table selections. */
 .cdk-drag-preview {
   @apply flex items-center w-full border-b;
-  background-color: var(--color-slate-300);
-  /*--color-table-row-selected-background*/
-  border-color: var(--color-slate-400);
-  /*--color-table-border*/
+  background-color: var(--cv-table-row-selected-background);
+  border-color: var(--cv-table-border);
 }
 
-/* dark mode */
-html.dark .cdk-drag-preview {
-  background-color: var(--color-slate-900);
-  /*--color-table-row-selected-background*/
-  border-color: var(--color-slate-700);
-  /*--color-table-border*/
+/* Palette picker previews use the very same hue/chroma definitions above. */
+.cv-palette-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(9rem, 1fr));
+  gap: 0.75rem;
+}
+.cv-palette-option {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.75rem;
+  border: 1px solid var(--ui-control-border);
+  border-radius: 0.5rem;
+  color: var(--ui-text);
+  background: var(--ui-surface);
+  cursor: pointer;
+}
+.cv-palette-option:hover {
+  background: var(--ui-hover);
+}
+.cv-palette-option:has(input:checked) {
+  background: var(--ui-selected);
+  border-color: var(--ui-accent);
+  box-shadow: inset 0 0 0 1px var(--ui-accent);
+}
+.cv-palette-option input {
+  accent-color: var(--ui-action);
+}
+.cv-palette-option:focus-within {
+  outline: 2px solid var(--ui-focus);
+  outline-offset: 3px;
+}
+.cv-palette-swatch {
+  width: 1.25rem;
+  height: 1.25rem;
+  flex: 0 0 1.25rem;
+  border-radius: 50%;
+  background: oklch(55% var(--accent-chroma) var(--accent-hue));
 }
