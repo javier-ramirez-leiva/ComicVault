@@ -3,9 +3,13 @@
   <app-loading-spinner-page></app-loading-spinner-page>
 } @else {
   @if (comicSearchDetailsLinks) {
-    <div class="details-page-container">
+    <div class="cv-detail-page">
+      <header class="cv-settings-heading cv-detail-heading">
+        <h1>{{ comicSearchDetailsLinks.title }}</h1>
+      </header>
+      <div class="cv-detail-hero">
       <div
-        class="lg:w-1/4 md:w-1/2 w-[100%] relative p-4 flex flex-col justify-center items-center"
+        class="cv-detail-cover"
       >
         <div class="relative w-full">
           @if (!imageLoaded) {
@@ -37,54 +41,56 @@
       </div>
       @if (rows$ | async; as rows) {
         <div
-          class="flex flex-col-reverse md:flex-col lg:w-2/3 md:w-3/5 p-4 items-center justify-center"
+          class="cv-detail-information"
         >
-          <app-two-columns-table class="w-full" [rows]="rows"></app-two-columns-table>
+          
           @if (
             comicSearchDetailsLinks.downloadingStatus == 'not-downloaded' ||
             comicSearchDetailsLinks.downloadingStatus == 'downloaded'
           ) {
-            <div class="flex items-center justify-center md:mx-10 md:mt-6 md:pb-0 pb-8 w-full">
+            <div class="cv-detail-actions cv-detail-primary-actions">
               @if (comicSearchDetailsLinks.downloadingStatus == 'not-downloaded') {
                 <app-download-button
                   appHideRoles
                   [appHideForRoles]="[Role.Requester, Role.Viewer]"
-                  class="relative w-64"
+                  class="cv-detail-action"
                   [comic]="comicSearchDetailsLinks"
                   [comicSearchDetailsLinks]="comicSearchDetailsLinks"
                 ></app-download-button>
               }
               @if (comicSearchDetailsLinks.downloadingStatus == 'downloaded') {
                 <app-go-to-comic-button
-                  class="relative w-64"
+                  class="cv-detail-action"
                   [comicSearchDetailsLinks]="comicSearchDetailsLinks"
                 ></app-go-to-comic-button>
               }
             </div>
           }
+          <section class="cv-detail-panel cv-detail-metadata"><h2>Metadata</h2><app-two-columns-table class="w-full" [rows]="rows"></app-two-columns-table></section>
         </div>
       }
     </div>
     @if (comicSearchDetailsLinks.tags.length > 0) {
-      <div class="flex justify-center align-middle flex-wrap my-4">
+      <div class="cv-detail-tags">
         @for (tag of comicSearchDetailsLinks.tags; track tag) {
           <app-tag-chip [tag]="tag"></app-tag-chip>
         }
       </div>
     }
-    <div class="py-4 pb-4">
-      <div class="text-box">
-        <p class="text-box-p">{{ comicSearchDetailsLinks.description }}</p>
+    <div class="cv-detail-panel cv-detail-description">
+      <h2>Description</h2>
+      <div class="cv-detail-description-content">
+        <p class="cv-detail-prose">{{ comicSearchDetailsLinks.description }}</p>
       </div>
     </div>
     @if (comicSearchDetailsLinks.screenshots.length > 0) {
-      <div class="justify-center pb-4 pt-4 h-[22rem] md:h-80 w-full max-w-screen">
+      <div class="cv-detail-related h-[22rem] md:h-80">
         <app-carousel-screenshots
           [coverUrls]="comicSearchDetailsLinks.screenshots"
         ></app-carousel-screenshots>
       </div>
     }
-    <div class="justify-center pb-20 md:pb-4 pt-4 md:pt-8 h-[28rem] md:h-96 w-full max-w-screen">
+    <div class="cv-detail-related min-h-[24rem]">
       @if (comicsCarousel$ | async; as comicsCarousel) {
         <div>
           <app-carousel-series-comics
@@ -99,6 +105,7 @@
           <app-mini-spinner class="w-full"></app-mini-spinner>
         </div>
       }
+    </div>
     </div>
   }
 }

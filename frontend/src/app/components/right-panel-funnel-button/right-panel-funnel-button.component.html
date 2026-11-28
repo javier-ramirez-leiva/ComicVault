@@ -1,7 +1,10 @@
 <button
   type="button"
   aria-label="Open filters"
-  class="cv-icon-control"
+  title="Filters"
+  [attr.aria-expanded]="expanded"
+  [attr.aria-controls]="panelId"
+  class="cv-icon-control cv-filter-trigger"
   (click)="onFunnelButtonClick()"
 >
   <svg

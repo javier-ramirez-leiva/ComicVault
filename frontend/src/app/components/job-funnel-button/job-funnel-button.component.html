@@ -1,25 +1,25 @@
 <app-right-panel-funnel-button
+  [expanded]="(isDrawerOpen$ | async) === true"
+  panelId="job-funnel-button-panel"
   (funnelButtonClicked)="onOpenDrawer()"
 ></app-right-panel-funnel-button>
-<div
-  class="right-panel-mask"
-  [ngClass]="{ hidden: !(isDrawerOpen$ | async) }"
-  (click)="onCloseDrawer()"
-></div>
-<div
+<button type="button" class="right-panel-mask" aria-label="Close filters" tabindex="-1"
+  [class.hidden]="!(isDrawerOpen$ | async)" (click)="onCloseDrawer()"></button>
+<div id="job-funnel-button-panel" role="dialog" aria-label="Job filters"
+  [attr.inert]="(isDrawerOpen$ | async) ? null : ''"
   class="right-panel-container bg-right-panel-background"
   [ngClass]="{
     'translate-x-full': !(isDrawerOpen$ | async),
     '-translate-x-0': (isDrawerOpen$ | async),
   }"
 >
-  <app-right-panel-title title="Filters" (onCloseClick)="onCloseDrawer()"></app-right-panel-title>
+  <app-right-panel-title title="Job filters" (onCloseClick)="onCloseDrawer()"></app-right-panel-title>
 
   <form
     [formGroup]="form"
-    class="flex flex-col justify-between flex-1 pb-24 md:pb-0 overflow-x-hidden"
+    class="cv-filter-form"
   >
-    <div class="space-y-6 text-right-panel-text">
+    <div class="cv-filter-fields text-right-panel-text">
       <!-- Sort -->
       <div class="space-y-2">
         <h6 class="text-base font-medium">Sort</h6>
@@ -47,7 +47,7 @@
       <!-- Username -->
       <div class="space-y-2">
         <h6 class="text-base font-medium">Users</h6>
-        <select id="username" formControlName="username" class="w-full mr-8 cursor-pointer">
+        <select id="username" formControlName="username" class="w-full min-w-0 cursor-pointer">
           <option [value]="''" [selected]="form.get('username')?.value === ''">All</option>
           @for (user of users; track $index) {
             <option [value]="user" [selected]="user === form.get('username')?.value">
@@ -127,14 +127,14 @@
       <!-- Date -->
       <div class="space-y-2">
         <h6 class="text-base font-medium">Date</h6>
-        <div class="flex-1 min-w-0 pr-14">
+        <div class="min-w-0">
           <app-date-text-form
             id="date-start"
             title="From"
             formControlName="dateStart"
           ></app-date-text-form>
         </div>
-        <div class="flex-1 min-w-0 pr-14">
+        <div class="min-w-0">
           <app-date-text-form
             id="date-end"
             title="To"
@@ -144,4 +144,8 @@
       </div>
     </div>
   </form>
+  <footer class="cv-filter-footer">
+    <p>Changes are applied automatically.</p>
+    <button type="button" class="cv-account-action cv-account-primary" (click)="onCloseDrawer()">Done</button>
+  </footer>
 </div>

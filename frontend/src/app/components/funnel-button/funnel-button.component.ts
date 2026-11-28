@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, EventEmitter, Output, inject } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, Output, inject, HostListener } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 import { LocalStorageService } from 'services';
@@ -148,18 +148,26 @@ export class FunnelButtonComponent {
     this.router.events.pipe(untilDestroyed(this)).subscribe((event) => {
       if (event instanceof NavigationEnd) {
         const routeString = event.urlAfterRedirects;
+        if (!routeString.startsWith('/library')) this.onCloseDrawer();
         this.seriesContent = routeString.startsWith('/library/series');
         this.contentChange.emit(this.seriesContent);
       }
     });
   }
 
+  @HostListener('document:keydown.escape')
+  onEscape() {
+    if (this.isDrawerOpen$.value) this.onCloseDrawer();
+  }
+
   onOpenDrawer() {
+    if (this.isDrawerOpen$.value) return;
     this.isDrawerOpen$.next(true);
     this.topBarService.setDrawerOpenState(true);
   }
 
   onCloseDrawer() {
+    if (!this.isDrawerOpen$.value) return;
     this.isDrawerOpen$.next(false);
     this.topBarService.setDrawerOpenState(false);
   }

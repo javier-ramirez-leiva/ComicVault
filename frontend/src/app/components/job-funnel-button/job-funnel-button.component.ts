@@ -1,4 +1,5 @@
-import { Component, EventEmitter, inject, OnInit, Output } from '@angular/core';
+import { NavigationEnd, Router } from '@angular/router';
+import { Component, EventEmitter, inject, OnInit, Output, HostListener } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { JobFilter, JobSortAttribute } from 'interfaces';
 import { BehaviorSubject } from 'rxjs';
@@ -32,6 +33,7 @@ export class JobFunnelButtonComponent implements OnInit {
   @Output() filterChange = new EventEmitter<JobFilter>();
   @Output() contentChange = new EventEmitter<boolean>();
 
+  private readonly router = inject(Router);
   private readonly formBuilder = inject(FormBuilder);
   private readonly topBarService = inject(TopBarService);
   private readonly usersService = inject(UsersService);
@@ -94,6 +96,9 @@ export class JobFunnelButtonComponent implements OnInit {
     });
   }
   ngOnInit(): void {
+    this.router.events.pipe(untilDestroyed(this)).subscribe((event) => {
+      if (event instanceof NavigationEnd && !event.urlAfterRedirects.startsWith('/settings/jobs')) this.onCloseDrawer();
+    });
     this.form.patchValue(this.initForm, { emitEvent: true });
     this.topBarService.resetJobFilterFunnelFormEvent$
       .pipe(untilDestroyed(this))
@@ -109,12 +114,19 @@ export class JobFunnelButtonComponent implements OnInit {
       });
   }
 
+  @HostListener('document:keydown.escape')
+  onEscape() {
+    if (this.isDrawerOpen$.value) this.onCloseDrawer();
+  }
+
   onOpenDrawer() {
+    if (this.isDrawerOpen$.value) return;
     this.isDrawerOpen$.next(true);
     this.topBarService.setDrawerOpenState(true);
   }
 
   onCloseDrawer() {
+    if (!this.isDrawerOpen$.value) return;
     this.isDrawerOpen$.next(false);
     this.topBarService.setDrawerOpenState(false);
   }

@@ -1,4 +1,5 @@
-import { Component, EventEmitter, inject, Output } from '@angular/core';
+import { NavigationEnd, Router } from '@angular/router';
+import { Component, EventEmitter, inject, Output, HostListener } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { BehaviorSubject } from 'rxjs';
@@ -34,6 +35,7 @@ export class LogFunnelButtonComponent {
   @Output() filterChange = new EventEmitter<LogFilter>();
   @Output() contentChange = new EventEmitter<boolean>();
 
+  private readonly router = inject(Router);
   private readonly formBuilder = inject(FormBuilder);
   private readonly topBarService = inject(TopBarService);
   private readonly usersService = inject(UsersService);
@@ -76,6 +78,9 @@ export class LogFunnelButtonComponent {
     });
   }
   ngOnInit(): void {
+    this.router.events.pipe(untilDestroyed(this)).subscribe((event) => {
+      if (event instanceof NavigationEnd && !event.urlAfterRedirects.startsWith('/settings/logs')) this.onCloseDrawer();
+    });
     this.form.patchValue(this.initForm, { emitEvent: true });
     this.topBarService.resetLogFilterFunnelFormEvent$
       .pipe(untilDestroyed(this))
@@ -91,12 +96,19 @@ export class LogFunnelButtonComponent {
       });
   }
 
+  @HostListener('document:keydown.escape')
+  onEscape() {
+    if (this.isDrawerOpen$.value) this.onCloseDrawer();
+  }
+
   onOpenDrawer() {
+    if (this.isDrawerOpen$.value) return;
     this.isDrawerOpen$.next(true);
     this.topBarService.setDrawerOpenState(true);
   }
 
   onCloseDrawer() {
+    if (!this.isDrawerOpen$.value) return;
     this.isDrawerOpen$.next(false);
     this.topBarService.setDrawerOpenState(false);
   }

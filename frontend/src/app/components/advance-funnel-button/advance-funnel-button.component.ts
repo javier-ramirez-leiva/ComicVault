@@ -1,4 +1,4 @@
-import { Component, EventEmitter, inject, Output } from '@angular/core';
+import { Component, EventEmitter, inject, Output, HostListener } from '@angular/core';
 import { RightPanelFunnelButtonComponent } from '../right-panel-funnel-button/right-panel-funnel-button.component';
 import { BehaviorSubject } from 'rxjs';
 import {
@@ -148,6 +148,7 @@ export class AdvanceFunnelButtonComponent {
     this.router.events.pipe(untilDestroyed(this)).subscribe((event) => {
       if (event instanceof NavigationEnd) {
         const routeString = event.urlAfterRedirects;
+        if (!routeString.startsWith('/advanceLibrary')) this.onCloseDrawer();
         this.seriesContent = routeString.startsWith('/advanceLibrary/series');
         this.contentChange.emit(this.seriesContent);
       }
@@ -161,12 +162,19 @@ export class AdvanceFunnelButtonComponent {
       });
   }
 
+  @HostListener('document:keydown.escape')
+  onEscape() {
+    if (this.isDrawerOpen$.value) this.onCloseDrawer();
+  }
+
   onOpenDrawer() {
+    if (this.isDrawerOpen$.value) return;
     this.isDrawerOpen$.next(true);
     this.topBarService.setDrawerOpenState(true);
   }
 
   onCloseDrawer() {
+    if (!this.isDrawerOpen$.value) return;
     this.isDrawerOpen$.next(false);
     this.topBarService.setDrawerOpenState(false);
   }

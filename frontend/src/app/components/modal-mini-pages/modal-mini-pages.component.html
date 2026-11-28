@@ -1,23 +1,14 @@
-<div class="fixed inset-0 z-50 flex items-center justify-center p-4">
-  <div
-    class="relative w-full max-w-[90vw] max-h-[90vh] bg-modal-background rounded-lg shadow-sm flex flex-col overflow-hidden"
-  >
-    <!-- Header / Close button -->
-    <app-cross-modal (onCloseClick)="cancel()"></app-cross-modal>
-
-    <!-- Scrollable content -->
-    <section
-      class="flex-1 overflow-y-auto pb-8 px-4 mt-16 touch-pan-y"
-      style="-webkit-overflow-scrolling: touch"
-    >
+<div class="cv-dialog cv-dialog-pages" role="dialog" aria-label="Select page">
+<header class="cv-dialog-header"><h2>Select page</h2><app-cross-modal (onCloseClick)="cancel()"></app-cross-modal></header>
+<div class="cv-dialog-body">
       <ul class="grid-mini-pages">
         @for (index of range; track index) {
           <li>
-            <div #image class="flex flex-col items-center h-full" (click)="updatePage(index)">
+            <button #image type="button" class="cv-dialog-page" [class.cv-dialog-page-selected]="index === page" [attr.aria-pressed]="index === page" (click)="updatePage(index)">
               @if (!imageErrors[index]) {
                 <div class="flex items-center h-full">
                   <img
-                    [src]="pagesURL + index"
+                    [src]="pagesURL + index" [alt]="'Page ' + index"
                     class="border-cover-card-active-border"
                     [class.border-4]="index === page"
                     (error)="imageErrors[index] = true"
@@ -32,15 +23,11 @@
                 </div>
               }
               <div class="text-generic-text mt-2">{{ index }}</div>
-            </div>
+            </button>
           </li>
         }
       </ul>
-    </section>
 
-    <!-- Footer / Button -->
-    <div class="flex justify-center px-4 py-2">
-      <button type="button" (click)="confirm()" class="button-text button-primary w-18">OK</button>
-    </div>
-  </div>
+</div>
+<footer class="cv-dialog-actions"><button type="button" class="button-text button-deactivated" (click)="cancel()">Cancel</button><button type="button" class="button-text button-primary" (click)="confirm()">OK</button></footer>
 </div>

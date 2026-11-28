@@ -1,18 +1,16 @@
-<div class="relative pt-10 bg-modal-background rounded-lg shadow-sm">
-  <app-cross-modal (onCloseClick)="cancel()"></app-cross-modal>
-  <div class="m-4 text-center">
-    <label class="font-semibold text-lg text-generic-text">{{ data?.comicTitle }}</label>
-  </div>
-  <div class="p-4 md:p-5 text-center md:max-h-96 overflow-y-auto">
+<div class="cv-dialog" role="dialog" aria-label="Download comics">
+<header class="cv-dialog-header"><h2>Download comics</h2><app-cross-modal (onCloseClick)="cancel()"></app-cross-modal></header>
+<div class="cv-dialog-body">
+<p class="cv-dialog-message font-medium">{{ data?.comicTitle }}</p>
     @for (downloadIssue of data?.options; track downloadIssue) {
-      <div class="relative flex items-center mb-4 w-full">
-        <form class="max-w-sm mx-auto w-full">
-          <label class="block mb-2 text-sm font-medium text-generic-text">{{
+      <div class="cv-dialog-field">
+        <form class="w-full">
+          <label [attr.for]="'download-options-' + downloadIssue.idGcIssue" class="block mb-2 text-sm font-medium text-generic-text">{{
             downloadIssue.description
           }}</label>
           <select
             (change)="onPlatformChange($event, downloadIssue.idGcIssue)"
-            id="download-options"
+            [id]="'download-options-' + downloadIssue.idGcIssue"
             class="bg-input-select-background border border-input-select-border text-input-select-text text-sm rounded-lg focus:ring-input-select-focus-ring block w-full p-2.5 cursor-pointer"
           >
             @if (downloadIssue.links.length) {
@@ -30,8 +28,7 @@
         </form>
       </div>
     }
-  </div>
-  <div class="align-middle w-full flex justify-center py-4">
-    <button type="button" (click)="confirm()" class="button-text button-primary">Download</button>
-  </div>
+  
+</div>
+<footer class="cv-dialog-actions"><button type="button" class="button-text button-deactivated" (click)="cancel()">Cancel</button><button type="button" class="button-text button-primary" (click)="confirm()">Download</button></footer>
 </div>

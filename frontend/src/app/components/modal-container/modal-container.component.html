@@ -1,9 +1,9 @@
 <div
   tabindex="-1"
   [ngClass]="(modalService.activeModal$ | async) ? 'flex' : 'hidden'"
-  class="bg-modal-blurry-background fixed inset-0 z-50 justify-center items-center w-full h-full"
+  class="cv-dialog-overlay fixed inset-0 z-50"
 >
-  <div class="relative p-4 w-full max-w-md max-h-full" id="modal-content">
+  <div class="cv-dialog-host" id="modal-content">
     @if ((modalService.animationModal$ | async) === true) {
       <div class="flex justify-center items-center w-full">
         <svg

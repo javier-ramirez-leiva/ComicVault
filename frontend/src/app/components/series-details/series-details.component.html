@@ -1,32 +1,29 @@
 @if (series$ | async; as series) {
-  <div class="flex px-8 pt-20 items-center w-ful justify-center">
-    <div class="flex-col-reverse md:flex-col lg:w-1/2 w-full md:w-2/3">
+  <div class="cv-detail-page">
+    <header class="cv-settings-heading cv-detail-heading"><h1>{{ series.title }}</h1></header>
+    <div class="cv-detail-hero cv-detail-series">
       @if (rows$ | async; as rows) {
-        <app-two-columns-table
-          [rows]="rows"
-          [formTable]="table"
-          [editMode]="editStatus"
-        ></app-two-columns-table>
-        <div class="flex items-center justify-center py-4 gap-4">
+        
+        <div class="cv-detail-series-controls">
+        <div class="cv-detail-actions">
           @if (!editStatus) {
             <app-seen-button
-              class="relative w-64"
+              class="cv-detail-action"
               [readStatus]="series.readStatus"
               (onClick)="toggleSeen()"
             ></app-seen-button>
           }
           @if (!editStatus) {
             <app-download-series-button
-              class="relative w-64"
+              class="cv-detail-action"
               [series]="series"
             ></app-download-series-button>
           }
           <app-edit-metadata-button
             appHideRoles
             [appHideForRoles]="[Role.Requester, Role.Viewer]"
-            class="relative"
-            [class.w-64]="!editStatus"
-            [class.w-128]="editStatus"
+            class="cv-detail-action"
+            [class.cv-detail-editing]="editStatus"
             (onEdit)="onEdit()"
             (onSave)="onSave()"
             (onCancel)="onCancel()"
@@ -35,13 +32,13 @@
             <app-delete-series-button
               appHideRoles
               [appHideForRoles]="[Role.Contributor, Role.Requester, Role.Viewer]"
-              class="relative w-64"
+              class="cv-detail-action"
               [series]="series"
             ></app-delete-series-button>
           }
         </div>
         @if (nextComicID && series?.readStatus === false) {
-          <div class="py-4 flex relative w-full justify-center">
+          <div class="cv-detail-next">
             <button
               [routerLink]="['/comics', nextComicID, 'details']"
               type="button"
@@ -66,11 +63,17 @@
             </button>
           </div>
         }
+        </div>
+        <section class="cv-detail-panel cv-detail-metadata"><h2>Metadata</h2><app-two-columns-table
+          [rows]="rows"
+          [formTable]="table"
+          [editMode]="editStatus"
+        ></app-two-columns-table></section>
       }
     </div>
-  </div>
   @if (comics$ | async; as comics) {
-    <div class="px-4 pb-20 md:pb-4">
+    <div class="cv-detail-related">
+      <h2 class="cv-detail-section-title">Issues</h2>
       @if (gridService.gridOptionActivePage$ | async) {
         <app-comics-database-grid
           [comics]="comics"
@@ -86,6 +89,7 @@
       }
     </div>
   }
+  </div>
 }
 @if (notFoundID$ | async; as notFoundID) {
   <app-series-not-found [id]="notFoundID"></app-series-not-found>

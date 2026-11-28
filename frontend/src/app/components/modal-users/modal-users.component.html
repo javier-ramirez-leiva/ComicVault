@@ -1,6 +1,7 @@
-<div class="relative pt-10 bg-modal-background rounded-lg shadow-sm">
-  <app-cross-modal (onCloseClick)="cancelUser()"></app-cross-modal>
-  <form class="mt-4 mx-6 space-y-4 md:space-y-6 text-generic-text" action="#">
+<div class="cv-dialog" role="dialog" aria-label="User settings">
+<header class="cv-dialog-header"><h2>User settings</h2><app-cross-modal (onCloseClick)="cancelUser()"></app-cross-modal></header>
+<div class="cv-dialog-body">
+  <form class="cv-dialog-fields text-generic-text">
     <div>
       <app-input-text
         title="Username"
@@ -14,15 +15,15 @@
       <app-input-text title="Password" [(value)]="user.password" [password]="true" id="password">
       </app-input-text>
     </div>
-    <div class="flex items-center justify-start gap-4">
-      <p class="block text-sm font-medium mb-2">Avatar color</p>
+    <div class="cv-dialog-color-row">
+      <p class="block text-sm font-medium">Avatar color</p>
       <div class="flex h-full justify-center">
         <app-input-color [(value)]="user.color"></app-input-color>
       </div>
     </div>
     @if (data?.input?.modifyRole === true) {
-      <div class="p-4 md:p-5 text-center">
-        <p class="block mb-2 text-sm font-medium">Select a role</p>
+      <div class="cv-dialog-field">
+        <label for="role" class="block mb-2 text-sm font-medium">Select a role</label>
         <div
           class="bg-input-select-background border border-input-select-border text-input-select-text text-sm rounded-lg focus:ring-input-select-focus-ring p-2.5"
         >
@@ -31,13 +32,12 @@
             <option value="OWNER">OWNER</option>
             <option value="CONTRIBUTOR">CONTRIBUTOR</option>
             <option value="REQUESTER">REQUESTER</option>
-            <option selected="VIEWER">VIEWER</option>
+            <option value="VIEWER">VIEWER</option>
           </select>
         </div>
       </div>
     }
-    <div class="align-middle w-full flex justify-center py-4">
-      <button type="button" (click)="okUser()" class="button-text button-primary">OK</button>
-    </div>
   </form>
+</div>
+<footer class="cv-dialog-actions"><button type="button" class="button-text button-deactivated" (click)="cancelUser()">Cancel</button><button type="button" class="button-text button-primary" (click)="okUser()">Save</button></footer>
 </div>

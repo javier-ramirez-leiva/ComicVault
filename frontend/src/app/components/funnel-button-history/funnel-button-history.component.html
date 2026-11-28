@@ -1,36 +1,36 @@
 <app-right-panel-funnel-button
+  [expanded]="(isDrawerOpen$ | async) === true"
+  panelId="funnel-button-history-panel"
   (funnelButtonClicked)="onOpenDrawer()"
 ></app-right-panel-funnel-button>
-<div
-  class="right-panel-mask"
-  [ngClass]="{ hidden: !(isDrawerOpen$ | async) }"
-  (click)="onCloseDrawer()"
-></div>
-<div
+<button type="button" class="right-panel-mask" aria-label="Close filters" tabindex="-1"
+  [class.hidden]="!(isDrawerOpen$ | async)" (click)="onCloseDrawer()"></button>
+<div id="funnel-button-history-panel" role="dialog" aria-label="Reading history filters"
+  [attr.inert]="(isDrawerOpen$ | async) ? null : ''"
   class="right-panel-container bg-right-panel-background"
   [ngClass]="{
     'translate-x-full': !(isDrawerOpen$ | async),
     '-translate-x-0': (isDrawerOpen$ | async),
   }"
 >
-  <app-right-panel-title title="Filters" (onCloseClick)="onCloseDrawer()"></app-right-panel-title>
+  <app-right-panel-title title="Reading history filters" (onCloseClick)="onCloseDrawer()"></app-right-panel-title>
 
-  <form [formGroup]="form" class="flex flex-col justify-between flex-1">
-    <div class="space-y-6 text-right-panel-text">
+  <form [formGroup]="form" class="cv-filter-form">
+    <div class="cv-filter-fields text-right-panel-text">
       <div class="space-y-2">
         <app-input-text-form id="comicTitle" formControlName="comicTitle" title="Comic Title">
         </app-input-text-form>
       </div>
       <div class="space-y-2">
         <h6 class="text-base font-medium">Date</h6>
-        <div class="flex-1 min-w-0 pr-14">
+        <div class="min-w-0">
           <app-date-text-form
             id="date-start"
             title="From"
             formControlName="dateStart"
           ></app-date-text-form>
         </div>
-        <div class="flex-1 min-w-0 pr-14">
+        <div class="min-w-0">
           <app-date-text-form
             id="date-end"
             title="To"
@@ -45,7 +45,7 @@
         <div class="flex items-center">
           <app-boolean-slider-form
             formControlName="readStatusOnGoing"
-            label="On going"
+            label="In progress"
           ></app-boolean-slider-form>
         </div>
         <div class="flex items-center">
@@ -73,4 +73,8 @@
       </div>
     </div>
   </form>
+  <footer class="cv-filter-footer">
+    <p>Changes are applied when you close this panel.</p>
+    <button type="button" class="cv-account-action cv-account-primary" (click)="onCloseDrawer()">Apply filters</button>
+  </footer>
 </div>

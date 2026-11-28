@@ -1,7 +1,7 @@
-<div class="modal-container cv-settings-dialog w-full">
+<div class="cv-dialog cv-dialog-wide" role="dialog" aria-label="Server information">
   <app-modal-details-top title="Server Info Details" (closeModal)="close()"></app-modal-details-top>
 
-  <div class="overflow-x-auto w-full">
+  <div class="cv-dialog-body">
     <app-two-columns-table [modalMode]="true" [rows]="rows"></app-two-columns-table>
   </div>
 

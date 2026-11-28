@@ -1,9 +1,8 @@
-<h5 class="cv-panel-title">
-  {{ title }}
-</h5>
+<div class="cv-filter-header">
+  <h5 class="cv-panel-title">{{ title }}</h5>
 <button
   type="button" (click)="onCloseDrawer()"
-  class="cv-icon-control absolute top-2 right-2"
+  class="cv-icon-control"
 >
   <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
     <path
@@ -12,5 +11,6 @@
       clip-rule="evenodd"
     ></path>
   </svg>
-  <span class="sr-only">Close menu</span>
+  <span class="sr-only">Close filters</span>
 </button>
+</div>

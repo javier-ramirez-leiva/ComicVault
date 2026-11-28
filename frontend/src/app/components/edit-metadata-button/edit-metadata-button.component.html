@@ -1,5 +1,5 @@
 @if (!editStatus) {
-  <button class="button-icon button-edit" (click)="click()">
+  <button type="button" aria-label="Edit metadata" class="button-icon button-edit" (click)="click()">
     <svg
       class="w-6 h-6"
       aria-hidden="true"
@@ -17,7 +17,8 @@
         d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z"
       ></path>
     </svg>
-  </button>
+    <span class="cv-detail-action-label">Edit metadata</span>
+</button>
 } @else {
   <div class="flex gap-4 w-full">
     @if (issueTitle) {
@@ -39,7 +40,7 @@
         </svg>
       </button>
     }
-    <button class="button-icon button-edit-ok" (click)="ok()">
+    <button type="button" aria-label="Save" class="button-icon button-edit-ok" (click)="ok()">
       <svg
         class="w-6 h-6"
         aria-hidden="true"
@@ -58,8 +59,9 @@
           d="M5 11.917 9.724 16.5 19 7.5"
         ></path>
       </svg>
-    </button>
-    <button class="button-icon button-edit-cancel" (click)="cancel()">
+      <span class="cv-detail-action-label">Save</span>
+</button>
+    <button type="button" aria-label="Cancel" class="button-icon button-edit-cancel" (click)="cancel()">
       <svg
         class="w-6 h-6"
         aria-hidden="true"
@@ -77,6 +79,7 @@
           d="M6 6L18 18M6 18L18 6"
         ></path>
       </svg>
-    </button>
+      <span class="cv-detail-action-label">Cancel</span>
+</button>
   </div>
 }

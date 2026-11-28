@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, EventEmitter, OnInit, Output, inject } from '@angular/core';
+import { AfterViewInit, Component, EventEmitter, OnInit, Output, inject , HostListener } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 import { TopBarService } from 'services';
@@ -65,11 +65,18 @@ export class FunnelButtonHistoryComponent implements AfterViewInit {
     });
   }
 
+  @HostListener('document:keydown.escape')
+  onEscape() {
+    if (this.isDrawerOpen$.value) this.onCloseDrawer();
+  }
+
   onOpenDrawer() {
+    if (this.isDrawerOpen$.value) return;
     this.isDrawerOpen$.next(true);
   }
 
   onCloseDrawer() {
+    if (!this.isDrawerOpen$.value) return;
     this.isDrawerOpen$.next(false);
     this.filterChange.emit(this.form.value);
     this.router.navigate([], {

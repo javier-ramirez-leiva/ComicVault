@@ -2,9 +2,13 @@
 @if (comic) {
   @if (series$ | async; as series) {
     <ng-container [formGroup]="form">
-      <div class="details-page-container">
+      <div class="cv-detail-page">
+      <header class="cv-settings-heading cv-detail-heading">
+        <h1>{{ comic.title }}</h1>
+      </header>
+      <div class="cv-detail-hero">
         <div
-          class="lg:w-1/4 md:w-1/2 w-[100%] relative p-4 flex flex-col justify-center items-center"
+          class="cv-detail-cover"
         >
           <div
             class="relative w-full max-w-full max-h-full rounded-md overflow-hidden h-full flex flex-col items-center justify-center"
@@ -12,7 +16,7 @@
             <div class="relative w-full">
               @if (!imageLoaded) {
                 <div
-                  class="relative w-full h-64 rounded-md animate-pulse bg-cover-card-pulsing"
+                  class="relative w-full rounded-md animate-pulse bg-cover-card-pulsing"
                   style="padding-bottom: 153.8%"
                 ></div>
               }
@@ -59,37 +63,30 @@
                   <div class="bg-cover-card-read h-4 rounded-full" [style]="widthStyle"></div>
                 }
               </div>
-            } @else {
-              <div class="relative w-full mt-2 h-4"></div>
             }
           </div>
         </div>
         @if (rows$ | async; as rows) {
           <div
-            class="flex flex-col-reverse md:flex-col lg:w-2/3 md:w-3/5 p-4 items-center justify-center"
+            class="cv-detail-information"
           >
-            <app-two-columns-table
-              [formTable]="table"
-              class="w-full"
-              [rows]="rows"
-              [editMode]="editStatus"
-            ></app-two-columns-table>
+            
             <div
-              class="flex items-center justify-center md:mx-10 md:mt-6 md:pb-0 pb-8 w-full gap-4 md:hidden lg:flex"
+              class="cv-detail-actions"
             >
               @if (!editStatus) {
+                <app-read-button class="cv-detail-action" [comic]="comic"></app-read-button>
+              }
+              @if (!editStatus) {
                 <app-seen-button
-                  class="relative w-64"
+                  class="cv-detail-action"
                   [readStatus]="comic.readStatus"
                   (onClick)="toggleSeen()"
                 ></app-seen-button>
               }
               @if (!editStatus) {
-                <app-read-button class="relative w-64" [comic]="comic"></app-read-button>
-              }
-              @if (!editStatus) {
                 <app-download-file-button
-                  class="relative w-64"
+                  class="cv-detail-action"
                   [comic]="comic"
                 ></app-download-file-button>
               }
@@ -97,9 +94,8 @@
                 appHideRoles
                 [appHideForRoles]="[Role.Requester, Role.Viewer]"
                 [issueTitle]="comic.title"
-                class="relative"
-                [class.w-64]="!editStatus"
-                [class.w-128]="editStatus"
+                class="cv-detail-action"
+                [class.cv-detail-editing]="editStatus"
                 (onEdit)="onEdit()"
                 (onSave)="onSave()"
                 (onCancel)="onCancel()"
@@ -109,54 +105,22 @@
                 <app-delete-button
                   appHideRoles
                   [appHideForRoles]="[Role.Contributor, Role.Requester, Role.Viewer]"
-                  class="relative w-64"
+                  class="cv-detail-action"
                   [comic]="comic"
                 ></app-delete-button>
               }
             </div>
+          <section class="cv-detail-panel cv-detail-metadata"><h2>Metadata</h2><app-two-columns-table
+              [formTable]="table"
+              class="w-full"
+              [rows]="rows"
+              [editMode]="editStatus"
+            ></app-two-columns-table></section>
           </div>
         }
       </div>
-      <div class="hidden lg:hidden md:flex items-center justify-center py-4 w-full gap-4">
-        @if (!editStatus) {
-          <app-seen-button
-            class="relative w-36"
-            [readStatus]="comic.readStatus"
-            (onClick)="toggleSeen()"
-          ></app-seen-button>
-        }
-        @if (!editStatus) {
-          <app-read-button class="relative w-36" [comic]="comic"></app-read-button>
-        }
-        @if (!editStatus) {
-          <app-download-file-button
-            class="relative w-36"
-            [comic]="comic"
-          ></app-download-file-button>
-        }
-        <app-edit-metadata-button
-          appHideRoles
-          [appHideForRoles]="[Role.Requester, Role.Viewer]"
-          [issueTitle]="comic.title"
-          class="relative"
-          [class.w-36]="!editStatus"
-          [class.w-72]="editStatus"
-          (onEdit)="onEdit()"
-          (onSave)="onSave()"
-          (onCancel)="onCancel()"
-          (onComicVine)="onComicVine($event)"
-        ></app-edit-metadata-button>
-        @if (!editStatus) {
-          <app-delete-button
-            appHideRoles
-            [appHideForRoles]="[Role.Requester, Role.Viewer]"
-            class="relative w-36"
-            [comic]="comic"
-          ></app-delete-button>
-        }
-      </div>
       @if (comic.tags.length > 0) {
-        <div class="flex justify-center align-middle flex-wrap my-4 md:my-8">
+        <div class="cv-detail-tags">
           @for (tag of comic.tags; track tag) {
             <app-tag-chip [tag]="tag"></app-tag-chip>
           }
@@ -174,10 +138,10 @@
           [upperBorder]="true"
           [bottomBorder]="true"
           (buttonClicked)="toggleDisplayProgressDetails()"
-          class="w-full px-4"
+          class="w-full"
         ></app-expander-button>
         @if (displayProgressDetails()) {
-          <div class="mx-4 py-4 px-4 border border-t-0 border-settings-menu-border rounded-b-lg">
+          <div class="py-4 px-4 border border-t-0 border-settings-menu-border rounded-b-lg">
             @if (comicProgressDetails$ | async; as progressDetails) {
               <app-history-table
                 [histories]="progressDetails"
@@ -187,13 +151,14 @@
           </div>
         }
       </div>
-      <div class="py-4">
+      <div class="cv-detail-panel cv-detail-description">
+        <h2>Description</h2>
         @if (!editStatus) {
-          <div class="text-box">
-            <p class="text-box-p">{{ comic.description }}</p>
+          <div class="cv-detail-description-content">
+            <p class="cv-detail-prose">{{ comic.description }}</p>
           </div>
         } @else {
-          <div class="text-box">
+          <div class="cv-detail-description-content">
             <app-input-text-form
               id="description"
               class="text-box-input"
@@ -204,7 +169,7 @@
         }
       </div>
       @if (comicsSeries$ | async; as comicsSeries) {
-        <div class="pb-20 md:pb-4 pt-4">
+        <div class="cv-detail-related">
           <app-carousel-series-comics
             [comics]="comicsSeries"
             [header]="comic.seriesTitle"
@@ -212,6 +177,7 @@
           ></app-carousel-series-comics>
         </div>
       }
+    </div>
     </ng-container>
   }
 }

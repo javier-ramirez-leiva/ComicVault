@@ -1,5 +1,5 @@
 @if (readStatus) {
-  <button (click)="click($event)" class="button-icon button-not-seen">
+  <button type="button" aria-label="Mark unread" (click)="click($event)" class="button-icon button-not-seen">
     <svg
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
@@ -14,9 +14,10 @@
         clip-rule="evenodd"
       ></path>
     </svg>
-  </button>
+    <span class="cv-detail-action-label">Mark unread</span>
+</button>
 } @else {
-  <button (click)="click($event)" class="button-icon button-seen">
+  <button type="button" aria-label="Mark read" (click)="click($event)" class="button-icon button-seen">
     <svg
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
@@ -31,5 +32,6 @@
         clip-rule="evenodd"
       ></path>
     </svg>
-  </button>
+    <span class="cv-detail-action-label">Mark read</span>
+</button>
 }

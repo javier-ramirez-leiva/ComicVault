@@ -1,6 +1,6 @@
-<div class="modal-container">
+<div class="cv-dialog cv-dialog-wide" role="dialog" aria-label="Device information">
   <app-modal-details-top title="Device Info Details" (closeModal)="close()"></app-modal-details-top>
-  <div class="flex flex-col-reverse md:flex-col items-center justify-center">
+  <div class="cv-dialog-body">
     <app-two-columns-table [modalMode]="true" [rows]="rows"></app-two-columns-table>
   </div>
   <app-modal-details-bottom (closeModal)="close()"></app-modal-details-bottom>

@@ -1,9 +1,9 @@
-<div class="relative pt-10 bg-modal-background rounded-lg shadow-sm">
-  <app-cross-modal (onCloseClick)="cancel()"></app-cross-modal>
-  <div class="align-middle w-full flex flex-col items-center py-4">
+<div class="cv-dialog" role="dialog" aria-label="Reader settings">
+<header class="cv-dialog-header"><h2>Reader settings</h2><app-cross-modal (onCloseClick)="cancel()"></app-cross-modal></header>
+<div class="cv-dialog-body">
     <form [formGroup]="form">
       <div
-        class="flex flex-col justify-start flex-1 w-full p-8 gap-4 pb-4"
+        class="cv-dialog-fields"
         formGroupName="readerSettingsService"
       >
         <app-boolean-slider-form
@@ -23,10 +23,10 @@
           label="Menu is not displayed when zoom"
         ></app-boolean-slider-form>
       </div>
-      <div class="p-8 pt-4">
-        <p for="role" class="block mb-2 text-sm font-medium text-generic-text">
+      <div class="cv-dialog-field">
+        <label for="doublePageConfiguration" class="block mb-2 text-sm font-medium text-generic-text">
           Double page configuration
-        </p>
+        </label>
         <select
           id="doublePageConfiguration"
           formControlName="doublePageConfiguration"
@@ -46,5 +46,7 @@
     >
       Set actual page as comic cover
     </button>
-  </div>
+
+</div>
+<footer class="cv-dialog-actions"><button type="button" class="button-text button-primary" (click)="cancel()">Done</button></footer>
 </div>

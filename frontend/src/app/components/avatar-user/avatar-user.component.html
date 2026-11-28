@@ -1,11 +1,11 @@
 @if (size === 'small') {
   <div
-    class="relative inline-flex items-center justify-center size-8 overflow-hidden rounded-full mr-2"
+    class="relative inline-flex items-center justify-center size-8 overflow-hidden rounded-full cv-account-avatar"
     [ngStyle]="{ 'background-color': color }"
   >
-    <span class="font-normal text-lg text-button-avatar-text">{{ username[0].toUpperCase() }}</span>
+    <span class="font-normal text-lg text-button-avatar-text">{{ username.charAt(0).toUpperCase() }}</span>
   </div>
-  {{ username }}
+  <span class="cv-avatar-name">{{ username }}</span>
 }
 @if (size === 'large') {
   <button
@@ -17,7 +17,7 @@
   >
     @if (username) {
       <span class="font-medium text-button-avatar-text">
-        {{ username[0].toUpperCase() }}
+        {{ username.charAt(0).toUpperCase() }}
       </span>
     }
   </button>
