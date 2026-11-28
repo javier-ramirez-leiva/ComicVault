@@ -1,13 +1,13 @@
-<div class="h-full px-3 py-4 overflow-y-auto bg-nav-menu-background pt-6 overflow-x-hidden">
-  <div class>
-    <a routerLink="home" class="flex items-center ps-1 mb-5">
-      <img [src]="iconSrc" class="size-10 me-3" />
-      <span class="self-center text-xl font-semibold whitespace-nowrap text-generic-text logo-typo"
+<div class="cv-sidebar h-full overflow-y-auto bg-nav-menu-background overflow-x-hidden" (keydown.escape)="setDisplayLibraryMenu(false)">
+  <div>
+    <a routerLink="home" class="cv-brand flex items-center">
+      <img [src]="iconSrc" class="size-9 me-3" alt="" />
+      <span class="self-center text-lg font-semibold whitespace-nowrap text-generic-text logo-typo"
         >ComicVault</span
       >
     </a>
   </div>
-  <ul class="space-y-2 pt-2 font-medium">
+  <ul class="cv-nav-group">
     <li>
       <app-left-nav-button
         route="home"
@@ -17,9 +17,9 @@
       ></app-left-nav-button>
     </li>
     <li>
-      <div class="flex align-middle w-full justify-between relative">
+      <div class="flex items-center w-full gap-1">
         <app-left-nav-button
-          class="w-full"
+          class="flex-1 min-w-0"
           route="library"
           activeRoute="library"
           label="Library"
@@ -27,7 +27,7 @@
         ></app-left-nav-button>
 
         <button
-          class="relative items-center p-2 text-sm font-medium text-center text-nav-menu-button-text rounded-lg hover:ring-4 hover:ring-nav-menu-button-border focus:ring-4 focus:outline-hidden focus:ring-nav-menu-button-border cursor-pointer"
+          class="cv-icon-control shrink-0" aria-label="Library actions" [attr.aria-expanded]="displayLibraryMiniMenu"
           type="button"
           appHideRoles
           [appHideForRoles]="[Role.Requester, Role.Viewer]"
@@ -45,15 +45,16 @@
             ></path>
           </svg>
 
-          <!-- Dropdown -->
+        </button>
+      </div>
+      <!-- Library actions -->
           @if (displayLibraryMiniMenu && open) {
             <div
-              class="fixed left-[calc(100%-2rem)] top-44 z-50"
-              appOutsideClick
-              (outsideClick)="setDisplayLibraryMenu(false)"
+              class="cv-library-submenu"
+
             >
-              <div class="bg-nav-menu-button-active divide-y rounded-lg shadow-lg w-52">
-                <ul class="py-2 text-sm text-nav-menu-button-text">
+              <div class="cv-submenu-surface">
+                <ul class="text-sm text-nav-menu-button-text">
                   <li>
                     <app-scan-lib-button [mini]="true"></app-scan-lib-button>
                   </li>
@@ -80,8 +81,6 @@
               </div>
             </div>
           }
-        </button>
-      </div>
     </li>
     <li
       appHideRoles
@@ -90,7 +89,7 @@
       <app-left-nav-button
         route="advanceLibrary"
         activeRoute="advanceLibrary"
-        label="Advance library"
+        label="Advanced library"
         svgPath="M12 21v-8.25M15.75 21v-8.25M8.25 21v-8.25M3 9l9-6 9 6m-1.5 12V10.332A48.36 48.36 0 0 0 12 9.75c-2.551 0-5.056.2-7.5.582V21M3 21h18M12 6.75h.008v.008H12V6.75Z"
       ></app-left-nav-button>
     </li>
@@ -112,7 +111,7 @@
       ></app-left-nav-button>
     </li>
   </ul>
-  <ul class="pt-4 mt-4 space-y-2 font-medium border-t border-nav-menu-section-border">
+  <ul class="cv-nav-group cv-nav-section">
     <li
       appHideRoles
       [appHideForRoles]="[Role.Owner, Role.Contributor, Role.Requester, Role.Viewer]"
@@ -144,7 +143,7 @@
       ></app-left-nav-button>
     </li>
   </ul>
-  <ul class="pt-4 mt-4 space-y-2 font-medium border-t border-nav-menu-section-border">
+  <ul class="cv-nav-group cv-nav-section">
     <li>
       @if (authService.username$ | async; as username) {
         <app-left-nav-button
@@ -166,7 +165,7 @@
       }
     </li>
   </ul>
-  <ul class="pt-4 mt-4 space-y-2 font-medium border-t border-nav-menu-section-border">
+  <ul class="cv-nav-group cv-nav-section">
     <li>
       <app-dark-mode-button></app-dark-mode-button>
     </li>

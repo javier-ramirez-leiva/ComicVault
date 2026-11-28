@@ -1,9 +1,10 @@
-<div class="fixed z-40 top-0 h-16 lg:hidden md:block pr-2">
+<div class="fixed z-40 top-0 h-16 hidden md:flex lg:hidden items-center pl-2">
   <button
-    (click)="setLeftMenuOpen(true)"
+    (click)="setLeftMenuOpen(!leftMenuOpenTrigger$.value)"
     aria-controls="separator-sidebar"
+    [attr.aria-expanded]="leftMenuOpenTrigger$.value"
     type="button"
-    class="hidden md:inline-flex z-40 items-center p-2 mt-3 mb-2 ms-3 text-sm"
+    class="cv-icon-control"
   >
     <span class="sr-only">Open sidebar</span>
     <svg class="w-6 h-6 text-topBar-left-corner">
@@ -13,9 +14,14 @@
 </div>
 
 @if (leftMenuOpen$ | async; as leftMenu) {
+  @if (leftMenu === 'open') {
+    <button type="button" class="cv-tablet-backdrop fixed inset-0 z-[39] hidden md:block lg:hidden" aria-label="Close sidebar" (click)="setLeftMenuOpen(false)"></button>
+  }
   <aside
-    class="fixed top-0 left-0 z-40 w-52 h-screen transition-transform -translate-x-full lg:translate-x-0 md:block"
+    id="separator-sidebar" class="cv-sidebar-shell fixed top-0 left-0 z-40 hidden md:block w-56 transition-transform -translate-x-full lg:translate-x-0"
+    [class.cv-sidebar-closed]="leftMenu !== 'open'"
     [class.translate-x-0]="leftMenu === 'open'"
+    (keydown.escape)="setLeftMenuOpen(false)"
     appOutsideMenuClick
     (outsideClick)="setLeftMenuOpen(false)"
   >
@@ -26,11 +32,11 @@
 <app-bottom-nav-menu></app-bottom-nav-menu>
 
 <app-top-bar></app-top-bar>
-<div class="fixed bottom-20 md:bottom-8 right-2 z-40">
+<div class="cv-floating-actions fixed md:bottom-8 right-2 z-40">
   <app-multi-select></app-multi-select>
 </div>
 
-<div class="lg:ml-52 bg-background min-h-screen h-full relative items-center">
+<div class="lg:ml-56 bg-background min-h-screen h-full relative items-center">
   <app-modal-container></app-modal-container>
   @if (blurMaskService.active) {
     <app-blur-mask></app-blur-mask>

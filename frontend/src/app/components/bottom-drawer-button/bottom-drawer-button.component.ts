@@ -9,6 +9,7 @@ import { RouterModule } from '@angular/router';
   templateUrl: './bottom-drawer-button.component.html',
 })
 export class BottomDrawerButtonComponent {
+  @Input({ required: true }) label!: string;
   @Input({ required: true }) route!: string;
   @Input({ required: true }) activeRoute!: string;
   @Input({ required: true }) svgPath!: string;

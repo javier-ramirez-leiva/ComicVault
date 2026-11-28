@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, inject, Input, OnInit } from '@angular/core';
 import { ActivePageService } from 'services';
-import { HideRolesDirective, OutsideClickDirective } from 'directives';
+import { HideRolesDirective } from 'directives';
 import { Role } from 'interfaces';
 import { ScanLibButtonComponent } from '../scan-lib-button/scan-lib-button.component';
 import { CleanLibButtonComponent } from '../clean-lib-button/clean-lib-button.component';
@@ -25,7 +25,6 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
     RouterModule,
     LeftNavButtonComponent,
     DarkModeButtonComponent,
-    OutsideClickDirective,
   ],
   templateUrl: './left-nav-menu.component.html',
 })

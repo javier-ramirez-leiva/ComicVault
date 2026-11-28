@@ -1,6 +1,6 @@
 @if (catergoryAndSearch$ | async; as catergoryAndSearch) {
-  <div class="flex items-center w-full gap-2">
-    <div class="flex-1">
+  <div class="flex items-center w-full gap-1 sm:gap-2">
+    <div class="flex-1 min-w-0">
       <app-search-input
         [searchButton]="false"
         (queryChange)="onQueryChange($event)"

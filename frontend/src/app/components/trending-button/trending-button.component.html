@@ -1,5 +1,5 @@
-<div class="relative inline-block w-fit button-icon">
-  <button
+<div class="relative inline-block w-fit cv-category-control">
+  <div
     [ngClass]="{
       'button-search': category === null,
       'button-trending': category === 'all',
@@ -67,8 +67,9 @@
         ></path>
       </svg>
     }
+  </div>
     <select
-      id="category-select"
+      aria-label="Comic category"
       [formControl]="categoryControl"
       class="absolute top-0 left-0 w-full h-full opacity-0 cursor-pointer"
     >
@@ -77,5 +78,5 @@
       <option value="dc">DC</option>
       <option value="other-comics">Other Comics</option>
     </select>
-  </button>
+
 </div>

@@ -1,4 +1,4 @@
-<button type="button" type="button" class="end-0 p-2.5 button-icon" (click)="toggleGrid()">
+<button type="button" aria-label="Change view layout" class="cv-icon-control" (click)="toggleGrid()">
   @if (gridService.gridOptionActivePage$ | async) {
     <svg
       class="w-6 h-6 text-generic-text"

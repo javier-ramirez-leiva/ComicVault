@@ -1,11 +1,12 @@
 <button
   type="button"
-  class="inline-flex flex-col items-center justify-center px-5 group w-full h-full"
+  class="cv-dock-item w-full h-full"
   [routerLink]="route"
+  [attr.aria-current]="(activePageService.activePage$ | async) === activeRoute ? 'page' : null"
   [queryParams]="queryParams"
 >
   <svg
-    class="w-5 h-5 mb-1"
+    class="size-5"
     aria-hidden="true"
     xmlns="http://www.w3.org/2000/svg"
     fill="currentColor"
@@ -16,4 +17,5 @@
   >
     <path [attr.d]="svgPath"></path>
   </svg>
+  <span>{{ label }}</span>
 </button>

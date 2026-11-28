@@ -1,5 +1,5 @@
-<div
-  class="flex items-center p-2 group left-menu-button"
+<button type="button"
+  class="flex items-center w-full group left-menu-button"
   (click)="darkModeService.updateDarkMode()"
 >
   @if (darkModeService.darkModeSignal() == 'null') {
@@ -39,4 +39,5 @@
       ></path>
     </svg>
   }
-</div>
+  <span class="ms-3">{{ darkModeService.darkModeSignal() == 'null' ? 'Dark mode' : 'Light mode' }}</span>
+</button>

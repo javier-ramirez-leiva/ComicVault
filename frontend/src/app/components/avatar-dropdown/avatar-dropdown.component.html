@@ -1,4 +1,5 @@
 @if (authService.user$ | async; as user) {
+  <div class="cv-avatar-wrapper" appOutsideClick (outsideClick)="hideDropdown()" (keydown.escape)="hideDropdown()">
   <app-avatar-user
     size="large"
     [username]="user.username"
@@ -7,28 +8,27 @@
   ></app-avatar-user>
   @if (displayyDropdown) {
     <div
-      class="z-10 divide-y bg-nav-menu-background border-2 border-nav-menu-section-border divide-nav-menu-section-border rounded-lg shadow-xs w-44 absolute top-16 right-2"
-      appOutsideClick
-      (outsideClick)="hideDropdown()"
+      class="cv-popover"
+
     >
-      <div class="px-4 py-3 text-sm text-generic-text">
-        <div class="py-1">{{ user.username }}</div>
-        <div class="font-medium truncate">{{ user.role }}</div>
+      <div class="cv-popover-header">
+        <div class="font-semibold truncate">{{ user.username }}</div>
+        <div class="text-xs text-nav-menu-bottom-icon truncate">{{ user.role }}</div>
       </div>
-      <ul class="py-2 text-sm text-nav-menu-button-text" aria-labelledby="avatarButton">
+      <ul class="cv-popover-items">
         <li>
-          <a
+          <button type="button"
             (click)="toggleDarkMode()"
-            class="block px-4 py-2 hover:bg-nav-menu-button-active cursor-pointer"
+            class="cv-menu-item"
           >
-            Toggle Light / Dark
-          </a>
+            Toggle light / dark
+          </button>
         </li>
         <li>
-          <a [routerLink]="['/settings']" class="block px-4 py-2 hover:bg-nav-menu-button-active">Appearance</a>
+          <a [routerLink]="['/settings']" class="cv-menu-item">Appearance</a>
         </li>
         <li>
-          <a [routerLink]="['/user']" class="block px-4 py-2 hover:bg-nav-menu-button-active">
+          <a [routerLink]="['/user']" class="cv-menu-item">
             User Settings
           </a>
         </li>
@@ -36,11 +36,12 @@
       <div class="py-1">
         <a
           [routerLink]="['/login']"
-          class="block px-4 py-2 text-sm hover:bg-nav-menu-button-active text-nav-menu-button-text"
+          class="cv-menu-item cv-danger-item"
         >
           Sign out
         </a>
       </div>
     </div>
   }
+  </div>
 }

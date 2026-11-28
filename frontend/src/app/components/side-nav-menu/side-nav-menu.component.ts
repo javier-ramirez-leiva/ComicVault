@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, HostListener, inject } from '@angular/core';
 import { NavigationEnd, Router, RouterOutlet } from '@angular/router';
 import { BlurMaskService, NotifierService } from 'services';
 import { NotificationGridComponent } from '../notification-grid/notification-grid.component';
@@ -10,7 +10,7 @@ import { MultiSelectComponent } from '../multi-select/multi-select.component';
 import { BottomNavMenuComponent } from '../bottom-nav-menu/bottom-nav-menu.component';
 import { LeftNavMenuComponent } from '../left-nav-menu/left-nav-menu.component';
 import { OutsideMenuClickDirective } from 'directives';
-import { BehaviorSubject, map, Observable, tap, throttleTime } from 'rxjs';
+import { BehaviorSubject, map, Observable } from 'rxjs';
 import { BlurMaskComponent } from '../blur-mask/blur-mask.component';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
@@ -41,15 +41,10 @@ export class SideNavMenuComponent {
 
   protected readonly blurMaskService = inject(BlurMaskService);
   protected readonly router = inject(Router);
-  isDesktop = window.matchMedia('(min-width: 1022px)').matches;
+  isDesktop = window.matchMedia('(min-width: 1024px)').matches;
 
   constructor() {
-    window.matchMedia('(min-width: 1022px)').addEventListener('change', (e) => {
-      this.isDesktop = e.matches;
-    });
     this.leftMenuOpen$ = this.leftMenuOpenTrigger$.pipe(
-      throttleTime(100),
-      tap((open) => this.blurMaskService.setActive(open)),
       map((open) => (open ? 'open' : 'close')),
     );
 
@@ -58,6 +53,17 @@ export class SideNavMenuComponent {
         this.setLeftMenuOpen(false);
       }
     });
+  }
+
+  @HostListener('window:resize')
+  onResize() {
+    this.isDesktop = window.matchMedia('(min-width: 1024px)').matches;
+    if (this.isDesktop || window.innerWidth < 768) this.setLeftMenuOpen(false);
+  }
+
+  @HostListener('document:keydown.escape')
+  onEscape() {
+    this.setLeftMenuOpen(false);
   }
 
   setLeftMenuOpen(value: boolean) {

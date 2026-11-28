@@ -1,9 +1,8 @@
-import { Component, inject } from '@angular/core';
-import { ActivePageService, BlurMaskService } from 'services';
-import { HideRolesDirective, OutsideClickDirective } from 'directives';
+import { Component, HostListener, inject } from '@angular/core';
+import { ActivePageService } from 'services';
+import { HideRolesDirective } from 'directives';
 import { Role } from 'interfaces';
 import { BottomDrawerLineComponent } from '../bottom-drawer-line/bottom-drawer-line.component';
-import { BottomDrawerButtonComponent } from '../bottom-drawer-button/bottom-drawer-button.component';
 import { BottomDrawerButtonsComponent } from '../bottom-drawer-buttons/bottom-drawer-buttons.component';
 import { NavigationEnd, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -14,14 +13,12 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
     HideRolesDirective,
     BottomDrawerLineComponent,
     BottomDrawerButtonsComponent,
-    OutsideClickDirective,
   ],
   templateUrl: './bottom-nav-menu.component.html',
 })
 @UntilDestroy()
 export class BottomNavMenuComponent {
   protected readonly activePageService = inject(ActivePageService);
-  private readonly blurMaskService = inject(BlurMaskService);
   private readonly router = inject(Router);
   protected readonly Role = Role;
   protected drawerOpen = false;
@@ -29,8 +26,17 @@ export class BottomNavMenuComponent {
   onDrawerOpen(value: boolean) {
     if (this.drawerOpen !== value) {
       this.drawerOpen = value;
-      this.blurMaskService.setActive(value);
     }
+  }
+
+  @HostListener('window:resize')
+  onResize() {
+    if (window.innerWidth >= 768) this.onDrawerOpen(false);
+  }
+
+  @HostListener('document:keydown.escape')
+  onEscape() {
+    this.onDrawerOpen(false);
   }
 
   constructor() {
